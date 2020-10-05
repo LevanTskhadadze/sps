@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>sps-pom</artifactId>
+		<groupId>com.azry.sps</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sps-console</artifactId>
+	<name>SPS Console</name>
+	<packaging>war</packaging>
+
+	<properties>
+		<gxt.version>3.1.4</gxt.version>
+		<gwt.version>2.7.0</gwt.version>
+		<gwt.ServletVersion>2.7.0</gwt.ServletVersion>
+
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<webapp.directory>${project.build.directory}/${project.build.finalName}</webapp.directory>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.azry.sps</groupId>
+			<artifactId>sps-common</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azry.sps</groupId>
+			<artifactId>sps-server</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azry.sps</groupId>
+			<artifactId>sps-system-parameters</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt</artifactId>
+			<version>${gxt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt-chart</artifactId>
+			<version>${gxt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt-theme-neptune</artifactId>
+			<version>${gxt.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-codeserver</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.ServletVersion}</version>
+		</dependency>
+
+		<!-- Azry -->
+		<dependency>
+			<groupId>com.azry.gxt</groupId>
+			<artifactId>azry-gxt</artifactId>
+			<version>1.1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>com.azry.faicons</groupId>
+			<artifactId>azry-faicons</artifactId>
+			<version>1.1</version>
+		</dependency>
+	</dependencies>
+
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<version>${gwt.version}</version>
+						<configuration>
+							<modules>
+								<module>com.azry.sps.console.appdev</module>
+								<module>com.azry.sps.console.logindev</module>
+							</modules>
+							<style>PRETTY</style>
+							<optimizationLevel>0</optimizationLevel>
+							<draftCompile>true</draftCompile>
+							<extraJvmArgs>-Xms1G -Xmx2G</extraJvmArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<outputDirectory>${webapp.directory}/WEB-INF/classes</outputDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>${basedir}/src/main/webapp</directory>
+							<includes>
+								<include>js/version.nocache.js</include>
+								<include>**/*.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>${gwt.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>i18n</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<debugSuspend>false</debugSuspend>
+					<modules>
+						<module>com.azry.sps.console.app</module>
+						<module>com.azry.sps.console.login</module>
+					</modules>
+					<runTarget>index.jsp</runTarget>
+					<encoding>UTF-8</encoding>
+					<hostedWebapp>${webapp.directory}</hostedWebapp>
+					<noServer>true</noServer>
+					<runTarget>sps-console/index.jsp</runTarget>
+					<port>80</port>
+					<extraJvmArgs>-Xms1G -Xmx2G</extraJvmArgs>
+					<i18nConstantsWithLookupBundles>
+						<i18nConstantsWithLookupBundle>com.azry.sps.console.client.Messages</i18nConstantsWithLookupBundle>
+					</i18nConstantsWithLookupBundles>
+					<generateDirectory>${project.build.directory}/generated-sources/gwt</generateDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

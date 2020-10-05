@@ -1,0 +1,48 @@
+root = true
+
+[*]
+charset = utf-8
+
+[*.java]
+indent_style = tab
+indent_size = 4
+ij_java_names_count_to_use_import_on_demand = 999999
+ij_java_class_count_to_use_import_on_demand = 999999
+ij_java_layout_static_imports_separately = true
+ij_java_insert_inner_class_imports = false
+
+[*.xml]
+indent_style = tab
+indent_size = 4
+
+[{*.json, *.yml}]
+indent_style = space
+indent_size = 2
+
+[*.js]
+indent_style = space
+indent_size = 2
+ij_javascript_spaces_within_imports = true # import {*BiggerTooltip*} from bla bla, * spaces are added
+ij_javascript_force_semicolon_style = true
+
+[*.ts]
+indent_style = space
+indent_size = 2
+ij_typescript_spaces_within_imports = true
+ij_typescript_force_semicolon_style = true
+
+[*.css]
+indent_style = space
+indent_size = 4
+
+[*.scss]
+indent_style = space
+indent_size = 2
+
+[*.php]
+indent_style = space
+indent_size = 4
+
+[{*.cpp, *.c}]
+indent_style = space
+indent_size = 4

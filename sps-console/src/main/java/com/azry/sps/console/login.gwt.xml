@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="login">
+    <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.sencha.gxt.ui.GXT' />
+    <inherits name="com.google.gwt.json.JSON" />
+    <inherits name='com.azry.gxt.client.zcomp' />
+    <inherits name="com.google.web.bindery.autobean.AutoBean"/>
+    
+    <entry-point class='com.azry.sps.console.loginclient.LoginModule' />
+    <source path='loginclient' />
+    <source path='loginshared' />
+</module>

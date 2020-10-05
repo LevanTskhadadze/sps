@@ -1,0 +1,12 @@
+body {
+    padding: 0;
+    margin: 0;
+	font-family: tahoma, arial, helvetica, sans-serif;
+}
+
+.footer {
+	color: #315179;
+	padding-right: 6px;
+	font-weight: bold;
+	font-size: 11px;
+}

@@ -1,0 +1,1 @@
+window.appVersion = '${project.version}';
