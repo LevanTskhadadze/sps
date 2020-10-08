@@ -1,4 +1,4 @@
-package com.azry.sps.common;
+package com.azry.sps.common.model.payment;
 
 public enum PaymentStatus {
 	CREATED,
