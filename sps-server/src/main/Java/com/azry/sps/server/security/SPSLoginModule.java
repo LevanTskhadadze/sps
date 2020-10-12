@@ -10,6 +10,7 @@ import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 
 import javax.security.auth.login.LoginException;
 import java.security.acl.Group;
+import java.util.Set;
 
 @Slf4j
 public class SPSLoginModule extends UsernamePasswordLoginModule {
@@ -39,9 +40,12 @@ public class SPSLoginModule extends UsernamePasswordLoginModule {
 		Group callerPrincipal = new SimpleGroup("CallerPrincipal");
 		if (user != null) {
 			try {
-				for (String permission: getUserManager().getPermissions(getUsername())) {
-					group.addMember(super.createIdentity(permission));
-			}
+				Set<String> permissions = getUserManager().getPermissions(getUsername());
+				if (permissions != null) {
+					for (String permission : permissions) {
+						group.addMember(super.createIdentity(permission));
+					}
+				}
 				group.addMember(super.createIdentity("ANY_ROLE"));
 				SPSPrincipal principal = (SPSPrincipal) getIdentity();
 				principal.setName(getUsername());

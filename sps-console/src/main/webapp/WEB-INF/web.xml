@@ -32,8 +32,7 @@
 			<http-method>DELETE</http-method>
 		</web-resource-collection>
 		<auth-constraint>
-<!--			<role-name>ANY_ROLE</role-name>-->
-			<role-name>USERS_MANAGE</role-name>
+			<role-name>ANY_ROLE</role-name>
 		</auth-constraint>
 		<user-data-constraint>
 			<transport-guarantee>NONE</transport-guarantee>
@@ -48,7 +47,6 @@
 	</login-config>
 
 	<security-role>
-<!--		<role-name>ANY_ROLE</role-name>-->
-		<role-name>USERS_MANAGE</role-name>
+		<role-name>ANY_ROLE</role-name>
 	</security-role>
 </web-app>
