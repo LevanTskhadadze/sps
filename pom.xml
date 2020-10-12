@@ -162,11 +162,11 @@
 
 
 		<!-- Java EE7 dependencies -->
-		<!--dependency>
+		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-security</artifactId>
 			<version>7.2.0.Final</version>
 			<scope>provided</scope>
-		</dependency-->
+		</dependency>
 	</dependencies>
 </project>
