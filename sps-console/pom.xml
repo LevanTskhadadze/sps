@@ -177,6 +177,7 @@
 					<generateDirectory>${project.build.directory}/generated-sources/gwt</generateDirectory>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

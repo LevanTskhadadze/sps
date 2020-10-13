@@ -29,7 +29,11 @@
                     <finalName>sps-ear-${project.version}</finalName>
                     <applicationName>sps</applicationName>
                     <modules>
-                        <webModule>
+						<ejbModule>
+							<groupId>com.azry.sps</groupId>
+							<artifactId>sps-system-parameters</artifactId>
+						</ejbModule>
+						<webModule>
                             <groupId>com.azry.sps</groupId>
                             <artifactId>sps-console</artifactId>
                             <contextRoot>/sps-console</contextRoot>
@@ -41,10 +45,6 @@
                         <ejbModule>
                             <groupId>com.azry.sps</groupId>
                             <artifactId>sps-server</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>com.azry.sps</groupId>
-                            <artifactId>sps-system-parameters</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>com.azry.sps</groupId>
