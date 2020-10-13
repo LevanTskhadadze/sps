@@ -27,14 +27,15 @@
 	</distributionManagement>
 
 	<modules>
-		<module>sps-console</module>
-		<module>sps-server</module>
-		<module>sps-common</module>
 		<module>sps-system-parameters</module>
+		<module>sps-common</module>
+		<module>sps-server</module>
 		<module>sps-ear</module>
 		<module>sps-fi-integration</module>
 		<module>sps-sp-integration</module>
 		<module>sps-api</module>
+		<module>sps-console</module>
+
 	</modules>
 
 	<build>
