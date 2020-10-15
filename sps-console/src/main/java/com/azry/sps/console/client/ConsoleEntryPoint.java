@@ -33,8 +33,8 @@ public class ConsoleEntryPoint implements EntryPoint {
 		footerText.setStyleName("FText");
 		return footerText;
 	}
-	
-	
+
+
 	private String getMenuInnerHTML() {
 		return "<table>" +
 			"	<tr>" +
@@ -72,7 +72,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		navbar.setStyleName("navbar");
 		FlexTable menuButtonContainer = new FlexTable();
 		menuButtonContainer.setWidget(0, 0, getMenu(centerPanel));
-		
+
 		navbar.add(menuButtonContainer, new HorizontalLayoutContainer.HorizontalLayoutData(1, -1));
 
 		FlexTable userContainer = new FlexTable();
