@@ -6,6 +6,8 @@ import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -57,6 +59,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		HTML menu1 = systemParameterTab.getMenuItem(centerPanel);
 		menu.add(menu1);
 
+
 		// button.setIcon(FAIconsProvider.getIcons().cog());
 		button.setHTML(getMenuInnerHTML());
 		button.setIconAlign(ButtonCell.IconAlign.RIGHT);
@@ -64,7 +67,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		return button;
 	}
 
-	private HorizontalLayoutContainer getHeader(TabPanel centerPanel){
+	private HorizontalLayoutContainer getHeader(TabPanel centerPanel, SystemUserDTO user){
 		HorizontalLayoutContainer navbar = new HorizontalLayoutContainer();
 		navbar.setHeight(42);
 
@@ -76,7 +79,8 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 		FlexTable userContainer = new FlexTable();
 		userContainer.setHeight("44px");
-		HTML username = new HTML("username");
+
+		HTML username = new HTML(user.getUserName());
 		username.setStyleName("user-block-username");
 
 		HTML logoutItem = new HTML("<i style='width:16px; height:16px;' class='fa fa-sign-out'></i>" + Mes.get("logout"));
@@ -102,6 +106,16 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+
+		ServicesFactory.getUserService().loadAuthorisedUser(new ServiceCallback<SystemUserDTO>() {
+			@Override
+			public void onServiceSuccess(SystemUserDTO result) {
+				VIEWPORT.add(BuildUI(result));
+			}
+		});
+	}
+
+	private BorderLayoutContainer BuildUI(SystemUserDTO user){
 		ZComp.setTheme(GxtTheme.NEPTUNE);
 		ZComp.setCustomIconsProvider(new ZIconsProvider());
 		RootPanel.get().add(VIEWPORT);
@@ -110,7 +124,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		TabPanel centerPanel = new TabPanel();
 		centerPanel.setStyleName("centerTabs");
 
-		HorizontalLayoutContainer header = getHeader(centerPanel);
+		HorizontalLayoutContainer header = getHeader(centerPanel, user);
 
 		HTML footerText = getFooter();
 
@@ -120,13 +134,11 @@ public class ConsoleEntryPoint implements EntryPoint {
 		BorderLayoutContainer.BorderLayoutData footerData= new BorderLayoutContainer.BorderLayoutData();
 		footerData.setSize(25);
 
+
 		mainFrame.setNorthWidget(header, navbarData);
 		mainFrame.setCenterWidget(centerPanel);
 		mainFrame.setSouthWidget(footerText, footerData);
 
-
-
-		VIEWPORT.add(mainFrame);
-
+		return mainFrame;
 	}
 }
