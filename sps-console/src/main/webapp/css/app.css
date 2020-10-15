@@ -1,14 +1,72 @@
 body {
     padding: 0;
     margin: 0;
-	font-family: tahoma, arial, helvetica, sans-serif;
+    font-family: tahoma, arial, helvetica, sans-serif;
 }
 
-.footer {
-	color: #315179;
-	padding-right: 6px;
-	font-weight: bold;
-	font-size: 11px;
+
+
+.navbar {
+    padding-left: 20px;
+    /*width: 100%;*/
+    background: #4B9CD7;
+    /*height: 50px;*/
+}
+
+.user-block-username {
+    min-width: 90px;
+    max-width: 150px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.FText {
+    padding-right: 6px;
+    font-weight: bold;
+    font-size: 15px;
+    background-color: dodgerblue;
+    border-bottom: 5px solid black;
+    text-align:right;
+}
+
+.menuButton div{
+    height: 42px;
+    cursor: pointer;
+    z-index: 1;
+    width: 42px;
+    border: hidden;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.menuItem:hover{
+    background: lightgrey;
+    cursor: pointer;
+}
+
+.menuItem{
+    font-family: helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 11px;
+}
+.logoutButton:hover{
+    background: #037ECF;
+    cursor: pointer;
+}
+
+.logoutButton{
+    border-radius: 5px;
+    width: 80px;
+    padding: 7px;
+    font-family: helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-size: 13px;
 }
 
 .normal-font-size * {

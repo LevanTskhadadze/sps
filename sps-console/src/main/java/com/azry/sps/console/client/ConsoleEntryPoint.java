@@ -5,15 +5,14 @@ import com.azry.gxt.client.zcomp.bootstrap.GxtTheme;
 import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
-
 import com.azry.sps.console.client.utils.Mes;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-
-
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sencha.gxt.cell.core.client.ButtonCell;
 import com.sencha.gxt.widget.core.client.TabPanel;
@@ -81,6 +80,12 @@ public class ConsoleEntryPoint implements EntryPoint {
 		username.setStyleName("user-block-username");
 
 		HTML logoutItem = new HTML("<i style='width:16px; height:16px;' class='fa fa-sign-out'></i>" + Mes.get("logout"));
+		logoutItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				Window.Location.replace("logout");
+			}
+		});
 
 		logoutItem.setStyleName("logoutButton");
 
