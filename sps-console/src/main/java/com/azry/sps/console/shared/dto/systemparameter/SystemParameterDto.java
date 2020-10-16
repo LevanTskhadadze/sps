@@ -1,9 +1,10 @@
-package com.azry.sps.console.shared.systemparameters;
+package com.azry.sps.console.shared.dto.systemparameter;
 
 
-import java.io.Serializable;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class SystemParameterDto implements Serializable {
+
+public class SystemParameterDto implements IsSerializable {
 	private long id;
 
 	private String code;
@@ -11,6 +12,16 @@ public class SystemParameterDto implements Serializable {
 	private String value;
 
 	private SystemParameterDtoType type;
+
+	private String description;
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getCode() {
 		return code;
@@ -42,5 +53,13 @@ public class SystemParameterDto implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof SystemParameterDto)) {
+			return false;
+		}
+		return id == ((SystemParameterDto)obj).id;
 	}
 }

@@ -56,21 +56,21 @@ public class SystemUserManagerBean implements SystemUserManager {
 	public Set<String> getPermissions(String username) {
 		Set<String> permissions = new HashSet<>();
 		try {
-		SystemUser systemUser = em.createQuery("select u from SystemUser u join fetch u.groups g " +
-																"where u.username = :username", SystemUser.class)
-			.setParameter("username", username)
-			.getSingleResult();
+			SystemUser systemUser = em.createQuery("select u from SystemUser u join fetch u.groups g " +
+																	"where u.username = :username", SystemUser.class)
+				.setParameter("username", username)
+				.getSingleResult();
 
-		for (UserGroup userGroup : systemUser.getGroups()) {
-			Arrays.stream(userGroup.getPermissions().split(","))
-				.map(p -> permissions.add(p))
-				.collect(Collectors.toSet());
-		}
+			for (UserGroup userGroup : systemUser.getGroups()) {
+				Arrays.stream(userGroup.getPermissions().split(","))
+					.map(p -> permissions.add(p))
+					.collect(Collectors.toSet());
+			}
 			return permissions;
 
-			}catch(NoResultException no){
-				return null;
-			}
+		} catch(NoResultException no) {
+			return null;
+		}
 
 	}
 

@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.ui.servicegroup;
+package com.azry.sps.console.client.tabs.servicegroup;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.EnterKeyBinder;
@@ -12,13 +12,17 @@ import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.ui.ActionMode;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -29,6 +33,8 @@ import com.sencha.gxt.data.shared.loader.ListLoader;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
 import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.TabItemConfig;
+import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -36,6 +42,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ServiceGroupPage extends Composite {
@@ -53,6 +60,8 @@ public class ServiceGroupPage extends Composite {
 	ZButton clearFiltersButton;
 
 	ZButton addButton;
+
+
 
 
 	private ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {

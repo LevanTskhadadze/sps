@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.ui;
+package com.azry.sps.console.client.tabs;
 
 public enum ActionMode {
 	ADD,

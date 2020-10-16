@@ -13,6 +13,7 @@ body {
     /*height: 50px;*/
 }
 
+
 .user-block-username {
     min-width: 90px;
     max-width: 150px;
@@ -50,10 +51,17 @@ body {
     cursor: pointer;
 }
 
-.menuItem{
+.menuItem {
     font-family: helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 11px;
+}
+
+.footer {
+	color: #315179;
+	padding-right: 6px;
+	font-weight: bold;
+	font-size: 11px;
 }
 .logoutButton:hover{
     background: #037ECF;
@@ -67,10 +75,6 @@ body {
     font-family: helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 13px;
-}
-
-.normal-font-size * {
-    font-size: 12px;
 }
 
 .normal-font-size * {
