@@ -11,7 +11,6 @@ import com.azry.sps.console.shared.systemparameter.SystemParameterServiceAsync;
 
 public class ServicesFactory {
 	private static SystemParameterServiceAsync systemParameterService;
-
 	public static SystemParameterServiceAsync getSystemParameterService() {
 		if (systemParameterService == null) {
 			systemParameterService =  GWT.create(SystemParameterService.class);
