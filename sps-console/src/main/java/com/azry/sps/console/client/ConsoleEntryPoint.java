@@ -6,9 +6,10 @@ import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
 
+import com.azry.sps.console.client.tabs.TabBuilder;
+import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
 import com.azry.sps.console.client.utils.Mes;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -28,7 +29,36 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 	public static final Viewport VIEWPORT = new Viewport();
 
-	private HTML getFooter(){
+	@Override
+	public void onModuleLoad() {
+		ZComp.setTheme(GxtTheme.NEPTUNE);
+		ZComp.setCustomIconsProvider(new ZIconsProvider());
+		RootPanel.get().add(VIEWPORT);
+		BorderLayoutContainer mainFrame = new BorderLayoutContainer();
+
+		TabPanel centerPanel = new TabPanel();
+		centerPanel.setStyleName("centerTabs");
+
+		HorizontalLayoutContainer header = getHeader(centerPanel);
+
+		HTML footerText = getFooter();
+
+		BorderLayoutContainer.BorderLayoutData navbarData = new BorderLayoutContainer.BorderLayoutData();
+		navbarData.setSize(44);
+
+		BorderLayoutContainer.BorderLayoutData footerData= new BorderLayoutContainer.BorderLayoutData();
+		footerData.setSize(25);
+		mainFrame.setNorthWidget(header, navbarData);
+		mainFrame.setCenterWidget(centerPanel);
+		mainFrame.setSouthWidget(footerText, footerData);
+
+
+		VIEWPORT.add(mainFrame);
+
+	}
+
+
+	private HTML getFooter() {
 		HTML footerText = new HTML("This is a footer");
 		footerText.setStyleName("FText");
 		return footerText;
@@ -44,19 +74,20 @@ public class ConsoleEntryPoint implements EntryPoint {
 	}
 
 
-
-
-
-	private TextButton getMenu(final TabPanel centerPanel){
+	private TextButton getMenu(final TabPanel centerPanel) {
 		final TextButton button = new TextButton();
-
-
 
 		final Menu menu = new Menu();
 		button.setMenu(menu);
-		SystemParameterTab systemParameterTab = GWT.create(SystemParameterTab.class);
-		HTML menu1 = systemParameterTab.getMenuItem(centerPanel);
-		menu.add(menu1);
+
+		//TODO unify table creation process and move getMenuItem to TabBuilder class.
+		SystemParameterTab systemParameterTab = new SystemParameterTab();
+		HTML systemParameterMenuItem = systemParameterTab.getMenuItem(centerPanel);
+		menu.add(systemParameterMenuItem);
+
+		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel);
+		menu.add(serviceGroupMenuItem);
+
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());
 		button.setHTML(getMenuInnerHTML());
@@ -65,7 +96,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		return button;
 	}
 
-	private HorizontalLayoutContainer getHeader(TabPanel centerPanel){
+	private HorizontalLayoutContainer getHeader(TabPanel centerPanel) {
 		HorizontalLayoutContainer navbar = new HorizontalLayoutContainer();
 		navbar.setHeight(42);
 
@@ -95,33 +126,4 @@ public class ConsoleEntryPoint implements EntryPoint {
 		return navbar;
 	}
 
-	@Override
-	public void onModuleLoad() {
-		ZComp.setTheme(GxtTheme.NEPTUNE);
-		ZComp.setCustomIconsProvider(new ZIconsProvider());
-		RootPanel.get().add(VIEWPORT);
-		BorderLayoutContainer mainFrame = new BorderLayoutContainer();
-
-		TabPanel centerPanel = new TabPanel();
-		centerPanel.setStyleName("centerTabs");
-
-		HorizontalLayoutContainer header = getHeader(centerPanel);
-
-		HTML footerText = getFooter();
-
-		BorderLayoutContainer.BorderLayoutData navbarData = new BorderLayoutContainer.BorderLayoutData();
-		navbarData.setSize(44);
-
-		BorderLayoutContainer.BorderLayoutData footerData= new BorderLayoutContainer.BorderLayoutData();
-		footerData.setSize(25);
-
-		mainFrame.setNorthWidget(header, navbarData);
-		mainFrame.setCenterWidget(centerPanel);
-		mainFrame.setSouthWidget(footerText, footerData);
-
-
-
-		VIEWPORT.add(mainFrame);
-
-	}
 }

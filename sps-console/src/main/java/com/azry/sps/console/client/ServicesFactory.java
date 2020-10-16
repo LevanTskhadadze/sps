@@ -4,16 +4,19 @@ import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupServiceAsync;
 import com.google.gwt.core.client.GWT;
 
+import com.azry.sps.console.shared.systemparameter.SystemParameterService;
+import com.azry.sps.console.shared.systemparameter.SystemParameterServiceAsync;
+
 public class ServicesFactory {
 
-    /*private static UserServiceAsync userService;
+    private static SystemParameterServiceAsync systemParameterService;
 
-    public static UserServiceAsync getUserService() {
-        if (userService == null) {
-            userService = GWT.create(UserService.class);
+    public static SystemParameterServiceAsync getSystemParameterService() {
+        if (systemParameterService == null) {
+            systemParameterService =  GWT.create(SystemParameterService.class);
         }
-        return userService;
-    }*/
+        return systemParameterService;
+    }
 
 	private static ServiceGroupServiceAsync serviceGroupService;
 

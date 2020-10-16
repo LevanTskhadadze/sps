@@ -25,7 +25,9 @@ public abstract class ServiceCallback<T> implements AsyncCallback<T> {
 	private ServiceCallback(Component comp, boolean showLoading) {
 		this.comp = comp;
 		this.showLoading = showLoading;
-		if (showLoading) Overlay.startLoading(comp);
+		if (showLoading) {
+			Overlay.startLoading(comp);
+		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.ui.servicegroup;
+package com.azry.sps.console.client.tabs.servicegroup;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
@@ -7,7 +7,7 @@ import com.azry.gxt.client.zcomp.ZNumberField;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.ui.ActionMode;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
