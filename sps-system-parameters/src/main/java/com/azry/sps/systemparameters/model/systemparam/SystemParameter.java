@@ -21,14 +21,14 @@ public class SystemParameter {
 	@Column(length = 50)
 	private String code;
 
+	@Column(length = 500)
+	private String description;
+
 	@Column(length = 100)
 	private String value;
 
 	@Column(length = 50)
 	@Enumerated(EnumType.STRING)
 	private SystemParameterType type;
-
-	@Column(length = 300)
-	private String description;
 
 }
