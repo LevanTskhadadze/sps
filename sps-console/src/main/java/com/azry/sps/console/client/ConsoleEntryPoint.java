@@ -4,23 +4,18 @@ package com.azry.sps.console.client;
 import com.azry.gxt.client.zcomp.bootstrap.GxtTheme;
 import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
+import com.azry.sps.console.client.error.ErrorHandlerInit;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
-
 import com.azry.sps.console.client.tabs.TabBuilder;
-import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-
-
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.cell.core.client.ButtonCell;
@@ -120,6 +115,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		ErrorHandlerInit errorHandler = new ErrorHandlerInit();
 
 		ServicesFactory.getUserService().loadAuthorisedUser(new ServiceCallback<SystemUserDTO>() {
 			@Override

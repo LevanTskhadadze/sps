@@ -22,7 +22,7 @@ public class Channel extends Configurable {
 	@Column(length = 50)
 	private String name;
 
-	@Column(length = 50)
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private FiServiceUnavailabilityAction fiServiceUnavailabilityAction;
 

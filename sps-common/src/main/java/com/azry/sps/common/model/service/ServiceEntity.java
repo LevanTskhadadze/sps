@@ -22,6 +22,6 @@ public class ServiceEntity extends Configurable {
 
 	private boolean active;
 
-	@Column(length = 2000)
+	@Column(length = Integer.MAX_VALUE)
 	private String data;
 }

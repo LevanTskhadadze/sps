@@ -19,13 +19,12 @@ import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 public abstract class ServiceGroupWindow extends ZWindow {
 
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
-	private static final int LABEL_WIDTH = 150;
 
 	private ServiceGroupDTO serviceGroupDTO;
 
-	private ActionMode actionMode;
+	private final ActionMode actionMode;
 
-	private VerticalLayoutContainer container = new VerticalLayoutContainer();
+	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private ZTextField nameField;
 
@@ -60,7 +59,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 			.required(true)
 			.build();
 
-		priorityField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).build();
+		priorityField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).required().build();
 		VerticalLayoutContainer.VerticalLayoutData layoutData = new VerticalLayoutContainer.VerticalLayoutData(1, -1);
 
 		container.add(getFieldLabel(nameField, "name", true), layoutData);
@@ -86,7 +85,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 							@Override
 							public void onServiceSuccess(ServiceGroupDTO result) {
 								hide();
-								onSave();
+								onSave(result);
 							}
 						});
 					}
@@ -107,7 +106,6 @@ public abstract class ServiceGroupWindow extends ZWindow {
 
 		addButton(saveButton);
 		addButton(cancelButton);
-
 	}
 
 	private void addBottomHorizontalLine() {
@@ -118,7 +116,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 
 	private ZFieldLabel getFieldLabel(IsWidget field, String labelKey, boolean required) {
 		return new ZFieldLabel.Builder()
-			.labelWidth(LABEL_WIDTH)
+			.labelWidth(150)
 			.label(Mes.get(labelKey))
 			.field(field)
 			.required(required)
@@ -128,7 +126,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 
 	private boolean isValid() {
 		boolean result = nameField.isValid();
-		result = result && priorityField.isValid();
+		result = priorityField.isValid() && result;
 		return result;
 	}
 
@@ -141,5 +139,5 @@ public abstract class ServiceGroupWindow extends ZWindow {
 		return serviceGroupDTO;
 	}
 
-	public abstract void onSave();
+	public abstract void onSave(ServiceGroupDTO dto);
 }

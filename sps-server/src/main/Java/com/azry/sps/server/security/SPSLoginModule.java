@@ -1,6 +1,7 @@
 package com.azry.sps.server.security;
 
 import com.azry.sps.common.model.users.SystemUser;
+import com.azry.sps.common.model.users.UserGroup;
 import com.azry.sps.server.services.user.SystemUserManager;
 import com.azry.sps.server.services.user.SystemUserManagerBean;
 import com.azry.sps.server.utils.EJBUtils;
@@ -10,7 +11,6 @@ import org.jboss.security.auth.spi.UsernamePasswordLoginModule;
 
 import javax.security.auth.login.LoginException;
 import java.security.acl.Group;
-import java.util.Set;
 
 @Slf4j
 public class SPSLoginModule extends UsernamePasswordLoginModule {
@@ -40,17 +40,18 @@ public class SPSLoginModule extends UsernamePasswordLoginModule {
 		Group callerPrincipal = new SimpleGroup("CallerPrincipal");
 		if (user != null) {
 			try {
-				Set<String> permissions = getUserManager().getPermissions(getUsername());
-				if (permissions != null) {
-					for (String permission : permissions) {
-						group.addMember(super.createIdentity(permission));
+				if(!user.getGroups().isEmpty()) {
+					for (UserGroup userGroup : user.getGroups()) {
+						for (String permission : userGroup.getPermissions().split(",")) {
+							group.addMember(super.createIdentity(permission));
+						}
 					}
+					group.addMember(super.createIdentity("ANY_ROLE"));
+					SPSPrincipal principal = (SPSPrincipal) getIdentity();
+					principal.setName(getUsername());
+					principal.setSystemUser(user);
+					callerPrincipal.addMember(principal);
 				}
-				group.addMember(super.createIdentity("ANY_ROLE"));
-				SPSPrincipal principal = (SPSPrincipal) getIdentity();
-				principal.setName(getUsername());
-				principal.setSystemUser(user);
-				callerPrincipal.addMember(principal);
 			} catch (Exception ex) {
 				log.error("Failed to create principal", ex);
 				throw new LoginException("Failed to create principal");

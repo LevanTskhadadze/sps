@@ -1,9 +1,11 @@
 package com.azry.sps.console.shared.dto;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.util.Date;
 
 
-public class ConfigurableDTO {
+public class ConfigurableDTO implements IsSerializable {
 
 	private Date createTime;
 

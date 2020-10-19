@@ -2,7 +2,6 @@ package com.azry.sps.server.services.user;
 
 
 import com.azry.sps.common.model.users.SystemUser;
-import com.azry.sps.common.model.users.UserGroup;
 import com.azry.sps.server.security.SPSPrincipal;
 import com.azry.sps.server.utils.EncryptionUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +12,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Stateless
 @Slf4j
@@ -44,34 +39,12 @@ public class SystemUserManagerBean implements SystemUserManager {
 
 	private SystemUser findSystemUser(String username) {
 		try {
-			return em.createQuery("select u from SystemUser u where u.username = :username", SystemUser.class)
+			return em.createQuery("select u from SystemUser u join fetch u.groups g where u.username = :username", SystemUser.class)
 					.setParameter("username", username)
 					.getSingleResult();
 		} catch (NoResultException no) {
 			return null;
 		}
-	}
-
-	@Override
-	public Set<String> getPermissions(String username) {
-		Set<String> permissions = new HashSet<>();
-		try {
-			SystemUser systemUser = em.createQuery("select u from SystemUser u join fetch u.groups g " +
-																	"where u.username = :username", SystemUser.class)
-				.setParameter("username", username)
-				.getSingleResult();
-
-			for (UserGroup userGroup : systemUser.getGroups()) {
-				Arrays.stream(userGroup.getPermissions().split(","))
-					.map(p -> permissions.add(p))
-					.collect(Collectors.toSet());
-			}
-			return permissions;
-
-		} catch(NoResultException no) {
-			return null;
-		}
-
 	}
 
 	private boolean passwordsMatch(String inputPassword, SystemUser selectedUser) {

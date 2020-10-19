@@ -1,6 +1,7 @@
 package com.azry.sps.console.client.utils;
 
 import com.azry.sps.console.client.ConsoleEntryPoint;
+import com.azry.sps.console.client.error.ErrorHandlerInit;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.widget.core.client.Component;
 
@@ -39,7 +40,7 @@ public abstract class ServiceCallback<T> implements AsyncCallback<T> {
 	}
 
     public void onServiceFailure(Throwable th) {
-	    // TODO: 12/20/2018 handle service failure
+		ErrorHandlerInit.errorHandler.onError(th);
     }
 
 	@Override

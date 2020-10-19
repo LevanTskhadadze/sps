@@ -9,8 +9,6 @@ import java.util.List;
 @RemoteServiceRelativePath("servlet/ServiceGroup")
 public interface ServiceGroupService extends RemoteService {
 
-	List<ServiceGroupDTO> getServiceGroups();
-
 	List<ServiceGroupDTO> getFilteredServiceGroups(String name);
 
 	ServiceGroupDTO updateServiceGroup(ServiceGroupDTO dto);

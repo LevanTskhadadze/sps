@@ -13,19 +13,19 @@ import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.ActionMode;
+import com.azry.sps.console.client.utils.FormatDate;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
@@ -33,8 +33,6 @@ import com.sencha.gxt.data.shared.loader.ListLoader;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
 import com.sencha.gxt.widget.core.client.Composite;
-import com.sencha.gxt.widget.core.client.TabItemConfig;
-import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -42,7 +40,6 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ServiceGroupPage extends Composite {
@@ -62,14 +59,14 @@ public class ServiceGroupPage extends Composite {
 	ZButton addButton;
 
 
-
-
 	private ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {
 		@Override
 		public String getKey(ServiceGroupDTO groupDTO) {
 			return String.valueOf(groupDTO.getId());
 		}
 	});
+
+	Store.StoreSortInfo storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> loader;
 
@@ -127,8 +124,8 @@ public class ServiceGroupPage extends Composite {
 				public void onSelect(SelectEvent selectEvent) {
 					new ServiceGroupWindow(null, ActionMode.ADD){
 						@Override
-						public void onSave() {
-							loader.load();
+						public void onSave(ServiceGroupDTO dto) {
+							gridStore.add(dto);
 						}
 					}.showInCenter();
 				}
@@ -166,6 +163,23 @@ public class ServiceGroupPage extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ServiceGroupDTO, ListLoadResult<ServiceGroupDTO>>(gridStore));
 
+		storeSortInfo = new Store.StoreSortInfo(new ValueProvider<ServiceGroupDTO, Long>() {
+			@Override
+			public Long getValue(ServiceGroupDTO groupDTO) {
+				return groupDTO.getPriority();
+			}
+
+			@Override
+			public void setValue(ServiceGroupDTO o, Long o2) { }
+
+			@Override
+			public String getPath() {
+				return null;
+			}
+		}, SortDir.ASC);
+
+		gridStore.addSortInfo(storeSortInfo);
+
 		grid = new ZGrid(gridStore, getColumns());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
@@ -174,7 +188,6 @@ public class ServiceGroupPage extends Composite {
 		grid.getView().setStripeRows(true);
 		grid.setColumnReordering(false);
 		grid.setColumnResize(false);
-		grid.setBorders(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
 		grid.addAttachHandler(new AttachEvent.Handler() {
@@ -185,7 +198,6 @@ public class ServiceGroupPage extends Composite {
 				}
 			}
 		});
-		grid.setBorders(true);
 	}
 
 
@@ -233,7 +245,7 @@ public class ServiceGroupPage extends Composite {
 			.valueProvider(new ZStringProvider<ServiceGroupDTO>() {
 				@Override
 				public String getProperty(ServiceGroupDTO groupDTO) {
-					return String.valueOf(groupDTO.getCreateTime());
+					return FormatDate.formatDateTime(groupDTO.getCreateTime());
 				}
 			})
 			.build());
@@ -244,14 +256,14 @@ public class ServiceGroupPage extends Composite {
 			.valueProvider(new ZStringProvider<ServiceGroupDTO>() {
 				@Override
 				public String getProperty(ServiceGroupDTO groupDTO) {
-					return String.valueOf(groupDTO.getLastUpdateTime());
+					return FormatDate.formatDateTime(groupDTO.getLastUpdateTime());
 				}
 			})
 			.build());
 
 //		if (canEdit()) {
 			columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
-				.width(40)
+				.width(32)
 				.fixed()
 				.cell(new ZIconButtonCell.Builder<ServiceGroupDTO, String>()
 					.gridStore(gridStore)
@@ -259,11 +271,12 @@ public class ServiceGroupPage extends Composite {
 					.icon(FAIconsProvider.getIcons().pencil())
 					.clickHandler(new GridClickHandler<ServiceGroupDTO>() {
 						@Override
-						public void onClick(Cell.Context context, ServiceGroupDTO dto) {
+						public void onClick(Cell.Context context, final ServiceGroupDTO dto) {
 							new ServiceGroupWindow(dto, ActionMode.EDIT) {
 								@Override
-								public void onSave() {
-									loader.load();
+								public void onSave(ServiceGroupDTO dto) {
+									gridStore.update(dto);
+									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}
@@ -274,7 +287,7 @@ public class ServiceGroupPage extends Composite {
 //		}
 
 		columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
-			.width(40)
+			.width(32)
 			.fixed()
 			.cell(new ZIconButtonCell.Builder<ServiceGroupDTO, String>()
 				.gridStore(gridStore)
@@ -289,7 +302,7 @@ public class ServiceGroupPage extends Composite {
 								ServicesFactory.getServiceGroupService().deleteServiceGroup(dto.getId(), new ServiceCallback<Void>() {
 									@Override
 									public void onServiceSuccess(Void result) {
-										loader.load();
+										gridStore.remove(gridStore.indexOf(dto));
 									}
 								});
 							}

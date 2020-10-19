@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface ServiceGroupServiceAsync {
 
-    void getServiceGroups(AsyncCallback<List<ServiceGroupDTO>> async);
-
     void getFilteredServiceGroups(String name, AsyncCallback<List<ServiceGroupDTO>> async);
 
     void updateServiceGroup(ServiceGroupDTO dto, AsyncCallback<ServiceGroupDTO> async);
