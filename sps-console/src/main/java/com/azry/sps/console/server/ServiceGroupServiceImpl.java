@@ -1,6 +1,6 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.model.service.ServiceGroup;
+import com.azry.sps.common.model.groups.ServiceGroup;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.server.services.servicegroup.ServiceGroupManager;
@@ -17,19 +17,14 @@ public class ServiceGroupServiceImpl extends RemoteServiceServlet implements Ser
 	private ServiceGroupManager serviceGroupManager;
 
 	@Override
-	public List<ServiceGroupDTO> getServiceGroups() {
-		return ServiceGroupDTO.toDTOs(serviceGroupManager.getServiceGroups());
-	}
-
-	@Override
 	public List<ServiceGroupDTO> getFilteredServiceGroups(String name) {
 		return ServiceGroupDTO.toDTOs(serviceGroupManager.getFilteredServiceGroups(name));
 	}
 
 	@Override
 	public ServiceGroupDTO updateServiceGroup(ServiceGroupDTO dto) {
-		ServiceGroup serviceGroup = serviceGroupManager.updateServiceGroup(dto.fromDTO());
-		return ServiceGroupDTO.toDTO(serviceGroup);
+			ServiceGroup serviceGroup = serviceGroupManager.updateServiceGroup(dto.fromDTO());
+			return ServiceGroupDTO.toDTO(serviceGroup);
 	}
 
 	@Override

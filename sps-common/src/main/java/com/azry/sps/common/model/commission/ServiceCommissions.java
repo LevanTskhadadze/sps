@@ -1,4 +1,4 @@
-package com.azry.sps.common.model.client;
+package com.azry.sps.common.model.commission;
 
 import com.azry.sps.common.Configurable;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
-public class ClientCommissions extends Configurable {
+public class ServiceCommissions extends Configurable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +25,7 @@ public class ClientCommissions extends Configurable {
 	@Column(length = 100)
 	private String servicesIds;
 
-	private boolean allChannels;
-
-	@Column(length = 500)
-	private String channelsIds;
-
-	@Column(length = 50)
+	@Column(length = 10)
 	@Enumerated(EnumType.STRING)
 	private CommissionRateType rateType;
 
@@ -41,5 +36,5 @@ public class ClientCommissions extends Configurable {
 	private BigDecimal maxCommission;
 
 	@Column(precision = 10, scale = 2)
-	private BigDecimal Commission;
+	private BigDecimal commission;
 }

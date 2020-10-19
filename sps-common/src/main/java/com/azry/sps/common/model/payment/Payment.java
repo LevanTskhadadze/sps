@@ -41,7 +41,7 @@ public class Payment {
 	@Column(precision = 10, scale = 2)
 	private BigDecimal svcCommission;
 
-	@Column(length = 50)
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 

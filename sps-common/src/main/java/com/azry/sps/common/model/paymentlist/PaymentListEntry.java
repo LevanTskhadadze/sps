@@ -1,6 +1,5 @@
-package com.azry.sps.common.model.service;
+package com.azry.sps.common.model.paymentlist;
 
-import com.azry.sps.common.Configurable;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -8,17 +7,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Data
-public class ServiceGroup extends Configurable {
+public class PaymentListEntry {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(length = 50)
-	private String name;
+	@ManyToOne
+	private PaymentList paymentList;
 
-	private long priority;
+	private long serviceId;
+
+	@Column(length = 100)
+	private String abonentCode;
 }

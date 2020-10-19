@@ -1,8 +1,9 @@
-package com.azry.sps.common.model.payment;
+package com.azry.sps.common.model.paymentlist;
 
 import com.azry.sps.common.model.client.Client;
 import lombok.Data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class PaymentList {
 
 	private Client client;
 
-	@OneToMany(mappedBy = "paymentList")
+	@OneToMany(mappedBy = "paymentList", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentListEntry> entries;
 
 }

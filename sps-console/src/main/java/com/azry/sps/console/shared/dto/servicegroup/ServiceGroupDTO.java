@@ -1,6 +1,6 @@
 package com.azry.sps.console.shared.dto.servicegroup;
 
-import com.azry.sps.common.model.service.ServiceGroup;
+import com.azry.sps.common.model.groups.ServiceGroup;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -50,6 +50,7 @@ public class ServiceGroupDTO extends ConfigurableDTO implements IsSerializable {
 			dto.setPriority(serviceGroup.getPriority());
 			dto.setCreateTime(serviceGroup.getCreateTime());
 			dto.setLastUpdateTime(serviceGroup.getLastUpdateTime());
+			dto.setVersion(serviceGroup.getVersion());
 
 			return dto;
 		}
@@ -79,6 +80,7 @@ public class ServiceGroupDTO extends ConfigurableDTO implements IsSerializable {
 		serviceGroup.setPriority(this.getPriority());
 		serviceGroup.setCreateTime(this.getCreateTime());
 		serviceGroup.setLastUpdateTime(this.getLastUpdateTime());
+		serviceGroup.setVersion(this.getVersion());
 
 		return serviceGroup;
 

@@ -1,11 +1,10 @@
-package com.azry.sps.console.server.security;
+package com.azry.sps.console.server;
 
 import com.azry.sps.console.server.converter.SystemParameterDtoConverter;
-import services.SystemParameterManager;
-import services.SystemParameterManagerBean;
 import com.azry.sps.console.shared.systemparameters.SystemParameterDto;
 import com.azry.sps.console.shared.systemparameters.TabService;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import services.SystemParameterManager;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
