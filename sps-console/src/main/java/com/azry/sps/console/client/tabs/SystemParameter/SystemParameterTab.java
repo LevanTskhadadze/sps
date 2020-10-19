@@ -158,6 +158,7 @@ public class SystemParameterTab {
 						config.setClosable(true);
 
 						centerPanel.update(content, config);
+						centerPanel.setActiveWidget(content);
 					}
 				});
 

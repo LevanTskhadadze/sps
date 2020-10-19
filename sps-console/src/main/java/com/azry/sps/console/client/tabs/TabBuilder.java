@@ -41,6 +41,7 @@ public class TabBuilder {
 				config.setClosable(true);
 
 				centerPanel.update(serviceGroupPage, config);
+				centerPanel.setActiveWidget(serviceGroupPage);
 			}
 
 		});
