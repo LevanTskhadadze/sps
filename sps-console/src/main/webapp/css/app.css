@@ -1,6 +1,8 @@
 body {
     padding: 0;
     margin: 0;
+
+
     font-family: tahoma, arial, helvetica, sans-serif;
 }
 
@@ -11,6 +13,7 @@ body {
     /*width: 100%;*/
     background: #4B9CD7;
     /*height: 50px;*/
+
 }
 
 
@@ -25,7 +28,6 @@ body {
     overflow: hidden;
 }
 
-
 .FText {
     padding-right: 6px;
     font-weight: bold;
@@ -34,6 +36,15 @@ body {
     border-bottom: 5px solid black;
     text-align:right;
 }
+
+.editForm td{
+    vertical-align: top;
+}
+.editForm div{
+    font-size: 13px;
+}
+
+
 
 .menuButton div{
     height: 42px;
