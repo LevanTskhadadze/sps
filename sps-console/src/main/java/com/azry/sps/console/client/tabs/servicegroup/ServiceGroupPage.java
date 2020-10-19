@@ -81,7 +81,7 @@ public class ServiceGroupPage extends Composite {
 
 	private void buildDisplay() {
 		verticalLayoutContainer.add(toolBar);
-		verticalLayoutContainer.add(grid);
+		verticalLayoutContainer.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
 	}
 
 	private void initToolbar() {

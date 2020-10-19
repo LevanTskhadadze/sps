@@ -1,4 +1,4 @@
-package com.azry.sps.console.shared.systemparameters;
+package com.azry.sps.console.shared.dto.systemparameter;
 
 
 public enum SystemParameterDtoType {

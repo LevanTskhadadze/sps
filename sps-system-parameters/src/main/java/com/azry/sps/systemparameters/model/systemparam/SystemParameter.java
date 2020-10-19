@@ -27,4 +27,8 @@ public class SystemParameter {
 	@Column(length = 50)
 	@Enumerated(EnumType.STRING)
 	private SystemParameterType type;
+
+	@Column(length = 300)
+	private String description;
+
 }

@@ -5,6 +5,9 @@ import com.azry.gxt.client.zcomp.bootstrap.GxtTheme;
 import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
+
+import com.azry.sps.console.client.tabs.TabBuilder;
+import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
@@ -13,8 +16,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+
+
 import com.google.gwt.user.client.ui.RootPanel;
 import com.sencha.gxt.cell.core.client.ButtonCell;
 import com.sencha.gxt.widget.core.client.TabPanel;
@@ -45,19 +51,20 @@ public class ConsoleEntryPoint implements EntryPoint {
 	}
 
 
-
-
-
-	private TextButton getMenu(final TabPanel centerPanel){
+	private TextButton getMenu(final TabPanel centerPanel) {
 		final TextButton button = new TextButton();
-
-
 
 		final Menu menu = new Menu();
 		button.setMenu(menu);
-		SystemParameterTab systemParameterTab = GWT.create(SystemParameterTab.class);
-		HTML menu1 = systemParameterTab.getMenuItem(centerPanel);
-		menu.add(menu1);
+
+		//TODO unify table creation process and move getMenuItem to TabBuilder class.
+		SystemParameterTab systemParameterTab = new SystemParameterTab();
+		HTML systemParameterMenuItem = systemParameterTab.getMenuItem(centerPanel);
+		menu.add(systemParameterMenuItem);
+
+		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel);
+		menu.add(serviceGroupMenuItem);
+
 
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());
