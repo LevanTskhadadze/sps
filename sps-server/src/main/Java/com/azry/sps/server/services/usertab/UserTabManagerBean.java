@@ -80,7 +80,7 @@ public class UserTabManagerBean implements UserTabManager{
 		for(SystemUser user : res){
 			user.initialize();
 		}
-		return new ListResult<SystemUser>(res, (int)((long)count.getSingleResult()));
+		return new ListResult<>(res, (int)((long)count.getSingleResult()));
 	}
 
 	@Override

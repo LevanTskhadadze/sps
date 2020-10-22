@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 public class UsersTab extends Composite {
-	private static final int DEFAULT_PAGE_SIZE = 50;
 
 	private final VerticalLayoutContainer content;
 
@@ -49,8 +48,6 @@ public class UsersTab extends Composite {
 	private ZSimpleComboBox<UserGroupDto> groupComboBox;
 
 	private ZSimpleComboBox<String> activeComboBox;
-
-	private ZPagingToolBar pager;
 
 	private PagingLoader<PagingLoadConfig, PagingLoadResult<SystemUserDTO>> pagingLoader;
 
@@ -85,7 +82,7 @@ public class UsersTab extends Composite {
 				if(groupComboBox.getValue() != null) {
 					params.put("groups", groupComboBox.getValue().getName());
 				}
-				//params.put("active", usernameField.getValue());
+
 				ServicesFactory.getUserTabService().getUsers(loadConfig.getOffset(), loadConfig.getLimit(), params, new ServiceCallback<PagingLoadResult<SystemUserDTO>>() {
 					@Override
 					public void onServiceSuccess(PagingLoadResult<SystemUserDTO> result) {
@@ -96,9 +93,18 @@ public class UsersTab extends Composite {
 			}
 		};
 		pagingLoader = new PagingLoader<>(proxy);
+
 		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, SystemUserDTO, PagingLoadResult<SystemUserDTO>>(UsersTable.getListStore()));
 		grid.setLoader(pagingLoader);
-		pager = new ZPagingToolBar.Builder<>(pagingLoader).build();
+		List<Integer> pagingPossibleValues = new ArrayList<>();
+		pagingPossibleValues.add(50);
+		pagingPossibleValues.add(100);
+		pagingPossibleValues.add(200);
+		pagingPossibleValues.add(5);
+		ZPagingToolBar pager = new ZPagingToolBar.Builder<>(pagingLoader)
+			.possibleValue(pagingPossibleValues)
+			.build();
+		pager.getCombo();
 		content.add(pager);
 		pagingLoader.load();
 	}
