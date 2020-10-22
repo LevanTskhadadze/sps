@@ -22,8 +22,6 @@ public abstract class ServiceGroupWindow extends ZWindow {
 
 	private ServiceGroupDTO serviceGroupDTO;
 
-	private final ActionMode actionMode;
-
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private ZTextField nameField;
@@ -37,7 +35,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 	public ServiceGroupWindow(ServiceGroupDTO serviceGroupDTO, ActionMode actionMode) {
 		super(Mes.get("ofServiceGroup") + " " + Mes.get("ActionMode_" + actionMode), 500, -1, false);
 		this.serviceGroupDTO = serviceGroupDTO;
-		this.actionMode = actionMode;
+
 		initFields();
 		if (serviceGroupDTO != null) {
 			setFieldValues();

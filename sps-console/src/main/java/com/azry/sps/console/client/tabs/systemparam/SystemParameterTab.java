@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.tabs.SystemParameter;
+package com.azry.sps.console.client.tabs.systemparam;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
@@ -6,10 +6,10 @@ import com.azry.gxt.client.zcomp.ZGrid;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.tabs.SystemParameter.table.SystemParametersModifyWindow;
+import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
-import com.azry.sps.console.client.tabs.SystemParameter.table.SystemParametersTable;
+import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 

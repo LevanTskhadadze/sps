@@ -1,0 +1,32 @@
+package com.azry.sps.console.shared.dto.usergroup;
+
+public enum PermissionsDTO {
+	SYSTEM_PARAMETERS_VIEW("systemParameters"),
+	SYSTEM_PARAMETERS_MANAGE("systemParameters"),
+	USERS_VIEW("users"),
+	USERS_MANAGE("users"),
+	USER_GROUPS_VIEW("userGroups"),
+	USER_GROUPS_MANAGE("userGroups"),
+	CHANNELS_VIEW("channels"),
+	CHANNELS_MANAGE("channels"),
+	SERVICE_GROUPS_VIEW("serviceGroups"),
+	SERVICE_GROUPS_MANAGE("serviceGroups"),
+	SERVICES_VIEW("services"),
+	SERVICES_MANAGE("services"),
+	CLIENT_COMMISSIONS_VIEW("commissions"),
+	CLIENT_COMMISSIONS_MANAGE("commissions"),
+	SERVICE_COMMISSIONS_VIEW("commissions"),
+	SERVICE_COMMISSIONS_MANAGE("commissions"),
+	PAYMENTS_VIEW("payments"),
+	PAYMENTS_PERFORM("payments");
+
+	private final String permissionType;
+
+	PermissionsDTO(String permission) {
+		this.permissionType = permission;
+	}
+
+	public String getPermissionType() {
+		return permissionType;
+	}
+}

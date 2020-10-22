@@ -3,7 +3,7 @@ package com.azry.sps.console.server;
 import com.azry.sps.console.server.helper.SystemParameterDtoHelper;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
-import services.SystemParameterManager;
+import com.azry.sps.server.services.systemparam.SystemParameterManager;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

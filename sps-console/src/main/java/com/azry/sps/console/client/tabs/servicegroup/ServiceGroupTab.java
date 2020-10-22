@@ -6,6 +6,7 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZColumnConfig;
 import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZGrid;
+import com.azry.gxt.client.zcomp.ZGridView;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.ZTextField;
@@ -42,7 +43,7 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceGroupPage extends Composite {
+public class ServiceGroupTab extends Composite {
 
 	VerticalLayoutContainer verticalLayoutContainer;
 
@@ -59,19 +60,19 @@ public class ServiceGroupPage extends Composite {
 	ZButton addButton;
 
 
-	private ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {
+	private final ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {
 		@Override
 		public String getKey(ServiceGroupDTO groupDTO) {
 			return String.valueOf(groupDTO.getId());
 		}
 	});
 
-	Store.StoreSortInfo storeSortInfo;
+	Store.StoreSortInfo<ServiceGroupDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> loader;
 
 
-	public ServiceGroupPage() {
+	public ServiceGroupTab() {
 		verticalLayoutContainer = new VerticalLayoutContainer();
 		initToolbar();
 		initGrid();
@@ -98,7 +99,7 @@ public class ServiceGroupPage extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					grid.getLoader().load();
+					loader.load();
 				}
 			})
 			.build();
@@ -163,7 +164,7 @@ public class ServiceGroupPage extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ServiceGroupDTO, ListLoadResult<ServiceGroupDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo(new ValueProvider<ServiceGroupDTO, Long>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceGroupDTO, Long>() {
 			@Override
 			public Long getValue(ServiceGroupDTO groupDTO) {
 				return groupDTO.getPriority();
@@ -180,14 +181,12 @@ public class ServiceGroupPage extends Composite {
 
 		gridStore.addSortInfo(storeSortInfo);
 
-		grid = new ZGrid(gridStore, getColumns());
+		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ServiceGroupDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
-		grid.getView().setColumnLines(true);
 		grid.getView().setStripeRows(true);
-		grid.setColumnReordering(false);
-		grid.setColumnResize(false);
+		grid.getView().getHeader().setDisableSortIcon(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
 		grid.addAttachHandler(new AttachEvent.Handler() {
@@ -317,5 +316,6 @@ public class ServiceGroupPage extends Composite {
 
 	private void clearFilter() {
 		name.setValue(null);
+		loader.load();
 	}
 }

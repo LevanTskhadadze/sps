@@ -1,13 +1,12 @@
-package services;
+package com.azry.sps.server.services.systemparam;
 
 import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameterType;
 
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 
 
 
-		Query query = em.createQuery(str.toString(), SystemParameter.class);
+		TypedQuery<SystemParameter> query = em.createQuery(str.toString(), SystemParameter.class);
 
 		for (Map.Entry<String, Object> entry : values.entrySet()) {
 			query.setParameter(entry.getKey(), "%" + entry.getValue() + "%");

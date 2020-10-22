@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.tabs.SystemParameter.table;
+package com.azry.sps.console.client.tabs.systemparam.table;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZColumnConfig;

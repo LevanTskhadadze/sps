@@ -1,23 +1,17 @@
 package com.azry.sps.console.client.tabs;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
-import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
-import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
+import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
 
-import java.util.List;
-
 public class TabBuilder {
 
-	private static ServiceGroupPage serviceGroupPage;
+	private static ServiceGroupTab serviceGroupPage;
 
 	public static HTML getServiceGroupMenuItem (final TabPanel centerPanel) {
 
@@ -33,7 +27,7 @@ public class TabBuilder {
 					centerPanel.setActiveWidget(serviceGroupPage);
 					return;
 				}
-				serviceGroupPage = new ServiceGroupPage();
+				serviceGroupPage = new ServiceGroupTab();
 				centerPanel.add(serviceGroupPage, Mes.get("serviceGroups"));
 
 				TabItemConfig config = centerPanel.getConfig(serviceGroupPage);

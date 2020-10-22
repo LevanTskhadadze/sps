@@ -5,7 +5,7 @@ import com.azry.sps.common.model.groups.ServiceGroup;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class ServiceGroupManagerBean implements ServiceGroupManager {
 			params.put("name", "%" + name.toLowerCase() + "%");
 		}
 
-		Query query = em.createQuery(sql, ServiceGroup.class);
+		TypedQuery<ServiceGroup> query = em.createQuery(sql, ServiceGroup.class);
 
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
