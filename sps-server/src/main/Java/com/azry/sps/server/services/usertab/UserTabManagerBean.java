@@ -55,7 +55,9 @@ public class UserTabManagerBean implements UserTabManager{
 			str.append(" AND su.active = :active ");
 		}
 
-		Query query = em.createQuery(queryPrefix + str.toString(), SystemUser.class);
+
+
+		Query query = em.createQuery(queryPrefix + str.toString() + " ORDER BY su.lastUpdateTime DESC", SystemUser.class);
 		Query count = em.createQuery(countPrefix + str.toString());
 		query.setFirstResult(startingIndex);
 		query.setMaxResults(numberToShow);

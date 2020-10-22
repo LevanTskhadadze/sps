@@ -19,6 +19,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	@Override
 	public SystemUserDTO loadAuthorisedUser() {
 		SystemUser systemUser = systemUserManager.loadAuthorisedUser();
-		return SystemUserDTO.toDTO(systemUser);
+		return SystemUserDTO.toDTO(systemUser, true);
 	}
 }

@@ -23,7 +23,7 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 	@Override
 	public PagingLoadResult<SystemUserDTO> getUsers(int startingIndex, int numberToDisplay, Map<String, String> params) {
 		ListResult<SystemUser> result = userTabManager.getUsers(startingIndex, numberToDisplay, params);
-		List<SystemUserDTO> res = SystemUserDTO.toDTOs(result.getResultList());
+		List<SystemUserDTO> res = SystemUserDTO.toDTOs(result.getResultList(), true);
 		return new PagingLoadResultBean<>(
 			res,
 			result.getResultCount(),
@@ -38,13 +38,13 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 
 	@Override
 	public SystemUserDTO editParameter(SystemUserDTO dto){
-		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)));
+		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
 	}
 
 	@Override
 	public SystemUserDTO addParameter(SystemUserDTO dto) {
 
-		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)));
+		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
 	}
 
 	@Override

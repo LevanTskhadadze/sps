@@ -92,7 +92,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 	}
 
 	@GwtIncompatible
-	public static SystemUserDTO toDTO(SystemUser systemUser) {
+	public static SystemUserDTO toDTO(SystemUser systemUser, boolean safe) {
 		if (systemUser == null) {
 			return null;
 		}
@@ -108,7 +108,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 			ex.printStackTrace();
 		}
 		dto.setName(systemUser.getName());
-		dto.setPassword(systemUser.getPassword());
+		if(!safe)dto.setPassword(systemUser.getPassword());
 		dto.setVersion(systemUser.getVersion());
 		dto.setCreateTime(systemUser.getCreateTime());
 		dto.setLastUpdateTime(systemUser.getLastUpdateTime());
@@ -140,7 +140,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 	}
 
 	@GwtIncompatible
-	public static List<SystemUserDTO> toDTOs(List<SystemUser> systemUsers) {
+	public static List<SystemUserDTO> toDTOs(List<SystemUser> systemUsers, boolean safe) {
 		if (systemUsers == null) {
 			return null;
 		}
@@ -148,7 +148,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 		List<SystemUserDTO> dtos = new ArrayList<>();
 
 		for(SystemUser user : systemUsers){
-			dtos.add(toDTO(user));
+			dtos.add(toDTO(user, safe));
 		}
 
 		return dtos;
