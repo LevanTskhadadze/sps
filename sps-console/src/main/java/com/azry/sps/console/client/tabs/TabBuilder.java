@@ -2,19 +2,18 @@ package com.azry.sps.console.client.tabs;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
-import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
-import com.azry.sps.console.client.tabs.users.UsersTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
+import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
+import com.azry.sps.console.client.tabs.usergroup.UserGroupTab;
+import com.azry.sps.console.client.tabs.users.UsersTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
-import com.sencha.gxt.widget.core.client.button.TextButton;
 
 import java.util.List;
 
@@ -111,9 +110,9 @@ public class TabBuilder {
 						return;
 					}
 				}
-				ServicesFactory.getUserGroupService().getAllUserGroups(new ServiceCallback<List<UserGroupDto>>() {
+				ServicesFactory.getUserGroupService().getUserGroups(new ServiceCallback<List<UserGroupDTO>>() {
 					@Override
-					public void onServiceSuccess(List<UserGroupDto> result) {
+					public void onServiceSuccess(List<UserGroupDTO> result) {
 						usersTab = new UsersTab(result);
 						centerPanel.add(usersTab, Mes.get("users"));
 
@@ -128,6 +127,41 @@ public class TabBuilder {
 
 
 
+			}
+		});
+		return menuItem;
+	}
+
+	private static UserGroupTab userGroupTab;
+
+	public static HTML getUserGroupMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-users'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("userGroupTab"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (userGroupTab != null) {
+					if(userGroupTab.getTitle().equals("closed")) {
+						userGroupTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(userGroupTab);
+						return;
+					}
+				}
+
+						userGroupTab = new UserGroupTab();
+						centerPanel.add(userGroupTab, Mes.get("users"));
+
+						TabItemConfig config = centerPanel.getConfig(userGroupTab);
+						config.setIcon(FAIconsProvider.getIcons().wrench());
+						config.setClosable(true);
+
+						centerPanel.update(userGroupTab, config);
+						centerPanel.setActiveWidget(userGroupTab);
 			}
 		});
 		return menuItem;

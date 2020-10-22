@@ -5,18 +5,17 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.azry.sps.console.client.utils.Mes;
 import com.sencha.gxt.widget.core.client.form.PasswordField;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class UsersModifyWindow extends ZWindow {
 			this.dto.setName("");
 			this.dto.setEmail("");
 			this.dto.setActive(false);
-			this.dto.setGroups(new ArrayList<UserGroupDto>());
+			this.dto.setGroups(new ArrayList<UserGroupDTO>());
 			this.dto.setId(0);
 		}
 
@@ -112,10 +111,10 @@ public class UsersModifyWindow extends ZWindow {
 	}
 
 	private void constructUserGroupTab(){
-		final List<UserGroupDto> entries = new ArrayList<>();
-		ServicesFactory.getUserGroupService().getAllUserGroups(new ServiceCallback<List<UserGroupDto>>() {
+		final List<UserGroupDTO> entries = new ArrayList<>();
+		ServicesFactory.getUserGroupService().getUserGroups( new ServiceCallback<List<UserGroupDTO>>() {
 			@Override
-			public void onServiceSuccess(List<UserGroupDto> result) {
+			public void onServiceSuccess(List<UserGroupDTO> result) {
 				entries.addAll(result);
 				userGroupTabContainer.add(userGroupTab = new UserGroupTab(entries, dto.getGroups()), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 

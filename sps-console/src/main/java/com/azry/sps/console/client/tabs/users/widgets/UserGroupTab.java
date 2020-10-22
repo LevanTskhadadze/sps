@@ -2,7 +2,7 @@ package com.azry.sps.console.client.tabs.users.widgets;
 
 import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -12,8 +12,6 @@ import com.google.gwt.user.client.ui.HTML;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UserGroupTab extends FlexTable {
 
@@ -21,9 +19,9 @@ public class UserGroupTab extends FlexTable {
 
 	private final List<CheckBox> checkBoxes;
 
-	private final List<UserGroupDto> groups;
+	private final List<UserGroupDTO> groups;
 
-	public UserGroupTab(List<UserGroupDto> entries, List<UserGroupDto> initialGroups){
+	public UserGroupTab(List<UserGroupDTO> entries, List<UserGroupDTO> initialGroups){
 		super();
 		groups = entries;
 		checkBoxes = new ArrayList<>();
@@ -53,11 +51,11 @@ public class UserGroupTab extends FlexTable {
 		getColumnFormatter().setWidth(1, "100%");
 	}
 
-	private void addEntries(List<UserGroupDto> initialGroups) {
+	private void addEntries(List<UserGroupDTO> initialGroups) {
 		int i = 1;
 
 
-		for(UserGroupDto dto : groups){
+		for(UserGroupDTO dto : groups){
 			CheckBox curr = new CheckBox();
 			checkBoxes.add(curr);
 
@@ -79,8 +77,8 @@ public class UserGroupTab extends FlexTable {
 		return false;
 	}
 
-	public List<UserGroupDto> getAllSelectedGroups(){
-		List<UserGroupDto> res = new ArrayList<>();
+	public List<UserGroupDTO> getAllSelectedGroups(){
+		List<UserGroupDTO> res = new ArrayList<>();
 		for (int i = 0; i < checkBoxes.size(); i ++){
 			if(checkBoxes.get(i).getValue()) {
 				res.add(groups.get(i));

@@ -99,9 +99,21 @@ public class UserGroupDTO extends ConfigurableDTO implements IsSerializable {
 		return userGroup;
 	}
 
+	@GwtIncompatible
+	public static List<UserGroup> fromDTOs(List<UserGroupDTO> dtos) {
+		List<UserGroup> userGroups = new ArrayList<>();
+		for (UserGroupDTO dto : dtos) {
+			userGroups.add(dto.fromDTO());
+		}
+		return userGroups;
+	}
+
 	@Override
 	public String toString() {
-		List<String> permList = Arrays.asList(permissions.split(","));
-		return StringUtil.joinMes(permList, ", ");
+		if (!permissions.isEmpty()) {
+			List<String> permList = Arrays.asList(permissions.split(","));
+			return StringUtil.joinMes(permList, ", ");
+		}
+		return null;
 	}
 }

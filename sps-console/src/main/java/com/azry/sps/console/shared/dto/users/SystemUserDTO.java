@@ -4,17 +4,10 @@ package com.azry.sps.console.shared.dto.users;
 import com.azry.sps.common.model.users.SystemUser;
 import com.azry.sps.common.model.users.UserGroup;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.server.utils.EncryptionUtils;
 import com.google.gwt.core.shared.GwtIncompatible;
-import com.google.gwt.user.client.rpc.IsSerializable;
-import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +24,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 
 	private String email;
 
-	private List<UserGroupDto> groups;
+	private List<UserGroupDTO> groups;
 
 	private boolean active;
 
@@ -75,11 +68,11 @@ public class SystemUserDTO extends ConfigurableDTO {
 		this.email = email;
 	}
 
-	public List<UserGroupDto> getGroups() {
+	public List<UserGroupDTO> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<UserGroupDto> groups) {
+	public void setGroups(List<UserGroupDTO> groups) {
 		this.groups = groups;
 	}
 
@@ -102,9 +95,9 @@ public class SystemUserDTO extends ConfigurableDTO {
 		dto.setActive(systemUser.isActive());
 		dto.setEmail(systemUser.getEmail());
 		try {
-			dto.setGroups(UserGroupDto.toDtos(systemUser.getGroups()));
+			dto.setGroups(UserGroupDTO.toDTOs(systemUser.getGroups()));
 		} catch (Exception ex){
-			dto.setGroups(new ArrayList<UserGroupDto>());
+			dto.setGroups(new ArrayList<UserGroupDTO>());
 			ex.printStackTrace();
 		}
 		dto.setName(systemUser.getName());
@@ -126,7 +119,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 		systemUser.setActive(dto.isActive());
 		systemUser.setEmail(dto.getEmail());
 		try {
-			systemUser.setGroups(UserGroupDto.toEntities(dto.getGroups()));
+			systemUser.setGroups(UserGroupDTO.fromDTOs(dto.getGroups()));
 		} catch (Exception ex){
 			systemUser.setGroups(new ArrayList<UserGroup>());
 			ex.printStackTrace();

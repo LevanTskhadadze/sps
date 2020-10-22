@@ -6,7 +6,6 @@ import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.error.ErrorHandlerInit;
 import com.azry.sps.console.client.tabs.TabBuilder;
-import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
@@ -69,6 +68,9 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel);
 		menu.add(usersMenuItem);
+
+		HTML userGroupMenuItem = TabBuilder.getUserGroupMenuItem(centerPanel);
+		menu.add(userGroupMenuItem);
 
 
 

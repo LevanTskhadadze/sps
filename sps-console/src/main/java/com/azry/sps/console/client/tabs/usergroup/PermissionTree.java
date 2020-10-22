@@ -96,30 +96,30 @@ public class PermissionTree {
 	}
 
 	public static String getCheckedPermissions(Tree<PermissionTreeModel, String> tree) {
+			List<String> permissions = new ArrayList<>();
 
-		List<String> permissions = new ArrayList<>();
-
-		for (PermissionTreeModel model : tree.getCheckedSelection()) {
-			if (model.getPermissionsDTO() != null) {
-				permissions.add(model.getPermissionsDTO().name());
+			for (PermissionTreeModel model : tree.getCheckedSelection()) {
+				if (model.getPermissionsDTO() != null) {
+					permissions.add(model.getPermissionsDTO().name());
+				}
 			}
-		}
-		return StringUtil.join(permissions, ",");
+			return StringUtil.join(permissions, ",");
 	}
 
 	public static void setCheckedPermissions(Tree<PermissionTreeModel, String> tree, String permissions) {
 		List<PermissionsDTO> permList = new ArrayList<>();
-		if (permissions != null) {
+		if (!permissions.isEmpty() ) {
 			for (String permission: permissions.split(",")) {
 				permList.add(PermissionsDTO.valueOf(permission));
 			}
-		}
 
-		for (PermissionsDTO permission : permList) {
-			PermissionTreeModel model = tree.getData(permission.name());
-			Tree.TreeNode<PermissionTreeModel> node = tree.findNode(model);
-			if (node != null) {
-				tree.setChecked(model, Tree.CheckState.CHECKED);
+
+			for (PermissionsDTO permission : permList) {
+				PermissionTreeModel model = tree.getData(permission.name());
+				Tree.TreeNode<PermissionTreeModel> node = tree.findNode(model);
+				if (node != null) {
+					tree.setChecked(model, Tree.CheckState.CHECKED);
+				}
 			}
 		}
 	}

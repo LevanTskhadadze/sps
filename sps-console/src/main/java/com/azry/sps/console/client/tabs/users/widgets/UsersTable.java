@@ -11,7 +11,7 @@ import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
@@ -19,7 +19,6 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class UsersTable {
 						StringBuilder prop = new StringBuilder();
 						String comma = "";
 						
-						for(UserGroupDto dto : systemUserDTO.getGroups()) {
+						for(UserGroupDTO dto : systemUserDTO.getGroups()) {
 							prop.append(comma).append(dto.getName());
 							comma = ", ";
 						}

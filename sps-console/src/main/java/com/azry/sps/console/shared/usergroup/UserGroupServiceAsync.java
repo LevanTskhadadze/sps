@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface UserGroupServiceAsync {
 
-	void getUserGroups(String name, PermissionsDTO permission, Boolean isActive, AsyncCallback<List<UserGroupDTO>> async);
+	void getUserGroups(AsyncCallback<List<UserGroupDTO>> async);
+
+	void getFilteredUserGroups(String name, PermissionsDTO permission, Boolean isActive, AsyncCallback<List<UserGroupDTO>> async);
 
 	void updateUserGroup(UserGroupDTO dto, AsyncCallback<UserGroupDTO> async);
 

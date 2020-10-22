@@ -6,11 +6,12 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import java.util.List;
-
 @RemoteServiceRelativePath("servlet/UserGroup")
 public interface UserGroupService extends RemoteService {
 
-	List<UserGroupDTO> getUserGroups(String name, PermissionsDTO permission, Boolean isActive);
+	List<UserGroupDTO> getUserGroups();
+
+	List<UserGroupDTO> getFilteredUserGroups(String name, PermissionsDTO permission, Boolean isActive);
 
 	UserGroupDTO updateUserGroup(UserGroupDTO dto);
 

@@ -13,7 +13,7 @@ import com.azry.sps.console.client.tabs.users.widgets.UsersTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.dom.client.Style;
 
@@ -45,7 +45,7 @@ public class UsersTab extends Composite {
 
 	private ZTextField emailField;
 
-	private ZSimpleComboBox<UserGroupDto> groupComboBox;
+	private ZSimpleComboBox<UserGroupDTO> groupComboBox;
 
 	private ZSimpleComboBox<String> activeComboBox;
 
@@ -53,7 +53,7 @@ public class UsersTab extends Composite {
 
 	ZGrid<SystemUserDTO> grid;
 
-	public UsersTab(List<UserGroupDto> result){
+	public UsersTab(List<UserGroupDTO> result){
 		super();
 		content = new VerticalLayoutContainer();
 		buildGroupField(result);
@@ -150,18 +150,18 @@ public class UsersTab extends Composite {
 			.build();
 	}
 
-	private void buildGroupField(List<UserGroupDto> entries){
-		groupComboBox = new ZSimpleComboBox.Builder<UserGroupDto>()
+	private void buildGroupField(List<UserGroupDTO> entries){
+		groupComboBox = new ZSimpleComboBox.Builder<UserGroupDTO>()
 			.emptyText(Mes.get("valueEmptyText"))
-			.keyProvider(new ModelKeyProvider<UserGroupDto>() {
+			.keyProvider(new ModelKeyProvider<UserGroupDTO>() {
 				@Override
-				public String getKey(UserGroupDto item) {
+				public String getKey(UserGroupDTO item) {
 					return String.valueOf(item.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<UserGroupDto>() {
+			.labelProvider(new LabelProvider<UserGroupDTO>() {
 				@Override
-				public String getLabel(UserGroupDto item) {
+				public String getLabel(UserGroupDTO item) {
 					return item.getName();
 				}
 			})

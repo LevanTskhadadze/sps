@@ -9,6 +9,8 @@ import com.azry.sps.console.shared.usergroup.UserGroupService;
 import com.azry.sps.console.shared.usergroup.UserGroupServiceAsync;
 import com.azry.sps.console.shared.users.UserService;
 import com.azry.sps.console.shared.users.UserServiceAsync;
+import com.azry.sps.console.shared.usertab.UserTabService;
+import com.azry.sps.console.shared.usertab.UserTabServiceAsync;
 import com.google.gwt.core.client.GWT;
 
 public class ServicesFactory {

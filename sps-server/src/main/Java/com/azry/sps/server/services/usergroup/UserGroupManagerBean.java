@@ -18,8 +18,13 @@ public class UserGroupManagerBean implements UserGroupManager {
 	private EntityManager em;
 
 	@Override
-	public List<UserGroup> getUserGroups(String name, Permissions permission, Boolean isActive) {
+	public List<UserGroup> getUserGroups() {
+		return em.createQuery("SELECT g FROM UserGroup g", UserGroup.class)
+			.getResultList();
+	}
 
+	@Override
+	public List<UserGroup> getFilteredUserGroups(String name, Permissions permission, Boolean isActive) {
 		String sql = "FROM UserGroup g ";
 		Map<String, String> params = new HashMap<>();
 

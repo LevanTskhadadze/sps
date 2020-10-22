@@ -9,7 +9,9 @@ import java.util.List;
 @Local
 public interface UserGroupManager {
 
-	List<UserGroup> getUserGroups(String name, Permissions permission, Boolean isActive);
+	List<UserGroup> getUserGroups();
+
+	List<UserGroup> getFilteredUserGroups(String name, Permissions permission, Boolean isActive);
 
 	UserGroup updateUserGroup(UserGroup userGroup);
 

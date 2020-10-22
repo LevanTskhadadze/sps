@@ -231,7 +231,7 @@ public class UserGroupTab extends Composite {
 		RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>>() {
 			@Override
 			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<UserGroupDTO>> callback) {
-				ServicesFactory.getUserGroupService().getUserGroups(name.getValue(), permission.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<UserGroupDTO>>() {
+				ServicesFactory.getUserGroupService().getFilteredUserGroups(name.getValue(), permission.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<UserGroupDTO>>() {
 					@Override
 					public void onServiceSuccess(List<UserGroupDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));
