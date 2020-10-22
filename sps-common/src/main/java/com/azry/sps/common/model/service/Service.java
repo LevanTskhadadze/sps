@@ -1,7 +1,7 @@
 package com.azry.sps.common.model.service;
 
 
-import com.azry.sps.common.Configurable;
+import com.azry.sps.common.model.Configurable;
 import lombok.Data;
 
 import java.math.BigDecimal;

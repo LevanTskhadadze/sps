@@ -1,4 +1,4 @@
-package com.azry.sps.common;
+package com.azry.sps.common.model;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,4 +20,6 @@ public class Configurable {
 
 	@Version
 	private long version;
+
+
 }

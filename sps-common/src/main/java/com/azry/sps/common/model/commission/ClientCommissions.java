@@ -1,6 +1,6 @@
 package com.azry.sps.common.model.commission;
 
-import com.azry.sps.common.Configurable;
+import com.azry.sps.common.model.Configurable;
 import lombok.Data;
 
 import javax.persistence.Column;

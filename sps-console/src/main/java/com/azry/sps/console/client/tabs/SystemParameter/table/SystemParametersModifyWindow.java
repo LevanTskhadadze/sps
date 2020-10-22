@@ -91,8 +91,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 	}
 
 	private void constructForm(FlexTable formContainer) {
-
-
 		formContainer.setWidget(0, 0, new HTML(Mes.get("code") + getRequiredFieldNotification() + ":"));
 		formContainer.setWidget(1, 0, new HTML(Mes.get("type") + getRequiredFieldNotification() + ":"));
 		formContainer.setWidget(2, 0, new HTML(Mes.get("value") + getRequiredFieldNotification() + ":"));

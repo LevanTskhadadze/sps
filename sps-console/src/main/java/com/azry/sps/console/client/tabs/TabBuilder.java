@@ -4,17 +4,17 @@ import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupPage;
+import com.azry.sps.console.client.tabs.users.UsersTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDto;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class TabBuilder {
@@ -85,6 +85,48 @@ public class TabBuilder {
 
 				centerPanel.update(systemParameterTab, config);
 				centerPanel.setActiveWidget(systemParameterTab);
+			}
+		});
+		return menuItem;
+	}
+
+
+	private static UsersTab usersTab;
+	public static HTML getUsersMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-user'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("users"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (usersTab != null) {
+					if(usersTab.getTitle().equals("closed")) {
+						usersTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(usersTab);
+						return;
+					}
+				}
+				ServicesFactory.getUserGroupService().getAllUserGroups(new ServiceCallback<List<UserGroupDto>>() {
+					@Override
+					public void onServiceSuccess(List<UserGroupDto> result) {
+						usersTab = new UsersTab(result);
+						centerPanel.add(usersTab, Mes.get("users"));
+
+						TabItemConfig config = centerPanel.getConfig(usersTab);
+						config.setIcon(FAIconsProvider.getIcons().wrench());
+						config.setClosable(true);
+
+						centerPanel.update(usersTab, config);
+						centerPanel.setActiveWidget(usersTab);
+					}
+				});
+
+
+				
 			}
 		});
 		return menuItem;

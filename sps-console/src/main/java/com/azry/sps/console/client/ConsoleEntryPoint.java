@@ -5,7 +5,6 @@ import com.azry.gxt.client.zcomp.bootstrap.GxtTheme;
 import com.azry.gxt.client.zcomp.bootstrap.ZComp;
 import com.azry.gxt.client.zcomp.resources.ZIconsProvider;
 import com.azry.sps.console.client.error.ErrorHandlerInit;
-import com.azry.sps.console.client.tabs.SystemParameter.SystemParameterTab;
 import com.azry.sps.console.client.tabs.TabBuilder;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
@@ -67,6 +66,9 @@ public class ConsoleEntryPoint implements EntryPoint {
 		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel);
 		menu.add(serviceGroupMenuItem);
 
+		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel);
+		menu.add(usersMenuItem);
+
 
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());
@@ -89,7 +91,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		FlexTable userContainer = new FlexTable();
 		userContainer.setHeight("44px");
 
-		HTML username = new HTML(user.getUserName());
+		HTML username = new HTML(user.getUsername());
 		username.setStyleName("user-block-username");
 
 		HTML logoutItem = new HTML("<i style='width:16px; height:16px;' class='fa fa-sign-out'></i>" + Mes.get("logout"));
@@ -115,7 +117,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		ErrorHandlerInit errorHandler = new ErrorHandlerInit();
+		ErrorHandlerInit.init();
 
 		ServicesFactory.getUserService().loadAuthorisedUser(new ServiceCallback<SystemUserDTO>() {
 			@Override

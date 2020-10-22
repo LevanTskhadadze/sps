@@ -1,4 +1,4 @@
-package services;
+package com.azry.sps.server.services.systemparam;
 
 import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameterType;
