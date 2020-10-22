@@ -17,12 +17,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.cell.core.client.ButtonCell;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.Viewport;
+import com.sencha.gxt.widget.core.client.event.BeforeCloseEvent;
 import com.sencha.gxt.widget.core.client.menu.Menu;
 
 
@@ -52,13 +54,21 @@ public class ConsoleEntryPoint implements EntryPoint {
 		final Menu menu = new Menu();
 		button.setMenu(menu);
 
-		//TODO unify table creation process and move getMenuItem to TabBuilder class.
-		SystemParameterTab systemParameterTab = new SystemParameterTab();
-		HTML systemParameterMenuItem = systemParameterTab.getMenuItem(centerPanel);
+		centerPanel.addBeforeCloseHandler(new BeforeCloseEvent.BeforeCloseHandler<Widget>() {
+			@Override
+			public void onBeforeClose(BeforeCloseEvent<Widget> event) {
+				event.getItem().setTitle("closed");
+			}
+		});
+
+		HTML systemParameterMenuItem = TabBuilder.getSystemParameterMenuItem(centerPanel);
 		menu.add(systemParameterMenuItem);
 
 		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel);
 		menu.add(serviceGroupMenuItem);
+
+		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel);
+		menu.add(usersMenuItem);
 
 
 
@@ -82,7 +92,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		FlexTable userContainer = new FlexTable();
 		userContainer.setHeight("44px");
 
-		HTML username = new HTML(user.getUserName());
+		HTML username = new HTML(user.getUsername());
 		username.setStyleName("user-block-username");
 
 		HTML logoutItem = new HTML("<i style='width:16px; height:16px;' class='fa fa-sign-out'></i>" + Mes.get("logout"));
@@ -108,7 +118,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		ErrorHandlerInit errorHandler = new ErrorHandlerInit();
+		ErrorHandlerInit.init();
 
 		ServicesFactory.getUserService().loadAuthorisedUser(new ServiceCallback<SystemUserDTO>() {
 			@Override

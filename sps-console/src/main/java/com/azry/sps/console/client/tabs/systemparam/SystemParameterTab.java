@@ -8,15 +8,16 @@ import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -26,24 +27,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SystemParameterTab {
+public class SystemParameterTab extends Composite {
 
 	private VerticalLayoutContainer content;
 
-	private final ZTextField codeField= new ZTextField.Builder()
-		.emptyText(Mes.get("codeEmptyText"))
-		.build();
+	private final ZTextField codeField;
 
-	private final ZTextField valueField = new ZTextField.Builder()
-		.emptyText(Mes.get("valueEmptyText"))
-		.build();
+	private final ZTextField valueField;
+
+	public SystemParameterTab(){
+		super();
+		content = new VerticalLayoutContainer();
+		codeField = new ZTextField.Builder()
+			.emptyText(Mes.get("codeEmptyText"))
+			.build();
+
+		valueField = new ZTextField.Builder()
+			.emptyText(Mes.get("valueEmptyText"))
+			.build();
+		initWidget(content);
+		ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(), new ServiceCallback<List<SystemParameterDto>>() {
+			@Override
+			public void onServiceSuccess(List<SystemParameterDto> result) {
+				assembleContent(result);
+			}
+		});
+
+
+
+	}
 
 	private void assembleContent(List<SystemParameterDto> data){
-		if (content != null) {
-			return;
-		}
 
-		content = new VerticalLayoutContainer();
+
 		content.add(getToolbar());
 		ZGrid<SystemParameterDto> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel());
 		grid.setColumnResize(false);
@@ -96,14 +112,10 @@ public class SystemParameterTab {
 					Map<String, String> params = new HashMap<>();
 					params.put("code", codeField.getValue());
 					params.put("value", valueField.getValue());
-					ServicesFactory.getSystemParameterService().getSystemParameterTab(params, new AsyncCallback<List<SystemParameterDto>>() {
-						@Override
-						public void onFailure(Throwable caught) {
-
-						}
+					ServicesFactory.getSystemParameterService().getSystemParameterTab(params, new ServiceCallback<List<SystemParameterDto>>() {
 
 						@Override
-						public void onSuccess(List<SystemParameterDto> result) {
+						public void onServiceSuccess(List<SystemParameterDto> result) {
 							SystemParametersTable.setListStore(result);
 						}
 					});
@@ -128,42 +140,4 @@ public class SystemParameterTab {
 	}
 
 
-	public HTML getMenuItem (final TabPanel centerPanel) {
-
-		String img = "<i style='width:16px; height:16px;' class='fa fa-wrench'></i>";
-
-		HTML menuItem = new HTML(img + Mes.get("sysPar"));
-		menuItem.setStyleName("menuItem");
-		menuItem.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(), new AsyncCallback<List<SystemParameterDto>>() {
-					@Override
-					public void onFailure(Throwable throwable) {
-
-					}
-
-					@Override
-					public void onSuccess(List<SystemParameterDto> result) {
-						if(content != null) {
-							centerPanel.setActiveWidget(content);
-							return;
-						}
-
-						assembleContent(result);
-						centerPanel.add(content, Mes.get("sysPar"));
-
-						TabItemConfig config = centerPanel.getConfig(content);
-						config.setIcon(FAIconsProvider.getIcons().wrench());
-						config.setClosable(true);
-
-						centerPanel.update(content, config);
-						centerPanel.setActiveWidget(content);
-					}
-				});
-
-			}
-		});
-		return menuItem;
-	}
 }

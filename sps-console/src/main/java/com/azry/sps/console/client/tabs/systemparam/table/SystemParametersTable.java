@@ -8,9 +8,9 @@ import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -22,7 +22,7 @@ import java.util.List;
 public class SystemParametersTable {
 
 
-	private static ListStore<SystemParameterDto> store = new ListStore<>(new ModelKeyProvider<SystemParameterDto>() {
+	private static final ListStore<SystemParameterDto> store = new ListStore<>(new ModelKeyProvider<SystemParameterDto>() {
 		@Override
 		public String getKey(SystemParameterDto systemParameterDto) {
 			return String.valueOf(systemParameterDto.getId());
@@ -94,40 +94,6 @@ public class SystemParametersTable {
 				.width(32)
 				.cell(new ZIconButtonCell.Builder<SystemParameterDto, String>()
 						.gridStore(store)
-						.icon(FAIconsProvider.getIcons().trash())
-						.clickHandler(new GridClickHandler<SystemParameterDto>() {
-							@Override
-							public void onClick(Cell.Context context, final SystemParameterDto systemParameterDto) {
-
-								new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
-									@Override
-									public void onConfirm() {
-										ServicesFactory.getSystemParameterService().removeParameter(systemParameterDto.getId(), new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable throwable) {
-
-											}
-
-											@Override
-											public void onSuccess(Void unused) {
-												store.remove(systemParameterDto);
-											}
-										});
-									}
-								}.show();
-							}
-						})
-						.build()
-				)
-				.fixed()
-				.build());
-
-
-		columns.add(new ZColumnConfig.Builder<SystemParameterDto, String>()
-				.header("")
-				.width(32)
-				.cell(new ZIconButtonCell.Builder<SystemParameterDto, String>()
-						.gridStore(store)
 						.icon(FAIconsProvider.getIcons().pencil())
 						.clickHandler(new GridClickHandler<SystemParameterDto>() {
 							@Override
@@ -143,6 +109,34 @@ public class SystemParametersTable {
 				.build());
 
 
+		columns.add(new ZColumnConfig.Builder<SystemParameterDto, String>()
+			.header("")
+			.width(32)
+			.cell(new ZIconButtonCell.Builder<SystemParameterDto, String>()
+				.gridStore(store)
+				.icon(FAIconsProvider.getIcons().trash())
+				.clickHandler(new GridClickHandler<SystemParameterDto>() {
+					@Override
+					public void onClick(Cell.Context context, final SystemParameterDto systemParameterDto) {
+
+						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
+							@Override
+							public void onConfirm() {
+								ServicesFactory.getSystemParameterService().removeParameter(systemParameterDto.getId(), new ServiceCallback<Void>() {
+
+									@Override
+									public void onServiceSuccess(Void unused) {
+										store.remove(systemParameterDto);
+									}
+								});
+							}
+						}.show();
+					}
+				})
+				.build()
+			)
+			.fixed()
+			.build());
 
 		return new ColumnModel<>(columns);
 	}

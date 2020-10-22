@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/sps/servlet/getTab")
+@WebServlet("/sps/servlet/sysPar")
 public class SystemParameterServiceImpl extends RemoteServiceServlet implements SystemParameterService {
 
 	@Inject

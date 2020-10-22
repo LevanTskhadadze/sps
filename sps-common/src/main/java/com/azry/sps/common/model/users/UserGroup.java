@@ -1,6 +1,6 @@
 package com.azry.sps.common.model.users;
 
-import com.azry.sps.common.Configurable;
+import com.azry.sps.common.model.Configurable;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -25,4 +25,8 @@ public class UserGroup extends Configurable {
 	private String permissions;
 
 	private boolean active;
+
+	public boolean isActive() {
+		return active;
+	}
 }

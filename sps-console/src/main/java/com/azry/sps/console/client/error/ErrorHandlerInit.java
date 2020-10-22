@@ -6,7 +6,7 @@ public class ErrorHandlerInit {
 
 	public static ErrorHandler errorHandler;
 
-	public ErrorHandlerInit() {
+	public static void init() {
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler());
 		errorHandler = new ErrorHandlerImpl();
 	}

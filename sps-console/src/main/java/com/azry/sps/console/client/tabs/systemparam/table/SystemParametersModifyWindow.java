@@ -6,9 +6,9 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -63,14 +63,15 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 		VerticalLayoutContainer mainContainer = new VerticalLayoutContainer();
 
-		ZButton confirmButton = getConfirmButton(dto);
+		ZButton confirmButton = getConfirmButton();
 		ZButton cancelButton = getCancelButton();
 		buttonBar.setMinButtonWidth(75);
-
+		getButtonBar().getElement().getStyle().setProperty("borderTop", "1px solid #3291D6");
 
 		addButton(confirmButton);
 		addButton(cancelButton);
 
+		formContainer.setStyleName("editForm");
 
 		constructForm(formContainer);
 
@@ -80,7 +81,8 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 		setHeight("400px");
 		setWidth("490px");
-		setHeadingText(Mes.get("SystemParam"));
+		String header = Mes.get("systemParam") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
+		setHeadingText(header);
 		showInCenter();
 	}
 
@@ -139,6 +141,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 			})
 			.enableSorting(false)
 			.values(types)
+			.width(305)
 			.editable(false)
 			.build();
 
@@ -247,26 +250,18 @@ public class SystemParametersModifyWindow extends ZWindow {
 			getValueFieldValue(),
 			descField.getValue(),
 
-			new AsyncCallback<Void>() {
-				@Override
-				public void onFailure(Throwable throwable) {
-
-				}
+			new ServiceCallback<Void>() {
 
 				@Override
-				public void onSuccess(Void unused) {
+				public void onServiceSuccess(Void unused) {
 					final int index = store.indexOf(dto);
 					store.remove(index);
 					ServicesFactory.getSystemParameterService().getParameter(
 						dto.getId(),
-						new AsyncCallback<SystemParameterDto>() {
-							@Override
-							public void onFailure(Throwable caught) {
-
-							}
+						new ServiceCallback<SystemParameterDto>() {
 
 							@Override
-							public void onSuccess(SystemParameterDto result) {
+							public void onServiceSuccess(SystemParameterDto result) {
 								store.add(index, result);
 								hide();
 							}
@@ -282,34 +277,30 @@ public class SystemParametersModifyWindow extends ZWindow {
 			getValueFieldValue(),
 			descField.getValue(),
 
-			new AsyncCallback<SystemParameterDto>() {
-				@Override
-				public void onFailure(Throwable throwable) {
-
-				}
+			new ServiceCallback<SystemParameterDto>() {
 
 				@Override
-				public void onSuccess(SystemParameterDto systemParameterDto) {
+				public void onServiceSuccess(SystemParameterDto systemParameterDto) {
 					store.add(systemParameterDto);
 				}
 			});
 	}
 
 
-	private ZButton getConfirmButton(final SystemParameterDto dto) {
+	private ZButton getConfirmButton() {
 		return new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.text(Mes.get("save"))
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-
+					boolean validation = true;
 					if (getValueFieldValue() == null || getValueFieldValue().equals("")) {
 						markValueField();
-						return;
+						validation = false;
 					}
 
-					SystemParameterDtoType dtoType;
+					SystemParameterDtoType dtoType = SystemParameterDtoType.BOOLEAN;
 					switch (typeField.getValue()) {
 						case "string":
 							dtoType = SystemParameterDtoType.STRING;
@@ -322,13 +313,14 @@ public class SystemParametersModifyWindow extends ZWindow {
 							break;
 						default:
 							typeField.markInvalid("invalid");
-							return;
+							validation = false;
 					}
 
 					if (codeField.getValue() == null || codeField.getValue().equals("")) {
 						codeField.markInvalid("invalid");
-						return;
+						validation = false;
 					}
+					if(!validation) return;
 					if (redactMode) {
 						doRedact();
 					}

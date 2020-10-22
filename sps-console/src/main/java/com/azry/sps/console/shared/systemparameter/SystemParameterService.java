@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import java.util.List;
 import java.util.Map;
 
-@RemoteServiceRelativePath("servlet/getTab")
+@RemoteServiceRelativePath("servlet/sysPar")
 public interface SystemParameterService extends RemoteService {
 	List<SystemParameterDto> getSystemParameterTab(Map<String, String> params);
 
