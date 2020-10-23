@@ -239,7 +239,8 @@ public class ServiceGroupTab extends Composite {
 
 
 		columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
-			.width(100)
+			.width(200)
+			.fixed()
 			.header(Mes.get("createTime"))
 			.valueProvider(new ZStringProvider<ServiceGroupDTO>() {
 				@Override
@@ -250,7 +251,8 @@ public class ServiceGroupTab extends Composite {
 			.build());
 
 		columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
-			.width(100)
+			.width(200)
+			.fixed()
 			.header(Mes.get("lastUpdateTime"))
 			.valueProvider(new ZStringProvider<ServiceGroupDTO>() {
 				@Override

@@ -1,11 +1,10 @@
-package com.azry.sps.console.client.tabs.usergroup;
+package com.azry.sps.console.client.tabs.channel;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.EnterKeyBinder;
 import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZColumnConfig;
 import com.azry.gxt.client.zcomp.ZConfirmDialog;
-import com.azry.gxt.client.zcomp.ZDynamicComboBox;
 import com.azry.gxt.client.zcomp.ZGrid;
 import com.azry.gxt.client.zcomp.ZGridView;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
@@ -22,13 +21,11 @@ import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.FormatDate;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.usergroup.PermissionsDTO;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -50,23 +47,18 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class UserGroupTab extends Composite {
-
-//	private static final String OPACITY_STYLE = "opacity: 0.3";
+public class ChannelTab extends Composite {
 
 	VerticalLayoutContainer verticalLayoutContainer;
 
-	ZGrid<UserGroupDTO> grid;
+	ZGrid<ChannelDTO> grid;
 
 	ZToolBar toolBar;
 
 	ZTextField name;
-
-	ZDynamicComboBox<PermissionsDTO> permission;
 
 	ZSimpleComboBox<Boolean> active;
 
@@ -76,26 +68,22 @@ public class UserGroupTab extends Composite {
 
 	ZButton addButton;
 
-	List<PermissionsDTO> permissions;
-
-	private final ListStore<UserGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<UserGroupDTO>() {
+	private final ListStore<ChannelDTO> gridStore = new ListStore<>(new ModelKeyProvider<ChannelDTO>() {
 		@Override
-		public String getKey(UserGroupDTO groupDTO) {
-			return String.valueOf(groupDTO.getId());
+		public String getKey(ChannelDTO dto) {
+			return String.valueOf(dto.getId());
 		}
 	});
 
-	Store.StoreSortInfo<UserGroupDTO> storeSortInfo;
+	Store.StoreSortInfo<ChannelDTO> storeSortInfo;
 
-	private ListLoader<ListLoadConfig, ListLoadResult<UserGroupDTO>> loader;
+	private ListLoader<ListLoadConfig, ListLoadResult<ChannelDTO>> loader;
 
 	List<Boolean> booleans = new ArrayList<>();
 
-
-	public UserGroupTab() {
+	public ChannelTab() {
 		booleans.add(true);
 		booleans.add(false);
-		permissions = Arrays.asList(PermissionsDTO.values());
 		verticalLayoutContainer = new VerticalLayoutContainer();
 		initToolbar();
 		initGrid();
@@ -114,39 +102,6 @@ public class UserGroupTab extends Composite {
 			.emptyText(Mes.get("name"))
 			.build();
 
-		permission = new ZDynamicComboBox.Builder<PermissionsDTO>()
-			.emptyText(Mes.get("allPermissions"))
-			.listWidth(400)
-			.minChars(1)
-			.width(300)
-			.keyProvider(new ModelKeyProvider<PermissionsDTO>() {
-				@Override
-				public String getKey(PermissionsDTO permission) {
-					return permission.name();
-				}
-			})
-			.labelProvider(new LabelProvider<PermissionsDTO>() {
-				@Override
-				public String getLabel(PermissionsDTO permission) {
-					return Mes.get(permission.name());
-				}
-			})
-			.dataCallback(new ZDynamicComboBox.Builder.DataCallBack<PermissionsDTO>() {
-				@Override
-				public void getData(String query, int i, AsyncCallback<List<PermissionsDTO>> asyncCallback) {
-					List<PermissionsDTO> perms = new ArrayList<>();
-					String q = query != null ? query.trim() : "";
-					for (PermissionsDTO perm : permissions) {
-						if (Mes.get(perm.name()).contains(q)) {
-							perms.add(perm);
-						}
-					}
-					asyncCallback.onSuccess(perms);
-				}
-			})
-			.build();
-
-		permission.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
 		active = new ZSimpleComboBox.Builder<Boolean>()
 			.keyProvider(new ModelKeyProvider<Boolean>() {
@@ -200,9 +155,9 @@ public class UserGroupTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new UserGroupWindow(null, ActionMode.ADD){
+					new ChannelWindow(null, ActionMode.ADD){
 						@Override
-						public void onSave(UserGroupDTO dto) {
+						public void onSave(ChannelDTO dto) {
 							gridStore.add(dto);
 						}
 					}.showInCenter();
@@ -219,7 +174,6 @@ public class UserGroupTab extends Composite {
 		toolBar.setEnableOverflow(false);
 
 		toolBar.add(name);
-		toolBar.add(permission);
 		toolBar.add(active);
 		toolBar.add(searchButton);
 		toolBar.add(clearFiltersButton);
@@ -228,12 +182,12 @@ public class UserGroupTab extends Composite {
 
 	private void initGrid() {
 
-		RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>>() {
+		RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>>() {
 			@Override
-			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<UserGroupDTO>> callback) {
-				ServicesFactory.getUserGroupService().getFilteredUserGroups(name.getValue(), permission.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<UserGroupDTO>>() {
+			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<ChannelDTO>> callback) {
+				ServicesFactory.getChannelService().getFilteredChannels(name.getValue(), active.getCurrentValue(), new ServiceCallback<List<ChannelDTO>>() {
 					@Override
-					public void onServiceSuccess(List<UserGroupDTO> result) {
+					public void onServiceSuccess(List<ChannelDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));
 					}
 				});
@@ -241,16 +195,16 @@ public class UserGroupTab extends Composite {
 		};
 
 		loader = new ListLoader<>(proxy);
-		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, UserGroupDTO, ListLoadResult<UserGroupDTO>>(gridStore));
+		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ChannelDTO, ListLoadResult<ChannelDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<UserGroupDTO, Date>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ChannelDTO, Date>() {
 			@Override
-			public Date getValue(UserGroupDTO groupDTO) {
-				return groupDTO.getLastUpdateTime();
+			public Date getValue(ChannelDTO dto) {
+				return dto.getLastUpdateTime();
 			}
 
 			@Override
-			public void setValue(UserGroupDTO o, Date o2) { }
+			public void setValue(ChannelDTO o, Date o2) { }
 
 			@Override
 			public String getPath() {
@@ -260,7 +214,7 @@ public class UserGroupTab extends Composite {
 
 		gridStore.addSortInfo(storeSortInfo);
 
-		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<UserGroupDTO>());
+		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ChannelDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
@@ -280,111 +234,111 @@ public class UserGroupTab extends Composite {
 	}
 
 
-	private ColumnModel<UserGroupDTO> getColumns() {
-		List<ColumnConfig<UserGroupDTO, ?>> columns = new ArrayList<>();
+	private ColumnModel<ChannelDTO> getColumns() {
+		List<ColumnConfig<ChannelDTO, ?>> columns = new ArrayList<>();
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
 			.width(120)
 			.fixed()
-			.valueProvider(new ZStringProvider<UserGroupDTO>() {
+			.valueProvider(new ZStringProvider<ChannelDTO>() {
 				@Override
-				public String getProperty(UserGroupDTO groupDTO) {
-					return String.valueOf(groupDTO.getId());
+				public String getProperty(ChannelDTO dto) {
+					return String.valueOf(dto.getId());
 				}
 			})
 			.header(Mes.get("id"))
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.width(200)
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+			.width(500)
 			.fixed()
 			.header(Mes.get("name"))
-			.valueProvider(new ZStringProvider<UserGroupDTO>() {
+			.valueProvider(new ZStringProvider<ChannelDTO>() {
 				@Override
-				public String getProperty(UserGroupDTO groupDTO) {
-					return groupDTO.getName();
+				public String getProperty(ChannelDTO dto) {
+					return dto.getName();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.header(Mes.get("userPermissions"))
-			.valueProvider(new ZStringProvider<UserGroupDTO>() {
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+			.header(Mes.get("fiServiceUnavailabilityAction"))
+			.valueProvider(new ZStringProvider<ChannelDTO>() {
 				@Override
-				public String getProperty(UserGroupDTO groupDTO) {
-					return groupDTO.toString();
+				public String getProperty(ChannelDTO dto) {
+					return Mes.get(dto.getFiServiceUnavailabilityAction().name());
 				}
 			})
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.width(150)
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+			.width(200)
 			.fixed()
 			.header(Mes.get("createTime"))
-			.valueProvider(new ZStringProvider<UserGroupDTO>() {
+			.valueProvider(new ZStringProvider<ChannelDTO>() {
 				@Override
-				public String getProperty(UserGroupDTO groupDTO) {
-					return FormatDate.formatDateTime(groupDTO.getCreateTime());
+				public String getProperty(ChannelDTO dto) {
+					return FormatDate.formatDateTime(dto.getCreateTime());
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.width(150)
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+			.width(200)
 			.fixed()
 			.header(Mes.get("lastUpdateTime"))
-			.valueProvider(new ZStringProvider<UserGroupDTO>() {
+			.valueProvider(new ZStringProvider<ChannelDTO>() {
 				@Override
-				public String getProperty(UserGroupDTO groupDTO) {
-					return FormatDate.formatDateTime(groupDTO.getLastUpdateTime());
+				public String getProperty(ChannelDTO dto) {
+					return FormatDate.formatDateTime(dto.getLastUpdateTime());
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, Boolean>()
-			.cell(new ZIconButtonCell.Builder<UserGroupDTO, Boolean>()
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, Boolean>()
+			.cell(new ZIconButtonCell.Builder<ChannelDTO, Boolean>()
 				.gridStore(gridStore)
-				.dynamicIcon(new IconSelector<UserGroupDTO>() {
+				.dynamicIcon(new IconSelector<ChannelDTO>() {
 					@Override
-					public ImageResource selectIcon(Cell.Context context, UserGroupDTO value) {
+					public ImageResource selectIcon(Cell.Context context, ChannelDTO value) {
 						if (value.isActive()) {
 							return FAIconsProvider.getIcons().green();
 						}
 						return FAIconsProvider.getIcons().red();
 					}
 				})
-				.dynamicTooltip(new TooltipSelector<UserGroupDTO>() {
+				.dynamicTooltip(new TooltipSelector<ChannelDTO>() {
 					@Override
-					public String selectTooltip(Cell.Context context, UserGroupDTO dto) {
+					public String selectTooltip(Cell.Context context, ChannelDTO dto) {
 						if (dto.isActive()) {
 							return Mes.get("deactivate");
 						}
 						return Mes.get("activate");
 					}
 				})
-//				.dynamicStyle(new StringStateSelector<UserGroupDTO>() {
+//				.dynamicStyle(new StringStateSelector<channelDTO>() {
 //					@Override
-//					public String getStyle(Cell.Context context, UserGroupDTO dto) {
+//					public String getStyle(Cell.Context context, channelDTO dto) {
 //						return OPACITY_STYLE;
 //					}
 //				})
-				.dynamicEnabling(new BooleanStateSelector<UserGroupDTO>() {
+				.dynamicEnabling(new BooleanStateSelector<ChannelDTO>() {
 					@Override
-					public boolean check(Cell.Context context, UserGroupDTO dto) {
+					public boolean check(Cell.Context context, ChannelDTO dto) {
 						return true;
 					}
 				})
-				.clickHandler(new GridClickHandler<UserGroupDTO>() {
+				.clickHandler(new GridClickHandler<ChannelDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final UserGroupDTO dto) {
+					public void onClick(Cell.Context context, final ChannelDTO dto) {
 						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
 							@Override
 							public void onConfirm() {
 								dto.setActive(!dto.isActive());
-								ServicesFactory.getUserGroupService().updateUserGroup(dto, new ServiceCallback<UserGroupDTO>() {
+								ServicesFactory.getChannelService().updateChannel(dto, new ServiceCallback<ChannelDTO>() {
 									@Override
-									public void onServiceSuccess(UserGroupDTO result) {
+									public void onServiceSuccess(ChannelDTO result) {
 										gridStore.update(result);
 									}
 								});
@@ -398,19 +352,19 @@ public class UserGroupTab extends Composite {
 			.build());
 
 //		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
+			.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
 				.gridStore(gridStore)
 				.tooltip(Mes.get("edit"))
 				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<UserGroupDTO>() {
+				.clickHandler(new GridClickHandler<ChannelDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final UserGroupDTO dto) {
-						new UserGroupWindow(dto, ActionMode.EDIT) {
+					public void onClick(Cell.Context context, final ChannelDTO dto) {
+						new ChannelWindow(dto, ActionMode.EDIT) {
 							@Override
-							public void onSave(UserGroupDTO dto) {
+							public void onSave(ChannelDTO dto) {
 								gridStore.update(dto);
 								gridStore.applySort(false);
 							}
@@ -422,20 +376,20 @@ public class UserGroupTab extends Composite {
 
 //		}
 
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
+			.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
 				.gridStore(gridStore)
 				.icon(FAIconsProvider.getIcons().trash())
 				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<UserGroupDTO>() {
+				.clickHandler(new GridClickHandler<ChannelDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final UserGroupDTO dto) {
+					public void onClick(Cell.Context context, final ChannelDTO dto) {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getUserGroupService().deleteUserGroup(dto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getChannelService().deleteChannel(dto.getId(), new ServiceCallback<Void>() {
 									@Override
 									public void onServiceSuccess(Void result) {
 										gridStore.remove(gridStore.indexOf(dto));
@@ -453,7 +407,6 @@ public class UserGroupTab extends Composite {
 
 	private void clearFilter() {
 		name.setValue(null);
-		permission.setValue(null);
 		active.setValue(null);
 		loader.load();
 	}

@@ -27,12 +27,10 @@ public class UserGroupServiceImpl extends RemoteServiceServlet implements UserGr
 
 	@Override
 	public List<UserGroupDTO> getFilteredUserGroups(String name, PermissionsDTO permission, Boolean isActive) {
-		Permissions permissions =null;
-		if (permission != null) {
-			permissions = Permissions.valueOf(permission.name());
-		}
 
-		return UserGroupDTO.toDTOs(userGroupManager.getFilteredUserGroups(name, permissions, isActive));
+		return UserGroupDTO.toDTOs(userGroupManager.getFilteredUserGroups(name,
+									permission == null ? null : Permissions.valueOf(permission.name()),
+									isActive));
 	}
 
 	@Override
