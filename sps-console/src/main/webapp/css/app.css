@@ -227,3 +227,30 @@ body {
     border-left: 1px solid #ededed;
     border-bottom: 1px solid #ededed;
 }
+
+.serviceChannelTable {
+    font-size: 11px;
+    border-bottom: 1px solid silver;
+    border-collapse: collapse;
+}
+.serviceChannelTable > tbody > tr:hover > td {
+    background-color: #dfeffb;
+}
+.serviceChannelTable > tbody > tr:first-child:hover > td {
+    background-color: transparent;
+}
+.serviceChannelTable > tbody > tr:first-child > td {
+    padding: 8px;
+    border-left: 1px solid silver;
+    border-bottom: 1px solid silver;
+    font-weight: bold;
+    color: #666666;
+}
+.serviceChannelTable > tbody > tr:first-child > td:first-child {
+    border-left: none;
+}
+.serviceChannelTable > tbody > tr > td {
+    padding: 5px;
+    border-left: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+}

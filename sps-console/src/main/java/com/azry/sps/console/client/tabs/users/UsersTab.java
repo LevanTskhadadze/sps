@@ -200,20 +200,8 @@ public class UsersTab extends Composite {
 		toolbar.add(getSearchButton());
 		toolbar.add(getClearButton());
 
-		ZButton addButton = new ZButton.Builder()
-			.appearance (new Css3ButtonCellAppearance<String>())
-			.icon (FAIconsProvider.getIcons().plus())
-			.text (Mes.get("addEntry"))
-			.handler (new SelectEvent.SelectHandler() {
-				@Override
-				public void onSelect(SelectEvent event) {
-					new UsersModifyWindow(null, UsersTable.getListStore());
-				}
-			})
-			.build();
 
-		addButton.getElement().getStyle().setColor("white");
-		toolbar.add(addButton);
+		toolbar.add(getAddButton());
 
 		toolbar.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
 		toolbar.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
@@ -238,6 +226,20 @@ public class UsersTab extends Composite {
 			.build();
 	}
 
+	private ZButton getAddButton(){
+		return new ZButton.Builder()
+			.appearance (new Css3ButtonCellAppearance<String>())
+			.icon (FAIconsProvider.getIcons().plus())
+			.text (Mes.get("addEntry"))
+			.handler (new SelectEvent.SelectHandler() {
+				@Override
+				public void onSelect(SelectEvent event) {
+					new UsersModifyWindow(null, UsersTable.getListStore());
+				}
+			})
+			.build();
+	}
+
 
 	private ZButton getClearButton(){
 		return new ZButton.Builder()
@@ -250,7 +252,7 @@ public class UsersTab extends Composite {
 					emailField.setText(null);
 					nameField.setText(null);
 					groupComboBox.setValue(null);
-
+					activeComboBox.setValue(null);
 				}
 			} )
 			.build();

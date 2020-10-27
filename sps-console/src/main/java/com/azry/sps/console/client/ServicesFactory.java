@@ -1,6 +1,8 @@
 package com.azry.sps.console.client;
 
 
+import com.azry.sps.console.shared.service.ServiceTabService;
+import com.azry.sps.console.shared.service.ServiceTabServiceAsync;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupServiceAsync;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
@@ -59,6 +61,15 @@ public class ServicesFactory {
 			userTabService = GWT.create(UserTabService.class);
 		}
 		return userTabService;
+	}
+
+	private static ServiceTabServiceAsync serviceTabService;
+
+	public static ServiceTabServiceAsync getServiceTabService() {
+		if (serviceTabService == null) {
+			serviceTabService = GWT.create(ServiceTabService.class);
+		}
+		return serviceTabService;
 	}
 
 }

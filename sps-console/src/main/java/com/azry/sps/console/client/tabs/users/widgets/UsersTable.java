@@ -28,8 +28,8 @@ public class UsersTable {
 
 	private static final ListStore<SystemUserDTO> store = new ListStore<>(new ModelKeyProvider<SystemUserDTO>() {
 		@Override
-		public String getKey(SystemUserDTO SystemUserDTO) {
-			return String.valueOf(SystemUserDTO.getId());
+		public String getKey(SystemUserDTO systemUserDTO) {
+			return String.valueOf(systemUserDTO.getId());
 		}
 	});
 

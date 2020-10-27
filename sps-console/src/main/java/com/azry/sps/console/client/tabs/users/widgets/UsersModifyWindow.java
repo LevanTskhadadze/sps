@@ -257,9 +257,6 @@ public class UsersModifyWindow extends ZWindow {
 				@Override
 				public void onServiceSuccess(SystemUserDTO newDto) {
 					dto = newDto;
-					Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
-					logger.log(Level.SEVERE, "" + dto.getVersion());
-
 					store.update(dto);
 				}
 			});
@@ -277,6 +274,7 @@ public class UsersModifyWindow extends ZWindow {
 		dto.setEmail(emailField.getValue());
 		dto.setGroups(userGroupTab.getAllSelectedGroups());
 		dto.setLastUpdateTime(new Date());
+		dto.setCreateTime(new Date());
 
 		ServicesFactory.getUserTabService().addParameter(
 			dto,

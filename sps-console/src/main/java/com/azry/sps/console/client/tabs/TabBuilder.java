@@ -3,6 +3,7 @@ package com.azry.sps.console.client.tabs;
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
+import com.azry.sps.console.client.tabs.services.ServicesTab;
 import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
 import com.azry.sps.console.client.tabs.usergroup.UserGroupTab;
 import com.azry.sps.console.client.tabs.users.UsersTab;
@@ -117,7 +118,7 @@ public class TabBuilder {
 						centerPanel.add(usersTab, Mes.get("users"));
 
 						TabItemConfig config = centerPanel.getConfig(usersTab);
-						config.setIcon(FAIconsProvider.getIcons().wrench());
+						config.setIcon(FAIconsProvider.getIcons().user());
 						config.setClosable(true);
 
 						centerPanel.update(usersTab, config);
@@ -162,6 +163,42 @@ public class TabBuilder {
 
 						centerPanel.update(userGroupTab, config);
 						centerPanel.setActiveWidget(userGroupTab);
+			}
+		});
+		return menuItem;
+	}
+
+
+	private static ServicesTab servicesTab;
+	public static HTML getServicesMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-leaf'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("services"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (servicesTab != null) {
+					if(servicesTab.getTitle().equals("closed")) {
+						servicesTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(servicesTab);
+						return;
+					}
+				}
+
+				servicesTab = new ServicesTab();
+				centerPanel.add(servicesTab, Mes.get("services"));
+
+				TabItemConfig config = centerPanel.getConfig(servicesTab);
+				config.setIcon(FAIconsProvider.getIcons().leaf());
+				config.setClosable(true);
+
+				centerPanel.update(servicesTab, config);
+				centerPanel.setActiveWidget(servicesTab);
+
 			}
 		});
 		return menuItem;
