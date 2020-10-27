@@ -1,6 +1,8 @@
 package com.azry.sps.console.client;
 
 
+import com.azry.sps.console.shared.channel.ChannelService;
+import com.azry.sps.console.shared.channel.ChannelServiceAsync;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.console.shared.service.ServiceTabServiceAsync;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
@@ -70,6 +72,15 @@ public class ServicesFactory {
 			serviceTabService = GWT.create(ServiceTabService.class);
 		}
 		return serviceTabService;
+	}
+
+	private static ChannelServiceAsync channelService;
+
+	public static ChannelServiceAsync getChannelService() {
+		if (channelService == null) {
+			channelService = GWT.create(ChannelService.class);
+		}
+		return channelService;
 	}
 
 }

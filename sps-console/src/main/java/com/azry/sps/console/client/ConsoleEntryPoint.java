@@ -75,6 +75,9 @@ public class ConsoleEntryPoint implements EntryPoint {
 		HTML servicesMenuItem = TabBuilder.getServicesMenuItem(centerPanel);
 		menu.add(servicesMenuItem);
 
+		HTML channelMenuItem = TabBuilder.getChannelMenuItem(centerPanel);
+		menu.add(channelMenuItem);
+
 
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());

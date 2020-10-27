@@ -2,6 +2,7 @@ package com.azry.sps.console.client.tabs;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.channel.ChannelTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
 import com.azry.sps.console.client.tabs.services.ServicesTab;
 import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
@@ -133,13 +134,14 @@ public class TabBuilder {
 		return menuItem;
 	}
 
+
 	private static UserGroupTab userGroupTab;
 
 	public static HTML getUserGroupMenuItem (final TabPanel centerPanel) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-users'></i>";
 
-		final HTML menuItem = new HTML(img + Mes.get("userGroupTab"));
+		final HTML menuItem = new HTML(img + Mes.get("userGroups"));
 		menuItem.setStyleName("menuItem");
 		menuItem.addClickHandler(new ClickHandler() {
 			@Override
@@ -155,10 +157,10 @@ public class TabBuilder {
 				}
 
 						userGroupTab = new UserGroupTab();
-						centerPanel.add(userGroupTab, Mes.get("users"));
+						centerPanel.add(userGroupTab, Mes.get("userGroups"));
 
 						TabItemConfig config = centerPanel.getConfig(userGroupTab);
-						config.setIcon(FAIconsProvider.getIcons().wrench());
+						config.setIcon(FAIconsProvider.getIcons().users());
 						config.setClosable(true);
 
 						centerPanel.update(userGroupTab, config);
@@ -168,6 +170,40 @@ public class TabBuilder {
 		return menuItem;
 	}
 
+	private static ChannelTab channelTab;
+
+	public static HTML getChannelMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-arrow-circle-right'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("channels"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (channelTab != null) {
+					if(channelTab.getTitle().equals("closed")) {
+						channelTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(channelTab);
+						return;
+					}
+				}
+
+				channelTab = new ChannelTab();
+				centerPanel.add(channelTab, Mes.get("channels"));
+
+				TabItemConfig config = centerPanel.getConfig(channelTab);
+				config.setIcon(FAIconsProvider.getIcons().arrow_circle_right());
+				config.setClosable(true);
+
+				centerPanel.update(channelTab, config);
+				centerPanel.setActiveWidget(channelTab);
+			}
+		});
+		return menuItem;
+	}
 
 	private static ServicesTab servicesTab;
 	public static HTML getServicesMenuItem (final TabPanel centerPanel) {

@@ -23,7 +23,7 @@ public abstract class UserGroupWindow extends ZWindow {
 
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
-	UserGroupDTO userGroupDTO;
+	private UserGroupDTO userGroupDTO;
 
 	private ZTextField nameField;
 
@@ -120,6 +120,7 @@ public abstract class UserGroupWindow extends ZWindow {
 	private UserGroupDTO getUserGroupForUpdate(){
 		if (userGroupDTO == null) {
 			userGroupDTO = new UserGroupDTO();
+			userGroupDTO.setActive(true);
 		}
 		userGroupDTO.setName(nameField.getValue());
 		userGroupDTO.setPermissions(PermissionTree.getCheckedPermissions(tree));

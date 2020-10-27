@@ -9,7 +9,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ChannelDTO extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
@@ -97,7 +96,6 @@ public class ChannelDTO extends ConfigurableDTO implements IsSerializable {
 
 		return channel;
 	}
-
-
-
 }
+
+

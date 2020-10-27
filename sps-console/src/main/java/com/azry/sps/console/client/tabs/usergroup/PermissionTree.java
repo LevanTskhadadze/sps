@@ -107,15 +107,8 @@ public class PermissionTree {
 	}
 
 	public static void setCheckedPermissions(Tree<PermissionTreeModel, String> tree, String permissions) {
-		List<PermissionsDTO> permList = new ArrayList<>();
-		if (!permissions.isEmpty() ) {
-			for (String permission: permissions.split(",")) {
-				permList.add(PermissionsDTO.valueOf(permission));
-			}
-
-
-			for (PermissionsDTO permission : permList) {
-				PermissionTreeModel model = tree.getData(permission.name());
+			for (String permission : permissions.split(",")) {
+				PermissionTreeModel model = tree.getData(permission);
 				Tree.TreeNode<PermissionTreeModel> node = tree.findNode(model);
 				if (node != null) {
 					tree.setChecked(model, Tree.CheckState.CHECKED);
@@ -123,4 +116,3 @@ public class PermissionTree {
 			}
 		}
 	}
-}
