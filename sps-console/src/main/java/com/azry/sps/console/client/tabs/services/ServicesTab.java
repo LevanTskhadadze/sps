@@ -13,6 +13,7 @@ import com.azry.sps.console.client.tabs.services.widgets.ServiceModifyWindow;
 import com.azry.sps.console.client.tabs.services.widgets.ServiceTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;
@@ -186,7 +187,12 @@ public class ServicesTab extends Composite {
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					new ServiceModifyWindow(null, ServiceTable.getListStore());
+					ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+						@Override
+						public void onServiceSuccess(List<ChannelDTO> result) {
+							new ServiceModifyWindow(null, ServiceTable.getListStore(), result);
+						}
+					});
 				}
 			})
 			.build();

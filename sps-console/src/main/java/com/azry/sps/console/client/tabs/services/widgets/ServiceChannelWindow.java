@@ -1,21 +1,25 @@
 package com.azry.sps.console.client.tabs.services.widgets;
 
+import com.azry.gxt.client.zcomp.ZButton;
+import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDto;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ToggleButton;
+import com.sencha.gxt.widget.core.client.Composite;
+import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceChannelWindow extends VerticalLayoutContainer {
+public class ServiceChannelWindow extends Composite {
 
 	private final ToggleButton selectAllButton;
 
@@ -25,26 +29,36 @@ public class ServiceChannelWindow extends VerticalLayoutContainer {
 
 	List<ChannelInfoRow> rows;
 
+	VerticalLayoutContainer container;
+
 	public ServiceChannelWindow(List<ServiceChannelInfoDto> entries, List<ChannelDTO> channels){
 		super();
+		container = new VerticalLayoutContainer();
 		table = new FlexTable();
 		channelInfos = new ArrayList<>();
 		rows = new ArrayList<>();
-
+		if (entries == null) {
+			entries = new ArrayList<>();
+		}
+		ZToolBar toolbar = new ZToolBar();
+		toolbar.setEnableOverflow(false);
+		toolbar.setHeight(40);
 		selectAllButton = new ToggleButton(Mes.get("allChannels"));
 		selectAllButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				for(ChannelInfoRow row : rows){
-					row.getActiveBox().setEnabled(!selectAllButton.isEnabled());
+					row.getActiveBox().setEnabled(!event.getValue());
 				}
 			}
 		});
 
-		setStyleName("ServiceChannelTable");
+		table.setStyleName("ServiceChannelTable");
 
-
-		add(selectAllButton);
+		toolbar.add(selectAllButton);
+		toolbar.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+		toolbar.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
+		container.add(toolbar);
 
 		table.setWidget(0, 0, new HTML(Mes.get("active")));
 		table.setWidget(0, 1, new HTML(Mes.get("channel")));
@@ -52,10 +66,13 @@ public class ServiceChannelWindow extends VerticalLayoutContainer {
 		table.setWidget(0, 3, new HTML(Mes.get("maxAmountShort")));
 
 		addEntries(entries, channels);
-		table.getWidget(0, 0).setWidth("10px");
-		table.getColumnFormatter().setWidth(0, "10px");
+		table.getColumnFormatter().setWidth(0, "32px");
+
 		table.getColumnFormatter().setWidth(1, "100%");
-		add(table);
+		/*table.getColumnFormatter().setWidth(2, "100%");
+		table.getColumnFormatter().setWidth(3, "100%");*/
+		container.add(table);
+		initWidget(container);
 	}
 
 	private void addEntries(List<ServiceChannelInfoDto> infos, List<ChannelDTO> channels) {
@@ -77,7 +94,16 @@ public class ServiceChannelWindow extends VerticalLayoutContainer {
 			}
 
 			BigDecimalField minAmountField = new BigDecimalField();
+			minAmountField.setWidth(140);
+			if (newInfo.getMaxAmount() != null) {
+				minAmountField.setValue(newInfo.getMinAmount());
+			}
+
 			BigDecimalField maxAmountField = new BigDecimalField();
+			maxAmountField.setWidth(140);
+			if (newInfo.getMaxAmount() != null) {
+				maxAmountField.setValue(newInfo.getMaxAmount());
+			}
 
 			rows.add(new ChannelInfoRow(activeBox, minAmountField, maxAmountField));
 
@@ -97,7 +123,7 @@ public class ServiceChannelWindow extends VerticalLayoutContainer {
 
 	public List<ServiceChannelInfoDto> getChannelInfos(){
 		for (int i = 0; i < rows.size(); i ++){
-			if (!selectAllButton.isEnabled()) {
+			if (selectAllButton.getValue()) {
 				channelInfos.get(i).setActive(true);
 			}
 			else {
@@ -116,13 +142,13 @@ public class ServiceChannelWindow extends VerticalLayoutContainer {
 		return channelInfos;
 	}
 
-	private class ChannelInfoRow {
+	private static class ChannelInfoRow {
 
-		private CheckBox activeBox;
+		private final CheckBox activeBox;
 
-		private BigDecimalField minAmountField;
+		private final BigDecimalField minAmountField;
 
-		private BigDecimalField maxAmountField;
+		private final BigDecimalField maxAmountField;
 
 		public ChannelInfoRow(CheckBox activeBox, BigDecimalField minAmountField, BigDecimalField maxAmountField) {
 			this.activeBox = activeBox;

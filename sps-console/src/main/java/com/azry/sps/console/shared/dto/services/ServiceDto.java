@@ -4,6 +4,7 @@ package com.azry.sps.console.shared.dto.services;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
 import com.google.gwt.core.shared.GwtIncompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ServiceDto extends ConfigurableDTO {
+public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
 

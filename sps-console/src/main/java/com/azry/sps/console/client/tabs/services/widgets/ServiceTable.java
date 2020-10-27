@@ -11,6 +11,7 @@ import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
@@ -141,7 +142,12 @@ public class ServiceTable {
 				.clickHandler(new GridClickHandler<ServiceDto>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceDto ServiceDto) {
-						new ServiceModifyWindow(ServiceDto, store);
+						ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+							@Override
+							public void onServiceSuccess(List<ChannelDTO> result) {
+								new ServiceModifyWindow(ServiceDto, store, result);
+							}
+						});
 
 					}
 				})

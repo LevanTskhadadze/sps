@@ -2,6 +2,7 @@ package com.azry.sps.console.shared.dto.services;
 
 import com.azry.sps.common.model.service.ServiceChannelInfo;
 import com.google.gwt.core.shared.GwtIncompatible;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ServiceChannelInfoDto {
+public class ServiceChannelInfoDto implements IsSerializable {
 
 	private long channelId;
 
@@ -18,6 +19,39 @@ public class ServiceChannelInfoDto {
 	private BigDecimal minAmount;
 
 	private BigDecimal maxAmount;
+
+
+	public long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(long channelId) {
+		this.channelId = channelId;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public BigDecimal getMinAmount() {
+		return minAmount;
+	}
+
+	public void setMinAmount(BigDecimal minAmount) {
+		this.minAmount = minAmount;
+	}
+
+	public BigDecimal getMaxAmount() {
+		return maxAmount;
+	}
+
+	public void setMaxAmount(BigDecimal maxAmount) {
+		this.maxAmount = maxAmount;
+	}
 
 	@GwtIncompatible
 	public static ServiceChannelInfoDto toDto(ServiceChannelInfo serviceChannelInfo) {

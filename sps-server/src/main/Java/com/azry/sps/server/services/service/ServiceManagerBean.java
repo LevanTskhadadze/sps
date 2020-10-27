@@ -70,7 +70,9 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public Service editService(Service service) {
 		ServiceEntity entity = service.getEntity();
-		return em.merge(entity).getService();
+		Service srv = em.merge(entity).getService();
+		srv.setVersion(srv.getVersion() + 1);
+		return srv;
 	}
 
 	@Override

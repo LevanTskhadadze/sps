@@ -11,6 +11,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
+import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -62,13 +63,8 @@ public class ServiceModifyWindow extends ZWindow {
 
 
 
-	public ServiceModifyWindow(ServiceDto dto, ListStore<ServiceDto> store) {
+	public ServiceModifyWindow(ServiceDto dto, ListStore<ServiceDto> store, List<ChannelDTO> channels) {
 		super();
-		channelContainer = new ServiceChannelWindow(dto.getChannels(), new ArrayList<ChannelDTO>());
-		tabPanel = new TabPanel();
-
-		this.store = store;
-
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
@@ -79,6 +75,12 @@ public class ServiceModifyWindow extends ZWindow {
 			this.dto.setActive(false);
 			this.dto.setId(0);
 		}
+		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), channels);
+		tabPanel = new TabPanel();
+
+		this.store = store;
+
+
 
 
 
@@ -97,7 +99,7 @@ public class ServiceModifyWindow extends ZWindow {
 		add(tabPanel, new MarginData(0));
 
 		setHeight("500px");
-		setWidth("550px");
+		setWidth("600px");
 		String header = Mes.get("systemParam") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
 		setHeadingText(header);
 		showInCenter();
@@ -108,10 +110,10 @@ public class ServiceModifyWindow extends ZWindow {
 	}
 
 	private void constructFormTab(){
-		formContainer.add(constructForm());
+		formContainer.add(constructForm(), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 
 		tabPanel.add(formContainer, Mes.get("serviceInfo"));
-		tabPanel.add(formContainer, Mes.get("serviceInfo"));
+		tabPanel.add(channelContainer, Mes.get("serviceInfo"));
 
 
 	}
@@ -303,6 +305,7 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setMaxAmount(maxAmountField.getValue());
 		dto.setGroupId(serviceGroupField.getValue().getId());
 		dto.setLastUpdateTime(new Date());
+		dto.setChannels(channelContainer.getChannelInfos());
 
 		Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
 		logger.log(Level.SEVERE, "" + dto.getVersion());
@@ -332,6 +335,7 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setProviderAccountIBAN(IBANField.getValue());
 		dto.setLastUpdateTime(new Date());
 		dto.setCreateTime(new Date());
+		dto.setChannels(channelContainer.getChannelInfos());
 
 		ServicesFactory.getServiceTabService().editService(
 			dto,
