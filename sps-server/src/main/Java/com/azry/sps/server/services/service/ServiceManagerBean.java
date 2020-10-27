@@ -3,8 +3,6 @@ package com.azry.sps.server.services.service;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
-import com.azry.sps.common.model.users.SystemUser;
-
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,6 +18,13 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@PersistenceContext
 	EntityManager em;
+
+	@Override
+	public List<ServiceEntity> getAllServices() {
+
+		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
+			.getResultList();
+	}
 
 	@Override
 	public ListResult<Service> getServices(Map<String, Object> params, int offset, int limit) {

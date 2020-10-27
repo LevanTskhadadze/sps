@@ -52,21 +52,21 @@ import java.util.List;
 
 public class ChannelTab extends Composite {
 
-	VerticalLayoutContainer verticalLayoutContainer;
+	private VerticalLayoutContainer verticalLayoutContainer;
 
-	ZGrid<ChannelDTO> grid;
+	private ZGrid<ChannelDTO> grid;
 
-	ZToolBar toolBar;
+	private ZToolBar toolBar;
 
-	ZTextField name;
+	private ZTextField name;
 
-	ZSimpleComboBox<Boolean> active;
+	private ZSimpleComboBox<Boolean> active;
 
-	ZButton searchButton;
+	private ZButton searchButton;
 
-	ZButton clearFiltersButton;
+	private ZButton clearFiltersButton;
 
-	ZButton addButton;
+	private ZButton addButton;
 
 	private final ListStore<ChannelDTO> gridStore = new ListStore<>(new ModelKeyProvider<ChannelDTO>() {
 		@Override
@@ -167,6 +167,7 @@ public class ChannelTab extends Composite {
 
 		new EnterKeyBinder.Builder(searchButton)
 			.add(name)
+			.add(active)
 			.bind();
 
 

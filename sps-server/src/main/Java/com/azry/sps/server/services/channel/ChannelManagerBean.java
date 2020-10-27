@@ -17,6 +17,12 @@ public class ChannelManagerBean implements ChannelManager {
 	private EntityManager em;
 
 	@Override
+	public List<Channel> getChannels() {
+		return em.createQuery("select c FROM Channel c", Channel.class)
+			.getResultList();
+	}
+
+	@Override
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 		String sql = "FROM Channel c ";
 		Map<String, String> params = new HashMap<>();

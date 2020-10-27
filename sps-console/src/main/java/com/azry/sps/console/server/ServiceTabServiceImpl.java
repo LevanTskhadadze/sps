@@ -2,10 +2,8 @@ package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
-import com.azry.sps.common.model.service.ServiceEntity;
-import com.azry.sps.common.model.users.SystemUser;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.users.SystemUserDTO;
+import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -22,6 +20,10 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 
 	@Inject
 	ServiceManager serviceManager;
+
+	public List<ServiceEntityDto> getAllServices(){
+		return ServiceEntityDto.toDtos(serviceManager.getAllServices());
+	}
 
 	@Override
 	public PagingLoadResult<ServiceDto> getServices(Map<String, Object> params, int offset, int limit) {

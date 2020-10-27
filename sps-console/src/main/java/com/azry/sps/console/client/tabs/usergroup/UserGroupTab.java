@@ -58,25 +58,19 @@ public class UserGroupTab extends Composite {
 
 //	private static final String OPACITY_STYLE = "opacity: 0.3";
 
-	VerticalLayoutContainer verticalLayoutContainer;
+	private final VerticalLayoutContainer verticalLayoutContainer;
 
-	ZGrid<UserGroupDTO> grid;
+	private ZGrid<UserGroupDTO> grid;
 
-	ZToolBar toolBar;
+	private ZToolBar toolBar;
 
-	ZTextField name;
+	private ZTextField name;
 
-	ZDynamicComboBox<PermissionsDTO> permission;
+	private ZDynamicComboBox<PermissionsDTO> permission;
 
-	ZSimpleComboBox<Boolean> active;
+	private ZSimpleComboBox<Boolean> active;
 
-	ZButton searchButton;
-
-	ZButton clearFiltersButton;
-
-	ZButton addButton;
-
-	List<PermissionsDTO> permissions;
+	private final List<PermissionsDTO> permissions;
 
 	private final ListStore<UserGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<UserGroupDTO>() {
 		@Override
@@ -85,11 +79,13 @@ public class UserGroupTab extends Composite {
 		}
 	});
 
-	Store.StoreSortInfo<UserGroupDTO> storeSortInfo;
+	private final List<Boolean> booleans = new ArrayList<>();
+
+	private Store.StoreSortInfo<UserGroupDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<UserGroupDTO>> loader;
 
-	List<Boolean> booleans = new ArrayList<>();
+
 
 
 	public UserGroupTab() {
@@ -169,7 +165,7 @@ public class UserGroupTab extends Composite {
 			.build();
 
 
-		searchButton = new ZButton.Builder()
+		ZButton searchButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.text(Mes.get("search"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -181,7 +177,7 @@ public class UserGroupTab extends Composite {
 			})
 			.build();
 
-		clearFiltersButton = new ZButton.Builder()
+		ZButton clearFiltersButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().eraser())
 			.tooltip(Mes.get("clearFilter"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -192,7 +188,8 @@ public class UserGroupTab extends Composite {
 			})
 			.build();
 
-		addButton = new ZButton.Builder()
+		//			.visible(isManage)
+		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -200,7 +197,7 @@ public class UserGroupTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new UserGroupWindow(null, ActionMode.ADD){
+					new UserGroupWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(UserGroupDTO dto) {
 							gridStore.add(dto);
@@ -212,6 +209,8 @@ public class UserGroupTab extends Composite {
 
 		new EnterKeyBinder.Builder(searchButton)
 			.add(name)
+			.add(permission)
+			.add(active)
 			.bind();
 
 

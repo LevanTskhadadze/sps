@@ -35,6 +35,14 @@ public class ChannelDTO extends ConfigurableDTO implements IsSerializable {
 		this.name = name;
 	}
 
+	public ChannelDTO() {
+	}
+
+	public ChannelDTO(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public FiServiceUnavailabilityActionDTO getFiServiceUnavailabilityAction() {
 		return fiServiceUnavailabilityAction;
 	}

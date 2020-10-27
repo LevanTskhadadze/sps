@@ -16,6 +16,11 @@ public class ChannelServiceImpl extends RemoteServiceServlet implements ChannelS
 	ChannelManager channelManager;
 
 	@Override
+	public List<ChannelDTO> getChannels() {
+		return ChannelDTO.toDTOs(channelManager.getChannels());
+	}
+
+	@Override
 	public List<ChannelDTO> getFilteredChannels(String name, Boolean isActive) {
 		return ChannelDTO.toDTOs(channelManager.getFilteredChannels(name, isActive));
 	}
