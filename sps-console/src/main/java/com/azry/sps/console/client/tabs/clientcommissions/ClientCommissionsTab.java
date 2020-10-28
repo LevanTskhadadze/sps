@@ -8,6 +8,7 @@ import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZGrid;
 import com.azry.gxt.client.zcomp.ZGridView;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
+import com.azry.gxt.client.zcomp.ZPagingToolBar;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.ZToolBar;
@@ -45,9 +46,9 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
-import com.sencha.gxt.widget.core.client.toolbar.PagingToolBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,19 +58,13 @@ public class ClientCommissionsTab extends Composite {
 
 	private List<ServiceEntityDto> serviceEntityDTOs;
 
-	private VerticalLayoutContainer verticalLayoutContainer;
+	private final VerticalLayoutContainer verticalLayoutContainer;
 
 	private ZGrid<ClientCommissionsDTO> grid;
 
 	private ZToolBar toolBar;
 
-	private ZButton searchButton;
-
-	private ZButton clearFiltersButton;
-
-	private ZButton addButton;
-
-	private PagingToolBar pagingToolBar;
+	private ZPagingToolBar pagingToolBar;
 
 	private ZSimpleComboBox<ServiceEntityDto> service;
 
@@ -177,7 +172,7 @@ public class ClientCommissionsTab extends Composite {
 			.build();
 
 
-		searchButton = new ZButton.Builder()
+		ZButton searchButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.text(Mes.get("search"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -189,7 +184,7 @@ public class ClientCommissionsTab extends Composite {
 			})
 			.build();
 
-		clearFiltersButton = new ZButton.Builder()
+		ZButton clearFiltersButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().eraser())
 			.tooltip(Mes.get("clearFilter"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -200,7 +195,8 @@ public class ClientCommissionsTab extends Composite {
 			})
 			.build();
 
-		addButton = new ZButton.Builder()
+		//			.visible(isManage)
+		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -208,7 +204,7 @@ public class ClientCommissionsTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new ClientCommissionsWindow(null, serviceEntityDTOs, channelDTOs, ActionMode.ADD){
+					new ClientCommissionsWindow(null, serviceEntityDTOs, channelDTOs, ActionMode.ADD) {
 						@Override
 						public void onSave(ClientCommissionsDTO dto) {
 							gridStore.add(dto);
@@ -302,9 +298,13 @@ public class ClientCommissionsTab extends Composite {
 
 		gridStore.addSortInfo(storeSortInfo);
 
+		List<Integer> pageSize = new ArrayList<>();
+		Collections.addAll(pageSize, 50, 100, 500, 1000);
 
-		pagingToolBar = new PagingToolBar(50);
-		pagingToolBar.bind(loader);
+		pagingToolBar = new ZPagingToolBar.Builder<>(loader)
+			.defaultValue(50)
+			.possibleValue(pageSize)
+			.build();
 
 		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ClientCommissionsDTO>());
 		grid.getView().setColumnLines(true);
