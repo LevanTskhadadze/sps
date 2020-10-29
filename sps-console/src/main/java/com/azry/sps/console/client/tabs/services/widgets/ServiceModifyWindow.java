@@ -100,7 +100,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 		setHeight("500px");
 		setWidth("600px");
-		String header = Mes.get("systemParam") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
+		String header = Mes.get("ofService") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
 		setHeadingText(header);
 		showInCenter();
 	}

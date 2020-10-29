@@ -20,4 +20,10 @@ public interface ServiceManager {
 	void removeService(long id);
 
 	void changeActivation(long id);
+
+	void setIcon(long id, String path);
+
+	String getIcon(long id);
+
+    Service getService(long id);
 }
