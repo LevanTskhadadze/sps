@@ -9,6 +9,8 @@ import java.util.List;
 @RemoteServiceRelativePath("servlet/Channel")
 public interface ChannelService extends RemoteService {
 
+	List<ChannelDTO> getChannels();
+
 	List<ChannelDTO> getFilteredChannels(String name, Boolean isActive);
 
 	ChannelDTO updateChannel(ChannelDTO dto);

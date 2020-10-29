@@ -45,19 +45,13 @@ import java.util.List;
 
 public class ServiceGroupTab extends Composite {
 
-	VerticalLayoutContainer verticalLayoutContainer;
+	private final VerticalLayoutContainer verticalLayoutContainer;
 
-	ZGrid<ServiceGroupDTO> grid;
+	private ZGrid<ServiceGroupDTO> grid;
 
-	ZToolBar toolBar;
+	private ZToolBar toolBar;
 
-	ZTextField name;
-
-	ZButton searchButton;
-
-	ZButton clearFiltersButton;
-
-	ZButton addButton;
+	private ZTextField name;
 
 
 	private final ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {
@@ -66,8 +60,6 @@ public class ServiceGroupTab extends Composite {
 			return String.valueOf(groupDTO.getId());
 		}
 	});
-
-	Store.StoreSortInfo<ServiceGroupDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> loader;
 
@@ -92,7 +84,7 @@ public class ServiceGroupTab extends Composite {
 			.build();
 
 
-		searchButton = new ZButton.Builder()
+		ZButton searchButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.text(Mes.get("search"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -104,7 +96,7 @@ public class ServiceGroupTab extends Composite {
 			})
 			.build();
 
-		clearFiltersButton = new ZButton.Builder()
+		ZButton clearFiltersButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().eraser())
 			.tooltip(Mes.get("clearFilter"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -115,7 +107,8 @@ public class ServiceGroupTab extends Composite {
 			})
 			.build();
 
-		addButton = new ZButton.Builder()
+		//			.visible(isManage)
+		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -123,7 +116,7 @@ public class ServiceGroupTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new ServiceGroupWindow(null, ActionMode.ADD){
+					new ServiceGroupWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(ServiceGroupDTO dto) {
 							gridStore.add(dto);
@@ -164,14 +157,15 @@ public class ServiceGroupTab extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ServiceGroupDTO, ListLoadResult<ServiceGroupDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceGroupDTO, Long>() {
+		Store.StoreSortInfo<ServiceGroupDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceGroupDTO, Long>() {
 			@Override
 			public Long getValue(ServiceGroupDTO groupDTO) {
 				return groupDTO.getPriority();
 			}
 
 			@Override
-			public void setValue(ServiceGroupDTO o, Long o2) { }
+			public void setValue(ServiceGroupDTO o, Long o2) {
+			}
 
 			@Override
 			public String getPath() {

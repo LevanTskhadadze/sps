@@ -3,6 +3,7 @@ package com.azry.sps.console.client.tabs;
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.channel.ChannelTab;
+import com.azry.sps.console.client.tabs.clientcommissions.ClientCommissionsTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
 import com.azry.sps.console.client.tabs.services.ServicesTab;
 import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
@@ -240,5 +241,39 @@ public class TabBuilder {
 		return menuItem;
 	}
 
+	private static ClientCommissionsTab clientCommissionsTab;
+
+	public static HTML getClientCommissionsMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("clientCommissions"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (clientCommissionsTab != null) {
+					if(clientCommissionsTab.getTitle().equals("closed")) {
+						clientCommissionsTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(clientCommissionsTab);
+						return;
+					}
+				}
+
+				clientCommissionsTab = new ClientCommissionsTab();
+				centerPanel.add(clientCommissionsTab, Mes.get("clientCommissions"));
+
+				TabItemConfig config = centerPanel.getConfig(clientCommissionsTab);
+				config.setIcon(FAIconsProvider.getIcons().briefcase());
+				config.setClosable(true);
+
+				centerPanel.update(clientCommissionsTab, config);
+				centerPanel.setActiveWidget(clientCommissionsTab);
+			}
+		});
+		return menuItem;
+	}
 
 }

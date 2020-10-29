@@ -8,6 +8,8 @@ import java.util.List;
 @Local
 public interface ChannelManager {
 
+	List<Channel> getChannels();
+
 	List<Channel> getFilteredChannels(String name, Boolean isActive);
 
 	Channel updateChannel(Channel channel);

@@ -28,7 +28,6 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,8 +79,8 @@ public class ServicesTab extends Composite {
 
 			}
 		};
-		pagingLoader = new PagingLoader<>(proxy);
 
+		pagingLoader = new PagingLoader<>(proxy);
 		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceDto, PagingLoadResult<ServiceDto>>(ServiceTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();

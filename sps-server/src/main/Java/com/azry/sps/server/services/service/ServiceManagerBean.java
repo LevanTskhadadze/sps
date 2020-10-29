@@ -23,6 +23,13 @@ public class ServiceManagerBean implements ServiceManager {
 	EntityManager em;
 
 	@Override
+	public List<ServiceEntity> getAllServices() {
+
+		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
+			.getResultList();
+	}
+
+	@Override
 	public ListResult<Service> getServices(Map<String, Object> params, int offset, int limit) {
 		if (params == null) params = new HashMap<>();
 

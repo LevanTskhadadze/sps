@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ChannelServiceAsync {
 
+	void getChannels(AsyncCallback<List<ChannelDTO>> async);
+
 	void getFilteredChannels(String name, Boolean isActive, AsyncCallback<List<ChannelDTO>> async);
 
 	void updateChannel(ChannelDTO dto, AsyncCallback<ChannelDTO> async);
