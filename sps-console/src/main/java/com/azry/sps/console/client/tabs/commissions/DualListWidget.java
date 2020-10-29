@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.tabs.clientcommissions;
+package com.azry.sps.console.client.tabs.commissions;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;

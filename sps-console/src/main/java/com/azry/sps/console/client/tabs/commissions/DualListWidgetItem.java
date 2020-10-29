@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.tabs.clientcommissions;
+package com.azry.sps.console.client.tabs.commissions;
 
 public class DualListWidgetItem {
 

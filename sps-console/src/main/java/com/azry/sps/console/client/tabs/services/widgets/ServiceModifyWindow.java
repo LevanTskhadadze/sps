@@ -5,8 +5,8 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
+import com.azry.sps.common.model.service.ServiceChannelInfo;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.tabs.users.widgets.UserGroupTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
@@ -24,7 +24,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -75,7 +74,7 @@ public class ServiceModifyWindow extends ZWindow {
 			this.dto.setActive(false);
 			this.dto.setId(0);
 		}
-		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), channels);
+		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), channels, this.dto.isAllChannels());
 		tabPanel = new TabPanel();
 
 		this.store = store;
@@ -297,15 +296,17 @@ public class ServiceModifyWindow extends ZWindow {
 	private boolean doRedact() {
 		if(!validate()) return false;
 
+		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
 		dto.setName(nameField.getValue());
 		dto.setProviderAccountIBAN(IBANField.getValue());
 		dto.setServicePayCode(payCodeField.getValue());
 		dto.setServiceDebtCode(debtCodeField.getValue());
 		dto.setMinAmount(minAmountField.getValue());
 		dto.setMaxAmount(maxAmountField.getValue());
+		dto.setAllChannels(info.isAllChannels());
 		dto.setGroupId(serviceGroupField.getValue().getId());
 		dto.setLastUpdateTime(new Date());
-		dto.setChannels(channelContainer.getChannelInfos());
+		dto.setChannels(info.getChannels());
 
 		Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
 		logger.log(Level.SEVERE, "" + dto.getVersion());
@@ -325,6 +326,8 @@ public class ServiceModifyWindow extends ZWindow {
 		if(!validate()) {
 			return false;
 		}
+
+		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
 		dto = new ServiceDto();
 		dto.setName(nameField.getValue());
 		dto.setGroupId(serviceGroupField.getValue().getId());
@@ -333,9 +336,10 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setServiceDebtCode(debtCodeField.getValue());
 		dto.setServicePayCode(payCodeField.getValue());
 		dto.setProviderAccountIBAN(IBANField.getValue());
+		dto.setAllChannels(info.isAllChannels());
 		dto.setLastUpdateTime(new Date());
 		dto.setCreateTime(new Date());
-		dto.setChannels(channelContainer.getChannelInfos());
+		dto.setChannels(info.getChannels());
 
 		ServicesFactory.getServiceTabService().editService(
 			dto,
@@ -369,4 +373,6 @@ public class ServiceModifyWindow extends ZWindow {
 			})
 			.build();
 	}
+
+
 }
