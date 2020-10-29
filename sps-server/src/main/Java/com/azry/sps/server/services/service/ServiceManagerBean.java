@@ -4,6 +4,7 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.model.users.SystemUser;
+import com.azry.sps.common.utils.XmlUtils;
 
 
 import javax.ejb.Stateless;
@@ -87,5 +88,26 @@ public class ServiceManagerBean implements ServiceManager {
 		service.setActive(!service.isActive());
 
 		em.persist(service);
+	}
+
+	@Override
+	public void setIcon(long id, String path) {
+		ServiceEntity entity = em.find(ServiceEntity.class, id);
+		Service srv = XmlUtils.fromXML(entity.getData(), Service.class);
+		srv.setIcon(path);
+		entity.setData(XmlUtils.toXml(srv));
+		em.persist(entity);
+	}
+
+	@Override
+	public String getIcon(long id) {
+		ServiceEntity entity = em.find(ServiceEntity.class, id);
+		Service srv = XmlUtils.fromXML(entity.getData(), Service.class);
+		return srv.getIcon();
+	}
+
+	@Override
+	public Service getService(long id) {
+		return em.find(ServiceEntity.class, id).getService();
 	}
 }

@@ -10,6 +10,8 @@ public interface ServiceTabServiceAsync {
 
 	void getServices(Map<String, Object> params, int offset, int limit, AsyncCallback<PagingLoadResult<ServiceDto>> callback);
 
+	void getService(long id, AsyncCallback<ServiceDto> callback);
+
 	void editService(ServiceDto service, AsyncCallback<ServiceDto> callback);
 
 	void removeService(long id, AsyncCallback<Void> callback);

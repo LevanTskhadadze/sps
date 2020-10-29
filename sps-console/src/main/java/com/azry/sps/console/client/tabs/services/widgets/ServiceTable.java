@@ -5,6 +5,7 @@ import com.azry.gxt.client.zcomp.ZColumnConfig;
 import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
+import com.azry.gxt.client.zcomp.ZURLBuilder;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.gxt.client.zcomp.helper.IconSelector;
 import com.azry.gxt.client.zcomp.helper.TooltipSelector;
@@ -13,8 +14,17 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.user.client.ui.ImageResourceRenderer;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -22,7 +32,10 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServiceTable {
 
@@ -46,7 +59,7 @@ public class ServiceTable {
 		return store;
 	}
 
-
+	@SuppressWarnings("unchecked")
 	public static ColumnModel<ServiceDto> getMyColumnModel() {
 
 		List<ColumnConfig<ServiceDto, ?>> columns = new ArrayList<>();
@@ -93,7 +106,84 @@ public class ServiceTable {
 				}
 			})
 			.build());
+		final ZIconButtonCell<ServiceDto, String> iconButtonCell;
+		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+			.header("")
+			.width(32)
+			.fixed()
+			.cellClassName("grid-icon-column")
+			.cell(new ZIconButtonCell.Builder<ServiceDto, String>()
+				.gridStore(store)
+				.dynamicIcon(
+					new IconSelector<ServiceDto>() {
 
+						@Override
+						public ImageResource selectIcon(Cell.Context context, ServiceDto dto) {
+							final String url = ZURLBuilder.create(GWT.getHostPageBaseURL(), "sps/servlet/iconDownload")
+								.param("id", dto.getId())
+								.build();
+							return new ImageResource() {
+								@Override
+								public int getHeight() {
+									return 25;
+								}
+
+								@Override
+								public int getLeft() {
+									return 0;
+								}
+
+								@Override
+								public SafeUri getSafeUri() {
+									return new SafeUri() {
+										@Override
+										public String asString() {
+											return url;
+										}
+									};
+								}
+
+								@Override
+								public int getTop() {
+									return 0;
+								}
+
+								@Override
+								public String getURL() {
+									return null;
+								}
+
+								@Override
+								public int getWidth() {
+									return 25;
+								}
+
+								@Override
+								public boolean isAnimated() {
+									return false;
+								}
+
+								@Override
+								public String getName() {
+									return null;
+								}
+							};
+						}
+					}
+				)
+				.clickHandler(new GridClickHandler<ServiceDto>() {
+					@Override
+					public void onClick(Cell.Context context, ServiceDto dto) {
+						new IconEditWindow("service", dto.getId(), store) {
+							@Override
+							public void onSave() {
+							}
+						}.showInCenter();
+					}
+				})
+				.build()
+			)
+			.build());
 
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
 			.header("")

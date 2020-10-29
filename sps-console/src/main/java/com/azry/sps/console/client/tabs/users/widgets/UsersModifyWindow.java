@@ -93,7 +93,7 @@ public class UsersModifyWindow extends ZWindow {
 
 		setHeight("500px");
 		setWidth("550px");
-		String header = Mes.get("systemParam") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
+		String header = Mes.get("ofUser") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
 		setHeadingText(header);
 		showInCenter();
 	}
