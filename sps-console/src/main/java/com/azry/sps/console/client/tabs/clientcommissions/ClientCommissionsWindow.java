@@ -306,8 +306,19 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 	}
 
 	private boolean validateAmountLimits() {
+		BigDecimal com = commission.getCurrentValue();
 		BigDecimal min = minCommission.getCurrentValue();
 		BigDecimal max = maxCommission.getCurrentValue();
+
+		if ((com != null) && com.compareTo(max) > 0) {
+			commission.markInvalid("invalidCommissionMaxValue");
+			return false;
+
+		} else if ((com != null) && com.compareTo(min) < 0) {
+			commission.markInvalid("invalidCommissionMinValue");
+			return false;
+		}
+
 		if ((min != null && max != null) && min.compareTo(max) >= 0) {
 			minCommission.markInvalid(Mes.get("invalidAmountMinMaxValues"));
 			return false;
