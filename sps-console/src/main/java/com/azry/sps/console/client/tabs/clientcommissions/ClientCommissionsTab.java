@@ -85,6 +85,20 @@ public class ClientCommissionsTab extends Composite {
 
 	public ClientCommissionsTab() {
 		initToolbar();
+		getData();
+		verticalLayoutContainer = new VerticalLayoutContainer();
+		initGrid();
+		initWidget(verticalLayoutContainer);
+		buildDisplay();
+	}
+
+	private void buildDisplay() {
+		verticalLayoutContainer.add(toolBar);
+		verticalLayoutContainer.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
+		verticalLayoutContainer.add(pagingToolBar);
+	}
+
+	private void getData() {
 		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceEntityDto>>() {
 			@Override
 			public void onServiceSuccess(List<ServiceEntityDto> result) {
@@ -99,16 +113,6 @@ public class ClientCommissionsTab extends Composite {
 				initChannelComboboxData(channelDTOs);
 			}
 		});
-		verticalLayoutContainer = new VerticalLayoutContainer();
-		initGrid();
-		initWidget(verticalLayoutContainer);
-		buildDisplay();
-	}
-
-	private void buildDisplay() {
-		verticalLayoutContainer.add(toolBar);
-		verticalLayoutContainer.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
-		verticalLayoutContainer.add(pagingToolBar);
 	}
 
 	private void initToolbar() {
