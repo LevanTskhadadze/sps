@@ -310,11 +310,11 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		BigDecimal min = minCommission.getCurrentValue();
 		BigDecimal max = maxCommission.getCurrentValue();
 
-		if ((com != null) && com.compareTo(max) > 0) {
+		if ((com != null && max != null) && com.compareTo(max) > 0) {
 			commission.markInvalid("invalidCommissionMaxValue");
 			return false;
 
-		} else if ((com != null) && com.compareTo(min) < 0) {
+		} else if ((com != null && min != null) && com.compareTo(min) < 0) {
 			commission.markInvalid("invalidCommissionMinValue");
 			return false;
 		}
