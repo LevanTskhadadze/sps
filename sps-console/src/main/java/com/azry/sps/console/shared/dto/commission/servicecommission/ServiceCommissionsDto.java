@@ -1,9 +1,10 @@
-package com.azry.sps.console.shared.dto.commission;
+package com.azry.sps.console.shared.dto.commission.servicecommission;
 
-import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.common.model.commission.CommissionRateType;
+import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.console.client.utils.StringUtil;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
+import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -12,17 +13,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClientCommissionsDTO extends ConfigurableDTO implements IsSerializable {
+public class ServiceCommissionsDto extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
 
 	private boolean allServices;
 
 	private List<String> servicesIds = new ArrayList<>();
-
-	private boolean allChannels;
-
-	private List<String> channelsIds = new ArrayList<>();
 
 	private CommissionRateTypeDTO rateType;
 
@@ -54,22 +51,6 @@ public class ClientCommissionsDTO extends ConfigurableDTO implements IsSerializa
 
 	public void setServicesIds(List<String> servicesIds) {
 		this.servicesIds = servicesIds;
-	}
-
-	public boolean isAllChannels() {
-		return allChannels;
-	}
-
-	public void setAllChannels(boolean allChannels) {
-		this.allChannels = allChannels;
-	}
-
-	public List<String> getChannelsIds() {
-		return channelsIds;
-	}
-
-	public void setChannelsIds(List<String> channelsIds) {
-		this.channelsIds = channelsIds;
 	}
 
 	public CommissionRateTypeDTO getRateType() {
@@ -105,25 +86,21 @@ public class ClientCommissionsDTO extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public static ClientCommissionsDTO toDTO(ClientCommissions clientCommissions) {
-		if (clientCommissions != null) {
-			ClientCommissionsDTO dto = new ClientCommissionsDTO();
-			dto.setId(clientCommissions.getId());
-			dto.setAllServices(clientCommissions.isAllServices());
-			if (!clientCommissions.getServicesIds().isEmpty())  {
-				dto.setServicesIds(Arrays.asList(clientCommissions.getServicesIds().split(",")));
+	public static ServiceCommissionsDto toDTO(ServiceCommissions serviceCommissions) {
+		if (serviceCommissions != null) {
+			ServiceCommissionsDto dto = new ServiceCommissionsDto();
+			dto.setId(serviceCommissions.getId());
+			dto.setAllServices(serviceCommissions.isAllServices());
+			if (!serviceCommissions.getServicesIds().isEmpty())  {
+				dto.setServicesIds(Arrays.asList(serviceCommissions.getServicesIds().split(",")));
 			}
-			dto.setAllChannels(clientCommissions.isAllChannels());
-			if (!clientCommissions.getChannelsIds().isEmpty()) {
-				dto.setChannelsIds(Arrays.asList(clientCommissions.getChannelsIds().split(",")));
-			}
-			dto.setRateType(CommissionRateTypeDTO.valueOf(clientCommissions.getRateType().name()));
-			dto.setMinCommission(clientCommissions.getMinCommission());
-			dto.setMaxCommission(clientCommissions.getMaxCommission());
-			dto.setCommission(clientCommissions.getCommission());
-			dto.setCreateTime(clientCommissions.getCreateTime());
-			dto.setLastUpdateTime(clientCommissions.getLastUpdateTime());
-			dto.setVersion(clientCommissions.getVersion());
+			dto.setRateType(CommissionRateTypeDTO.valueOf(serviceCommissions.getRateType().name()));
+			dto.setMinCommission(serviceCommissions.getMinCommission());
+			dto.setMaxCommission(serviceCommissions.getMaxCommission());
+			dto.setCommission(serviceCommissions.getCommission());
+			dto.setCreateTime(serviceCommissions.getCreateTime());
+			dto.setLastUpdateTime(serviceCommissions.getLastUpdateTime());
+			dto.setVersion(serviceCommissions.getVersion());
 
 			return dto;
 		}
@@ -131,13 +108,11 @@ public class ClientCommissionsDTO extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public static List<ClientCommissionsDTO> toDTOs(List<ClientCommissions> clientCommissions) {
-		if (clientCommissions != null) {
-			List<ClientCommissionsDTO> dtos = new ArrayList<>();
-
-			for (ClientCommissions cc : clientCommissions) {
-				dtos.add(toDTO(cc));
-
+	public static List<ServiceCommissionsDto> toDTOs(List<ServiceCommissions> serviceCommissions) {
+		if (serviceCommissions != null) {
+			List<ServiceCommissionsDto> dtos = new ArrayList<>();
+			for (ServiceCommissions entity : serviceCommissions) {
+				dtos.add(toDTO(entity));
 			}
 			return dtos;
 		}
@@ -145,13 +120,11 @@ public class ClientCommissionsDTO extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public ClientCommissions fromDTO() {
-		ClientCommissions cc = new ClientCommissions();
+	public ServiceCommissions fromDTO() {
+		ServiceCommissions cc = new ServiceCommissions();
 		cc.setId(this.getId());
 		cc.setAllServices(this.isAllServices());
 		cc.setServicesIds(StringUtil.join(this.getServicesIds(), ","));
-		cc.setAllChannels(this.isAllChannels());
-		cc.setChannelsIds(StringUtil.join(this.getChannelsIds(), ","));
 		cc.setRateType(CommissionRateType.valueOf(this.getRateType().name()));
 		cc.setMinCommission(this.getMinCommission());
 		cc.setMaxCommission(this.getMaxCommission());

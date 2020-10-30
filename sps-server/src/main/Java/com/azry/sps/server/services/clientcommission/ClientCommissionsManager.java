@@ -1,4 +1,4 @@
-package com.azry.sps.server.services.commission;
+package com.azry.sps.server.services.clientcommission;
 
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.commission.ClientCommissions;

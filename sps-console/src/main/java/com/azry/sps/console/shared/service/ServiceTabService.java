@@ -1,7 +1,6 @@
 package com.azry.sps.console.shared.service;
 
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

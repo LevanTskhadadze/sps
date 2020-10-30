@@ -3,10 +3,12 @@ package com.azry.sps.console.client;
 
 import com.azry.sps.console.shared.channel.ChannelService;
 import com.azry.sps.console.shared.channel.ChannelServiceAsync;
-import com.azry.sps.console.shared.commission.ClientCommissionsService;
-import com.azry.sps.console.shared.commission.ClientCommissionsServiceAsync;
+import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
+import com.azry.sps.console.shared.clientcommission.ClientCommissionsServiceAsync;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.console.shared.service.ServiceTabServiceAsync;
+import com.azry.sps.console.shared.servicecommission.ServiceCommissionsService;
+import com.azry.sps.console.shared.servicecommission.ServiceCommissionsServiceAsync;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupServiceAsync;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
@@ -92,6 +94,15 @@ public class ServicesFactory {
 			clientCommissionsService = GWT.create(ClientCommissionsService.class);
 		}
 		return clientCommissionsService;
+	}
+
+	private static ServiceCommissionsServiceAsync serviceCommissionsService;
+
+	public static ServiceCommissionsServiceAsync getServiceCommissionsService() {
+		if (serviceCommissionsService == null) {
+			serviceCommissionsService = GWT.create(ServiceCommissionsService.class);
+		}
+		return serviceCommissionsService;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.azry.sps.console.client.tabs.services.widgets;
 
-import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
@@ -11,6 +10,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.button.ToggleButton;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -31,7 +31,7 @@ public class ServiceChannelWindow extends Composite {
 
 	VerticalLayoutContainer container;
 
-	public ServiceChannelWindow(List<ServiceChannelInfoDto> entries, List<ChannelDTO> channels){
+	public ServiceChannelWindow(List<ServiceChannelInfoDto> entries, List<ChannelDTO> channels, boolean allSelected){
 		super();
 		container = new VerticalLayoutContainer();
 		table = new FlexTable();
@@ -44,15 +44,13 @@ public class ServiceChannelWindow extends Composite {
 		toolbar.setEnableOverflow(false);
 		toolbar.setHeight(40);
 		selectAllButton = new ToggleButton(Mes.get("allChannels"));
+		selectAllButton.setValue(allSelected);
 		selectAllButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
-				for(ChannelInfoRow row : rows){
-					row.getActiveBox().setEnabled(!event.getValue());
-				}
+				toggleCheckboxes(!event.getValue());
 			}
 		});
-
 		table.setStyleName("ServiceChannelTable");
 
 		toolbar.add(selectAllButton);
@@ -72,7 +70,14 @@ public class ServiceChannelWindow extends Composite {
 		/*table.getColumnFormatter().setWidth(2, "100%");
 		table.getColumnFormatter().setWidth(3, "100%");*/
 		container.add(table);
+		toggleCheckboxes(!allSelected);
 		initWidget(container);
+	}
+
+	private void toggleCheckboxes(boolean value) {
+		for(ChannelInfoRow row : rows){
+			row.getActiveBox().setEnabled(value);
+		}
 	}
 
 	private void addEntries(List<ServiceChannelInfoDto> infos, List<ChannelDTO> channels) {
@@ -121,14 +126,10 @@ public class ServiceChannelWindow extends Composite {
 		return info;
 	}
 
-	public List<ServiceChannelInfoDto> getChannelInfos(){
+	public ChannelInfo getChannelInfos(){
 		for (int i = 0; i < rows.size(); i ++){
-			if (selectAllButton.getValue()) {
-				channelInfos.get(i).setActive(true);
-			}
-			else {
-				channelInfos.get(i).setActive(rows.get(i).getActiveBox().getValue());
-			}
+
+			channelInfos.get(i).setActive(rows.get(i).getActiveBox().getValue());
 
 			if (rows.get(i).getMinAmountField().getValue() != null) {
 				channelInfos.get(i).setMinAmount(rows.get(i).getMinAmountField().getValue());
@@ -139,7 +140,7 @@ public class ServiceChannelWindow extends Composite {
 			}
 		}
 
-		return channelInfos;
+		return new ChannelInfo(channelInfos, selectAllButton.getValue());
 	}
 
 	private static class ChannelInfoRow {
@@ -166,6 +167,26 @@ public class ServiceChannelWindow extends Composite {
 
 		public BigDecimalField getMaxAmountField() {
 			return maxAmountField;
+		}
+	}
+
+	static class ChannelInfo {
+
+		List<ServiceChannelInfoDto> channels;
+
+		boolean allChannels;
+
+		ChannelInfo(List<ServiceChannelInfoDto> ch, boolean allChannels) {
+			this.channels = ch;
+			this.allChannels = allChannels;
+		}
+
+		public List<ServiceChannelInfoDto> getChannels() {
+			return channels;
+		}
+
+		public boolean isAllChannels() {
+			return allChannels;
 		}
 	}
 

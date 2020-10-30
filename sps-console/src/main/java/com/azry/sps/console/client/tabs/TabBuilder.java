@@ -3,7 +3,8 @@ package com.azry.sps.console.client.tabs;
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.channel.ChannelTab;
-import com.azry.sps.console.client.tabs.clientcommissions.ClientCommissionsTab;
+import com.azry.sps.console.client.tabs.commissions.clientcommissions.ClientCommissionsTab;
+import com.azry.sps.console.client.tabs.commissions.servicecommissions.ServiceCommissionsTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
 import com.azry.sps.console.client.tabs.services.ServicesTab;
 import com.azry.sps.console.client.tabs.systemparam.SystemParameterTab;
@@ -271,6 +272,41 @@ public class TabBuilder {
 
 				centerPanel.update(clientCommissionsTab, config);
 				centerPanel.setActiveWidget(clientCommissionsTab);
+			}
+		});
+		return menuItem;
+	}
+
+	private static ServiceCommissionsTab serviceCommissionsTab;
+
+	public static HTML getServiceCommissionsMenuItem (final TabPanel centerPanel) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("serviceCommissions"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (serviceCommissionsTab != null) {
+					if (serviceCommissionsTab.getTitle().equals("closed")) {
+						serviceCommissionsTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(serviceCommissionsTab);
+						return;
+					}
+				}
+
+				serviceCommissionsTab = new ServiceCommissionsTab();
+				centerPanel.add(serviceCommissionsTab, Mes.get("serviceCommissions"));
+
+				TabItemConfig config = centerPanel.getConfig(serviceCommissionsTab);
+				config.setIcon(FAIconsProvider.getIcons().briefcase());
+				config.setClosable(true);
+
+				centerPanel.update(serviceCommissionsTab, config);
+				centerPanel.setActiveWidget(serviceCommissionsTab);
 			}
 		});
 		return menuItem;

@@ -21,8 +21,6 @@ import com.sencha.gxt.widget.core.client.form.PasswordField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class UsersModifyWindow extends ZWindow {
