@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.widget.core.client.TabItemConfig;
 import com.sencha.gxt.widget.core.client.TabPanel;
+import com.sencha.gxt.widget.core.client.menu.Menu;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class TabBuilder {
 
 	private static ServiceGroupTab serviceGroupPage;
 
-	public static HTML getServiceGroupMenuItem (final TabPanel centerPanel) {
+	public static HTML getServiceGroupMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-tag'></i>";
 
@@ -35,12 +36,12 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (serviceGroupPage != null) {
-					if(serviceGroupPage.getTitle().equals("closed")) {
+					if (serviceGroupPage.getTitle().equals("closed")) {
 						serviceGroupPage = null;
 					}
 					else {
-
 						centerPanel.setActiveWidget(serviceGroupPage);
+						menu.hide();
 						return;
 					}
 				}
@@ -54,6 +55,7 @@ public class TabBuilder {
 
 				centerPanel.update(serviceGroupPage, config);
 				centerPanel.setActiveWidget(serviceGroupPage);
+				menu.hide();
 			}
 
 		});
@@ -61,7 +63,7 @@ public class TabBuilder {
 	}
 
 	private static SystemParameterTab systemParameterTab;
-	public static HTML getSystemParameterMenuItem (final TabPanel centerPanel) {
+	public static HTML getSystemParameterMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-wrench'></i>";
 
@@ -76,6 +78,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(systemParameterTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -89,6 +92,7 @@ public class TabBuilder {
 
 				centerPanel.update(systemParameterTab, config);
 				centerPanel.setActiveWidget(systemParameterTab);
+				menu.hide();
 			}
 		});
 		return menuItem;
@@ -96,7 +100,7 @@ public class TabBuilder {
 
 
 	private static UsersTab usersTab;
-	public static HTML getUsersMenuItem (final TabPanel centerPanel) {
+	public static HTML getUsersMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-user'></i>";
 
@@ -111,6 +115,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(usersTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -126,6 +131,7 @@ public class TabBuilder {
 
 						centerPanel.update(usersTab, config);
 						centerPanel.setActiveWidget(usersTab);
+						menu.hide();
 					}
 				});
 
@@ -139,7 +145,7 @@ public class TabBuilder {
 
 	private static UserGroupTab userGroupTab;
 
-	public static HTML getUserGroupMenuItem (final TabPanel centerPanel) {
+	public static HTML getUserGroupMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-users'></i>";
 
@@ -154,19 +160,21 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(userGroupTab);
+						menu.hide();
 						return;
 					}
 				}
 
-						userGroupTab = new UserGroupTab();
-						centerPanel.add(userGroupTab, Mes.get("userGroups"));
+				userGroupTab = new UserGroupTab();
+				centerPanel.add(userGroupTab, Mes.get("userGroups"));
 
-						TabItemConfig config = centerPanel.getConfig(userGroupTab);
-						config.setIcon(FAIconsProvider.getIcons().users());
-						config.setClosable(true);
+				TabItemConfig config = centerPanel.getConfig(userGroupTab);
+				config.setIcon(FAIconsProvider.getIcons().users());
+				config.setClosable(true);
 
-						centerPanel.update(userGroupTab, config);
-						centerPanel.setActiveWidget(userGroupTab);
+				centerPanel.update(userGroupTab, config);
+				centerPanel.setActiveWidget(userGroupTab);
+				menu.hide();
 			}
 		});
 		return menuItem;
@@ -174,7 +182,7 @@ public class TabBuilder {
 
 	private static ChannelTab channelTab;
 
-	public static HTML getChannelMenuItem (final TabPanel centerPanel) {
+	public static HTML getChannelMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-arrow-circle-right'></i>";
 
@@ -189,6 +197,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(channelTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -202,13 +211,14 @@ public class TabBuilder {
 
 				centerPanel.update(channelTab, config);
 				centerPanel.setActiveWidget(channelTab);
+				menu.hide();
 			}
 		});
 		return menuItem;
 	}
 
 	private static ServicesTab servicesTab;
-	public static HTML getServicesMenuItem (final TabPanel centerPanel) {
+	public static HTML getServicesMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-leaf'></i>";
 
@@ -223,6 +233,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(servicesTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -236,7 +247,7 @@ public class TabBuilder {
 
 				centerPanel.update(servicesTab, config);
 				centerPanel.setActiveWidget(servicesTab);
-
+				menu.hide();
 			}
 		});
 		return menuItem;
@@ -244,7 +255,7 @@ public class TabBuilder {
 
 	private static ClientCommissionsTab clientCommissionsTab;
 
-	public static HTML getClientCommissionsMenuItem (final TabPanel centerPanel) {
+	public static HTML getClientCommissionsMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
 
@@ -259,6 +270,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(clientCommissionsTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -272,6 +284,7 @@ public class TabBuilder {
 
 				centerPanel.update(clientCommissionsTab, config);
 				centerPanel.setActiveWidget(clientCommissionsTab);
+				menu.hide();
 			}
 		});
 		return menuItem;
@@ -279,7 +292,7 @@ public class TabBuilder {
 
 	private static ServiceCommissionsTab serviceCommissionsTab;
 
-	public static HTML getServiceCommissionsMenuItem (final TabPanel centerPanel) {
+	public static HTML getServiceCommissionsMenuItem(final TabPanel centerPanel, final Menu menu) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
 
@@ -294,6 +307,7 @@ public class TabBuilder {
 					}
 					else {
 						centerPanel.setActiveWidget(serviceCommissionsTab);
+						menu.hide();
 						return;
 					}
 				}
@@ -307,6 +321,7 @@ public class TabBuilder {
 
 				centerPanel.update(serviceCommissionsTab, config);
 				centerPanel.setActiveWidget(serviceCommissionsTab);
+				menu.hide();
 			}
 		});
 		return menuItem;

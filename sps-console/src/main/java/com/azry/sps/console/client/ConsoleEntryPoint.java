@@ -60,28 +60,28 @@ public class ConsoleEntryPoint implements EntryPoint {
 			}
 		});
 
-		HTML systemParameterMenuItem = TabBuilder.getSystemParameterMenuItem(centerPanel);
+		HTML systemParameterMenuItem = TabBuilder.getSystemParameterMenuItem(centerPanel, menu);
 		menu.add(systemParameterMenuItem);
 
-		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel);
+		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel, menu);
 		menu.add(serviceGroupMenuItem);
 
-		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel);
+		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel, menu);
 		menu.add(usersMenuItem);
 
-		HTML userGroupMenuItem = TabBuilder.getUserGroupMenuItem(centerPanel);
+		HTML userGroupMenuItem = TabBuilder.getUserGroupMenuItem(centerPanel, menu);
 		menu.add(userGroupMenuItem);
 
-		HTML servicesMenuItem = TabBuilder.getServicesMenuItem(centerPanel);
+		HTML servicesMenuItem = TabBuilder.getServicesMenuItem(centerPanel, menu);
 		menu.add(servicesMenuItem);
 
-		HTML channelMenuItem = TabBuilder.getChannelMenuItem(centerPanel);
+		HTML channelMenuItem = TabBuilder.getChannelMenuItem(centerPanel, menu);
 		menu.add(channelMenuItem);
 
-		HTML clientCommissionsMenuItem = TabBuilder.getClientCommissionsMenuItem(centerPanel);
+		HTML clientCommissionsMenuItem = TabBuilder.getClientCommissionsMenuItem(centerPanel, menu);
 		menu.add(clientCommissionsMenuItem);
 
-		HTML serviceCommissionsMenuItem = TabBuilder.getServiceCommissionsMenuItem(centerPanel);
+		HTML serviceCommissionsMenuItem = TabBuilder.getServiceCommissionsMenuItem(centerPanel, menu);
 		menu.add(serviceCommissionsMenuItem);
 
 
