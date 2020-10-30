@@ -18,6 +18,8 @@ import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServiceChannelWindow extends Composite {
 
@@ -124,6 +126,22 @@ public class ServiceChannelWindow extends Composite {
 		ServiceChannelInfoDto info = new ServiceChannelInfoDto();
 		info.setChannelId(id);
 		return info;
+	}
+
+	public boolean isValid() {
+		//Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
+		boolean valid = true;
+		for(ChannelInfoRow row : rows) {
+			//logger.log(Level.SEVERE, "!!!");
+			if(row.getMinAmountField().getValue() != null &&
+				row.getMaxAmountField().getValue() != null &&
+				row.getMinAmountField().getValue().compareTo(row.getMaxAmountField().getValue()) > 0) {
+					row.getMinAmountField().markInvalid(Mes.get("invalidAmountMinMaxValues"));
+					row.getMaxAmountField().markInvalid(Mes.get("invalidAmountMinMaxValues"));
+					valid = false;
+			}
+		}
+		return valid;
 	}
 
 	public ChannelInfo getChannelInfos(){

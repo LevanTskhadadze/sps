@@ -12,6 +12,8 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +27,17 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 		return ServiceEntityDto.toDtos(serviceManager.getAllServices());
 	}
 
+	Comparator<Service> serviceComparator = new Comparator<Service>() {
+		@Override
+		public int compare(Service s1, Service s2) {
+			return s1.getName().compareTo(s2.getName());
+		}
+	};
+
 	@Override
 	public PagingLoadResult<ServiceDto> getServices(Map<String, Object> params, int offset, int limit) {
 		ListResult<Service> result = serviceManager.getServices(params, offset, limit);
+		Collections.sort(result.getResultList(), serviceComparator);
 		List<ServiceDto> res = ServiceDto.toDtos(result.getResultList());
 		return new PagingLoadResultBean<>(
 			res,

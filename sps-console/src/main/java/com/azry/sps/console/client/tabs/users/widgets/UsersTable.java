@@ -21,6 +21,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UsersTable {
@@ -162,6 +163,7 @@ public class UsersTable {
 										@Override
 										public void onServiceSuccess(Void result) {
 											userDTO.setActive(!userDTO.isActive());
+											userDTO.setLastUpdateTime(new Date());
 											store.update(userDTO);
 										}
 									});

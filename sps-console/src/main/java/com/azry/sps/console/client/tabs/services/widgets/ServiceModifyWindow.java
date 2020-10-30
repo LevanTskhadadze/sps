@@ -254,43 +254,54 @@ public class ServiceModifyWindow extends ZWindow {
 	private boolean validate() {
 		boolean good = true;
 
-		if(nameField.getValue() == null || nameField.getValue().equals("")) {
+		if (nameField.getValue() == null || nameField.getValue().equals("")) {
 			good = false;
 			nameField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(serviceGroupField.getValue() == null || serviceGroupField.getValue().equals("")) {
+		if (serviceGroupField.getValue() == null || serviceGroupField.getValue().equals("")) {
 			good = false;
 			serviceGroupField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(minAmountField.getValue() == null || minAmountField.getValue().equals("")) {
+		if (minAmountField.getValue() == null) {
 			good = false;
 			minAmountField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(maxAmountField.getValue() == null || maxAmountField.getValue().equals("")) {
+		if (maxAmountField.getValue() == null) {
 			good = false;
 			maxAmountField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(debtCodeField.getValue() == null || debtCodeField.getValue().equals("")) {
+		if (debtCodeField.getValue() == null || debtCodeField.getValue().equals("")) {
 			good = false;
 			debtCodeField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(payCodeField.getValue() == null || payCodeField.getValue().equals("")) {
+		if (payCodeField.getValue() == null || payCodeField.getValue().equals("")) {
 			good = false;
 			payCodeField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(IBANField.getValue() == null || IBANField.getValue().equals("")) {
+		if (IBANField.getValue() == null || IBANField.getValue().equals("")) {
 			good = false;
 			IBANField.markInvalid(Mes.get("requiredField"));
 		}
 
 
-		return good;
+		if (good && minAmountField.getValue().compareTo(maxAmountField.getValue()) > 0) {
+			minAmountField.markInvalid(Mes.get("invalidAmountMinMaxValues"));
+			maxAmountField.markInvalid(Mes.get("invalidAmountMinMaxValues"));
+			good = false;
+		}
+		if (!good) {
+			tabPanel.setActiveWidget(formContainer);
+		}
+		if (good && !channelContainer.isValid()) {
+			tabPanel.setActiveWidget(channelContainer);
+		}
+		return good && channelContainer.isValid();
 	}
 
 	private boolean doRedact() {
@@ -308,8 +319,7 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setLastUpdateTime(new Date());
 		dto.setChannels(info.getChannels());
 
-		Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
-		logger.log(Level.SEVERE, "" + dto.getVersion());
+
 		ServicesFactory.getServiceTabService().editService(dto,
 			new ServiceCallback<ServiceDto>() {
 

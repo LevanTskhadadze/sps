@@ -48,7 +48,7 @@ public class ServiceManagerBean implements ServiceManager {
 			str.append(" AND se.active = :active ");
 		}
 
-		Query query = em.createQuery(queryPrefix + str.toString() + " ORDER BY se.lastUpdateTime DESC", ServiceEntity.class);
+		Query query = em.createQuery(queryPrefix + str.toString(), ServiceEntity.class);
 		Query count = em.createQuery(countPrefix + str.toString());
 		query.setFirstResult(offset);
 		query.setMaxResults(limit);

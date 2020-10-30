@@ -99,6 +99,10 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		initButtons();
 
 		buildDisplay();
+
+		setHeight("650px");
+		setWidth("900px");
+
 	}
 
 	private void buildDisplay() {
@@ -231,6 +235,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		allChannels = getToggleButtonWithListener("allChannels");
 		allChannels.setValue(clientCommissionsDto.isAllChannels());
 
+
 	}
 
 	private void addBottomHorizontalLine() {
@@ -320,12 +325,14 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 			commission.markInvalid("invalidCommissionMaxValue");
 			return false;
 
-		} else if ((com != null && min != null) && com.compareTo(min) < 0) {
+		}
+
+		if ((com != null && min != null) && com.compareTo(min) < 0) {
 			commission.markInvalid("invalidCommissionMinValue");
 			return false;
 		}
 
-		if ((min != null && max != null) && min.compareTo(max) >= 0) {
+		if ((min != null && max != null) && min.compareTo(max) > 0) {
 			minCommission.markInvalid(Mes.get("invalidAmountMinMaxValues"));
 			return false;
 		}
@@ -343,9 +350,11 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		if (minCommission.getValue() != null) {
 			clientCommissionsDto.setMinCommission(minCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
+		else clientCommissionsDto.setMinCommission(null);
 		if (maxCommission.getValue() != null) {
 			clientCommissionsDto.setMaxCommission(maxCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
+		else clientCommissionsDto.setMaxCommission(null);
 		return clientCommissionsDto;
 	}
 

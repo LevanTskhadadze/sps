@@ -92,6 +92,9 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		initButtons();
 
 		buildDisplay();
+
+		setHeight("650px");
+		setWidth("900px");
 	}
 
 	private void buildDisplay() {
@@ -288,8 +291,19 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private boolean validateAmountLimits() {
 		BigDecimal min = minCommission.getCurrentValue();
 		BigDecimal max = maxCommission.getCurrentValue();
-		if ((min != null && max != null) && min.compareTo(max) >= 0) {
+		BigDecimal curr = commission.getCurrentValue();
+		if (min != null && max != null && min.compareTo(max) > 0) {
 			minCommission.markInvalid(Mes.get("invalidAmountMinMaxValues"));
+			return false;
+		}
+
+		if (min != null && curr != null && min.compareTo(curr) > 0) {
+			minCommission.markInvalid(Mes.get("invalidCommissionMaxValue"));
+			return false;
+		}
+
+		if (max != null && curr != null && max.compareTo(curr) < 0) {
+			minCommission.markInvalid(Mes.get("invalidCommissionMinValue"));
 			return false;
 		}
 
@@ -304,9 +318,12 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		if (minCommission.getValue() != null) {
 			serviceCommissionsDto.setMinCommission(minCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
+		else serviceCommissionsDto.setMinCommission(null);
 		if (maxCommission.getValue() != null) {
 			serviceCommissionsDto.setMaxCommission(maxCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
+		else serviceCommissionsDto.setMaxCommission(null);
+
 		return serviceCommissionsDto;
 	}
 

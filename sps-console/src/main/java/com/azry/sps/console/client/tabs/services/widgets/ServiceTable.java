@@ -25,6 +25,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ServiceTable {
@@ -95,6 +96,7 @@ public class ServiceTable {
 					return ServiceDto.getFormattedLastUpdateTime();
 				}
 			})
+			.sortable()
 			.build());
 		final ZIconButtonCell<ServiceDto, String> iconButtonCell;
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
@@ -201,6 +203,7 @@ public class ServiceTable {
 							@Override
 							public void onServiceSuccess(Void result) {
 								serviceDto.setActive(!serviceDto.isActive());
+								serviceDto.setLastUpdateTime(new Date());
 								store.update(serviceDto);
 							}
 						});
