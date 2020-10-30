@@ -49,6 +49,7 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -103,6 +104,12 @@ public class ClientCommissionsTab extends Composite {
 			@Override
 			public void onServiceSuccess(List<ServiceEntityDto> result) {
 				serviceEntityDTOs = result;
+				Collections.sort(serviceEntityDTOs,new Comparator<ServiceEntityDto>() {
+					@Override
+					public int compare(ServiceEntityDto o1, ServiceEntityDto o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
 				initServiceComboboxData(serviceEntityDTOs);
 			}
 		});
@@ -110,6 +117,12 @@ public class ClientCommissionsTab extends Composite {
 			@Override
 			public void onServiceSuccess(List<ChannelDTO> result) {
 				channelDTOs = result;
+				Collections.sort(channelDTOs,new Comparator<ChannelDTO>() {
+					@Override
+					public int compare(ChannelDTO o1, ChannelDTO o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
 				initChannelComboboxData(channelDTOs);
 			}
 		});

@@ -48,6 +48,7 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -84,10 +85,15 @@ public class ServiceCommissionsTab extends Composite {
 			@Override
 			public void onServiceSuccess(List<ServiceEntityDto> result) {
 				serviceEntityDTOs = result;
+				Collections.sort(serviceEntityDTOs,new Comparator<ServiceEntityDto>() {
+					@Override
+					public int compare(ServiceEntityDto o1, ServiceEntityDto o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
 				initServiceComboboxData(serviceEntityDTOs);
 			}
 		});
-
 		verticalLayoutContainer = new VerticalLayoutContainer();
 		initGrid();
 		initWidget(verticalLayoutContainer);
