@@ -3,7 +3,6 @@ package com.azry.sps.server.services.service;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
-import com.azry.sps.common.model.users.SystemUser;
 import com.azry.sps.common.utils.XmlUtils;
 
 

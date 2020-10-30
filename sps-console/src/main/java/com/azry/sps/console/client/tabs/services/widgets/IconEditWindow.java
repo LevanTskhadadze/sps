@@ -5,16 +5,24 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZFieldLabel;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
 import com.sencha.gxt.widget.core.client.form.FileUploadField;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
+import com.sencha.gxt.widget.core.client.info.Info;
+import netscape.javascript.JSObject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class  IconEditWindow extends ZWindow {
 
@@ -63,22 +71,33 @@ public abstract class  IconEditWindow extends ZWindow {
 		formPanel.setMethod(FormPanel.Method.POST);
 		formPanel.addSubmitCompleteHandler(new SubmitCompleteEvent.SubmitCompleteHandler() {
 			@Override
-			public void onSubmitComplete(SubmitCompleteEvent event) {
+			public void onSubmitComplete(final SubmitCompleteEvent event) {
 				ServicesFactory.getServiceTabService().getService(id, new ServiceCallback<ServiceDto>() {
 					@Override
 					public void onServiceSuccess(ServiceDto result) {
 						store.update(result);
 						hide();
+						Logger logger = Logger.getLogger("!!!");
+						logger.log(Level.SEVERE, event.getResults());
+
+						if (event.getResults().contains("\"status\": \"OK\"")) {
+							onSave();
+							hide();
+							Info.display(Mes.get("note"), Mes.get("iconSuccessfulUpload"));
+						}
+							else {
+								int left = event.getResults().indexOf("info");
+								left = event.getResults().indexOf("\"", left);
+								left = event.getResults().indexOf("\"", left + 1);
+
+								int right = event.getResults().indexOf("\"", left + 1);
+								DialogUtils.showWarning(Mes.get(event.getResults().substring(left + 1, right)));
+							}
 					}
 				});
 /*				JavaScriptObject response = JsonUtils.safeEval(event.getResults());
 
-				if ("OK".equals(response.toString())) {
-					onSave();
-					hide();
-					Info.display(Mes.get("note"), Mes.get("iconSuccessfullyUploaded"));
-				}/* else {
-					DialogUtils.showWarning(response.getInfo());
+/*
 				}*/
 			}
 		});

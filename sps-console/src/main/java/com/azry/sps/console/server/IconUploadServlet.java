@@ -2,6 +2,7 @@ package com.azry.sps.console.server;
 import com.azry.sps.console.server.file.FileManager;
 import com.azry.sps.server.services.service.ServiceManager;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,17 +50,22 @@ public class IconUploadServlet extends HttpServlet {
 			ServletFileUpload fileUpload = new ServletFileUpload(fileItemFactory);
 			fileUpload.setSizeMax(maxFileSize);
 
-			List<FileItem> items = fileUpload.parseRequest(req);
-
+			List<FileItem> items;
+			try {
+				items = fileUpload.parseRequest(req);
+			} catch (FileUploadBase.SizeLimitExceededException ex) {
+				showResponse(resp, "ERROR", "iconSizeLimitExceeded");
+				return;
+			}
 			for (Object object : items) {
 				FileItem item = (FileItem) object;
 				if (item.getSize() > maxFileSize) {
-					//showResponse(resp, "ERROR", Mes.get("iconSizeLimitExceeded", String.valueOf(MAX_FILE_UPLOAD_MB)));
+					showResponse(resp, "ERROR", "iconSizeLimitExceeded");
 					return;
 				}
 
 				if (!ALLOWED_CONTENT_TYPES.contains(item.getContentType())) {
-					//showResponse(resp, "ERROR", Mes.get("iconTypeNotSupported"));
+					showResponse(resp, "ERROR", "iconTypeNotSupported");
 					return;
 				}
 
@@ -68,7 +75,7 @@ public class IconUploadServlet extends HttpServlet {
 
 				byte[] buffer = IOUtils.toByteArray(item.getInputStream());
 				String fileName = fileManager.uploadIcon(source, buffer);
-				//showResponse(resp, "OK", "");
+				showResponse(resp, "OK", "successfulUpload");
 				serviceManager.setIcon(id, fileName);
 
 				if (!item.isInMemory()) {
@@ -76,14 +83,14 @@ public class IconUploadServlet extends HttpServlet {
 				}
 			}
 		} catch (Exception ex) {
-			//showResponse(resp, "ERROR", Mes.get("unexpectedError"));
+			showResponse(resp, "ERROR", "unexpectedError");
 			log.warn("Error occurred during uploading file", ex);
 		}
 	}
 
 	private void showResponse(HttpServletResponse response, String status, String info) throws IOException {
 		response.setContentType("text/html");
-		response.getWriter().write(status);
+		response.getWriter().write("{ \"status\": \"" + status + "\", \"info\": \"" + info + "\" }");
 		response.flushBuffer();
 	}
 }
