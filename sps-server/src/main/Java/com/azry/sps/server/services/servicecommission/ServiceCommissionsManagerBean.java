@@ -26,7 +26,7 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 			if (serviceId.equals("-1")) {
 				sql += "AND c.allServices = TRUE ";
 			} else {
-				sql += "AND LOWER(c.servicesIds) LIKE :service ";
+				sql += "AND c.allServices = TRUE OR LOWER(c.servicesIds) LIKE :service ";
 				params.put("service", "%" + serviceId + "%");
 			}
 		}

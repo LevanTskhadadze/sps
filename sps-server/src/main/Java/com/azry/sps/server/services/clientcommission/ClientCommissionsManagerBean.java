@@ -26,7 +26,7 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			if (serviceId.equals("-1")) {
 				sql += "AND c.allServices = TRUE ";
 			} else {
-				sql += "AND LOWER(c.servicesIds) LIKE :service ";
+				sql += "AND c.allServices = TRUE OR LOWER(c.servicesIds) LIKE :service ";
 				params.put("service", "%" + serviceId + "%");
 			}
 		}
@@ -35,7 +35,7 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			if (channelId.equals("-1")) {
 				sql += "AND c.allChannels = TRUE ";
 			} else {
-				sql += "AND c.channelsIds LIKE :channel ";
+				sql += "AND c.allCannels = TRUE OR c.channelsIds LIKE :channel ";
 				params.put("channel", "%" + channelId + "%");
 			}
 		}
