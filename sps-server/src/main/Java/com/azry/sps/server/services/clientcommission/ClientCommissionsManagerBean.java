@@ -44,14 +44,17 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 		query.setFirstResult(offset);
 		query.setMaxResults(limit);
 
-		long count = em.createQuery("select COUNT(c.id) FROM ClientCommissions c", Long.class).getSingleResult();
+
+		TypedQuery<Long> count = em.createQuery("SELECT COUNT(c.id) " + sql, Long.class);
 
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
+			count.setParameter(entry.getKey(), entry.getValue());
 		}
+
 		List<ClientCommissions> clientCommissions = query.getResultList();
 
-		return new ListResult<>(clientCommissions, (int) count);
+		return new ListResult<>(clientCommissions, (int)(long) count.getSingleResult());
 	}
 
 	@Override
