@@ -312,6 +312,5 @@ public class ServiceGroupTab extends Composite {
 
 	private void clearFilter() {
 		name.setValue(null);
-		loader.load();
 	}
 }

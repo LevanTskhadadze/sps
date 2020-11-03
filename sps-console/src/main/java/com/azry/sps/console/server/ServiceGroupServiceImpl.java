@@ -1,6 +1,8 @@
 package com.azry.sps.console.server;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.server.services.servicegroup.ServiceGroupManager;
@@ -22,9 +24,14 @@ public class ServiceGroupServiceImpl extends RemoteServiceServlet implements Ser
 	}
 
 	@Override
-	public ServiceGroupDTO updateServiceGroup(ServiceGroupDTO dto) {
+	public ServiceGroupDTO updateServiceGroup(ServiceGroupDTO dto) throws SPSConsoleException {
+		try {
 			ServiceGroup serviceGroup = serviceGroupManager.updateServiceGroup(dto.fromDTO());
 			return ServiceGroupDTO.toDTO(serviceGroup);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

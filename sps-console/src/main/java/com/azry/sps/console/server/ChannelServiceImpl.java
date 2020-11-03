@@ -1,6 +1,8 @@
 package com.azry.sps.console.server;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.console.shared.channel.ChannelService;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -26,8 +28,13 @@ public class ChannelServiceImpl extends RemoteServiceServlet implements ChannelS
 	}
 
 	@Override
-	public ChannelDTO updateChannel(ChannelDTO dto) {
-		return ChannelDTO.toDTO(channelManager.updateChannel(dto.fromDTO()));
+	public ChannelDTO updateChannel(ChannelDTO dto) throws SPSConsoleException {
+		try {
+			return ChannelDTO.toDTO(channelManager.updateChannel(dto.fromDTO()));
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

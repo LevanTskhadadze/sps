@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.systemparam;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
 
 import javax.ejb.Local;
@@ -12,7 +13,7 @@ public interface SystemParameterManager {
 
 	void remove(long id);
 
-	void editRow(long id, String code, String type, String value, String description);
+	void editRow(long id, String code, String type, String value, String description) throws SPSException;
 
 	SystemParameter getRow(long id);
 

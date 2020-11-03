@@ -1,9 +1,11 @@
 package com.azry.sps.server.services.channel;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.channels.Channel;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
@@ -55,8 +57,13 @@ public class ChannelManagerBean implements ChannelManager {
 	}
 
 	@Override
-	public Channel updateChannel(Channel channel) {
-		return em.merge(channel);
+	public Channel updateChannel(Channel channel) throws SPSException {
+		try {
+			return em.merge(channel);
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
 	}
 
 	@Override

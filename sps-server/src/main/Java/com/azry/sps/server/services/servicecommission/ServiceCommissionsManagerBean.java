@@ -1,10 +1,12 @@
 package com.azry.sps.server.services.servicecommission;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.commission.ServiceCommissions;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
@@ -46,8 +48,13 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 	}
 
 	@Override
-	public ServiceCommissions updateServiceCommissions(ServiceCommissions serviceCommissions) {
-		return em.merge(serviceCommissions);
+	public ServiceCommissions updateServiceCommissions(ServiceCommissions serviceCommissions) throws SPSException {
+		try {
+			return em.merge(serviceCommissions);
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
 	}
 
 	@Override

@@ -1,14 +1,15 @@
 package com.azry.sps.server.services.usertab;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.users.SystemUser;
-import com.azry.sps.common.model.users.UserGroup;
-
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class UserTabManagerBean implements UserTabManager{
 
 
 
-		Query query = em.createQuery(queryPrefix + str.toString() + " ORDER BY su.lastUpdateTime DESC", SystemUser.class);
+		TypedQuery<SystemUser> query = em.createQuery(queryPrefix + str.toString() + " ORDER BY su.lastUpdateTime DESC", SystemUser.class);
 		Query count = em.createQuery(countPrefix + str.toString());
 		query.setFirstResult(startingIndex);
 		query.setMaxResults(numberToShow);
@@ -100,14 +101,18 @@ public class UserTabManagerBean implements UserTabManager{
 	}
 
 	@Override
-	public SystemUser editRow(SystemUser user) {
+	public SystemUser editRow(SystemUser user) throws SPSException {
+		try {
+			if(user.getId() > 0 && user.getPassword() == null || user.getPassword().equals("")) {
+				user.setPassword(em.find(SystemUser.class, user.getId()).getPassword());
+			}
 
-		if(user.getId() > 0 && user.getPassword() == null || user.getPassword().equals("")) {
-			user.setPassword(em.find(SystemUser.class, user.getId()).getPassword());
+			SystemUser newEntity = em.merge(user);
+			newEntity.setVersion(newEntity.getVersion() + 1);
+			return newEntity;
 		}
-
-		SystemUser newEntity = em.merge(user);
-		newEntity.setVersion(newEntity.getVersion() + 1);
-		return newEntity;
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
 	}
 }

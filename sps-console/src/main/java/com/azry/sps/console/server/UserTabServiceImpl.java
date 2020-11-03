@@ -1,7 +1,9 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.users.SystemUser;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.azry.sps.console.shared.usertab.UserTabService;
 import com.azry.sps.server.services.usertab.UserTabManager;
@@ -37,14 +39,23 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 	}
 
 	@Override
-	public SystemUserDTO editParameter(SystemUserDTO dto){
-		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+	public SystemUserDTO editParameter(SystemUserDTO dto) throws SPSConsoleException {
+		try {
+			return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override
-	public SystemUserDTO addParameter(SystemUserDTO dto) {
-
-		return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+	public SystemUserDTO addParameter(SystemUserDTO dto) throws SPSConsoleException {
+		try {
+			return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

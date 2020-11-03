@@ -72,7 +72,6 @@ public abstract class ChannelWindow extends ZWindow {
 				}
 			})
 			.values(Arrays.asList(FiServiceUnavailabilityActionDTO.values()))
-			.noSelectionLabel("")
 			.enableSorting(false)
 			.editable(false)
 			.width(200)
@@ -82,7 +81,7 @@ public abstract class ChannelWindow extends ZWindow {
 		VerticalLayoutContainer.VerticalLayoutData layoutData = new VerticalLayoutContainer.VerticalLayoutData(1, -1);
 
 		container.add(getFieldLabel(nameField, "name", true), layoutData);
-		container.add(getFieldLabel(fiServiceUnavailabilityAction, "fiServiceUnavailabilityAction", true), layoutData);
+		container.add(getFieldLabel(fiServiceUnavailabilityAction, "fiServiceUnavailabilityAction", false), layoutData);
 	}
 
 

@@ -50,7 +50,6 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class ClientCommissionsTab extends Composite {
@@ -298,20 +297,20 @@ public class ClientCommissionsTab extends Composite {
 		loader = new PagingLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ClientCommissionsDto, PagingLoadResult<ClientCommissionsDto>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ClientCommissionsDto, Date>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ClientCommissionsDto, Long>() {
 			@Override
-			public Date getValue(ClientCommissionsDto dto) {
-				return dto.getLastUpdateTime();
+			public Long getValue(ClientCommissionsDto dto) {
+				return dto.getPriority();
 			}
 
 			@Override
-			public void setValue(ClientCommissionsDto o, Date o2) { }
+			public void setValue(ClientCommissionsDto o, Long o2) { }
 
 			@Override
 			public String getPath() {
 				return null;
 			}
-		}, SortDir.DESC);
+		}, SortDir.ASC);
 
 		gridStore.addSortInfo(storeSortInfo);
 
@@ -346,12 +345,25 @@ public class ClientCommissionsTab extends Composite {
 		List<ColumnConfig<ClientCommissionsDto, ?>> columns = new ArrayList<>();
 
 		columns.add(new ZColumnConfig.Builder<ClientCommissionsDto, String>()
-			.width(250)
-//			.fixed()
+			.width(120)
+			.fixed()
+			.header(Mes.get("priority"))
 			.valueProvider(new ZStringProvider<ClientCommissionsDto>() {
 				@Override
 				public String getProperty(ClientCommissionsDto dto) {
-					return dto.isAllServices() ? Mes.get("allServices") : Mes.get("services") + ":" + dto.getServicesIds().size();
+					return String.valueOf(dto.getPriority());
+				}
+			})
+			.build());
+
+
+		columns.add(new ZColumnConfig.Builder<ClientCommissionsDto, String>()
+			.width(250)
+			.valueProvider(new ZStringProvider<ClientCommissionsDto>() {
+				@Override
+				public String getProperty(ClientCommissionsDto dto) {
+					return dto.isAllServices() ? Mes.get("allServices") : Mes.get("services") + ": " +
+						"" + dto.getServicesIds().size();
 				}
 			})
 			.header(Mes.get("services"))
@@ -359,12 +371,11 @@ public class ClientCommissionsTab extends Composite {
 
 		columns.add(new ZColumnConfig.Builder<ClientCommissionsDto, String>()
 			.width(250)
-//			.fixed()
 			.header(Mes.get("channels"))
 			.valueProvider(new ZStringProvider<ClientCommissionsDto>() {
 				@Override
 				public String getProperty(ClientCommissionsDto dto) {
-					return dto.isAllChannels() ? Mes.get("allChannels") : Mes.get("channels") + ":" + dto.getChannelsIds().size();
+					return dto.isAllChannels() ? Mes.get("allChannels") : Mes.get("channels") + ": " + dto.getChannelsIds().size();
 				}
 			})
 			.build());
@@ -489,6 +500,5 @@ public class ClientCommissionsTab extends Composite {
 	private void clearFilter() {
 		service.setValue(null);
 		channel.setValue(null);
-		loader.load();
 	}
 }

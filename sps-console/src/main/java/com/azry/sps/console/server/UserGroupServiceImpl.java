@@ -1,8 +1,10 @@
 package com.azry.sps.console.server;
 
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.users.Permissions;
 import com.azry.sps.common.model.users.UserGroup;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.usergroup.PermissionsDTO;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.usergroup.UserGroupService;
@@ -34,9 +36,14 @@ public class UserGroupServiceImpl extends RemoteServiceServlet implements UserGr
 	}
 
 	@Override
-	public UserGroupDTO updateUserGroup(UserGroupDTO dto) {
-		UserGroup userGroup = userGroupManager.updateUserGroup(dto.fromDTO());
-		return UserGroupDTO.toDTO(userGroup);
+	public UserGroupDTO updateUserGroup(UserGroupDTO dto) throws SPSConsoleException {
+		try {
+			UserGroup userGroup = userGroupManager.updateUserGroup(dto.fromDTO());
+			return UserGroupDTO.toDTO(userGroup);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

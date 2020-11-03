@@ -1,10 +1,12 @@
 package com.azry.sps.server.services.usergroup;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.users.Permissions;
 import com.azry.sps.common.model.users.UserGroup;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
@@ -62,8 +64,13 @@ public class UserGroupManagerBean implements UserGroupManager {
 	}
 
 	@Override
-	public UserGroup updateUserGroup(UserGroup userGroup) {
-		return em.merge(userGroup);
+	public UserGroup updateUserGroup(UserGroup userGroup) throws SPSException {
+		try {
+			return em.merge(userGroup);
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
 	}
 
 	@Override

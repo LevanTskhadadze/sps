@@ -1,5 +1,6 @@
 package com.azry.sps.console.shared.usergroup;
 
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.usergroup.PermissionsDTO;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -13,7 +14,7 @@ public interface UserGroupService extends RemoteService {
 
 	List<UserGroupDTO> getFilteredUserGroups(String name, PermissionsDTO permission, Boolean isActive);
 
-	UserGroupDTO updateUserGroup(UserGroupDTO dto);
+	UserGroupDTO updateUserGroup(UserGroupDTO dto) throws SPSConsoleException;
 
 	void deleteUserGroup(long id);
 }

@@ -17,6 +17,8 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 
 	private long id;
 
+	private long priority;
+
 	private boolean allServices;
 
 	private List<String> servicesIds = new ArrayList<>();
@@ -39,6 +41,14 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public long getPriority() {
+		return priority;
+	}
+
+	public void setPriority(long priority) {
+		this.priority = priority;
 	}
 
 	public boolean isAllServices() {
@@ -110,6 +120,7 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 		if (clientCommissions != null) {
 			ClientCommissionsDto dto = new ClientCommissionsDto();
 			dto.setId(clientCommissions.getId());
+			dto.setPriority(clientCommissions.getPriority());
 			dto.setAllServices(clientCommissions.isAllServices());
 			if (!clientCommissions.getServicesIds().isEmpty())  {
 				dto.setServicesIds(Arrays.asList(clientCommissions.getServicesIds().split(",")));
@@ -149,6 +160,7 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 	public ClientCommissions fromDTO() {
 		ClientCommissions cc = new ClientCommissions();
 		cc.setId(this.getId());
+		cc.setPriority(this.getPriority());
 		cc.setAllServices(this.isAllServices());
 		cc.setServicesIds(StringUtil.join(this.getServicesIds(), ","));
 		cc.setAllChannels(this.isAllChannels());

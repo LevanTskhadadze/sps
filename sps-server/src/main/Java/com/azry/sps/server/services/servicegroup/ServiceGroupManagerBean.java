@@ -1,9 +1,11 @@
 package com.azry.sps.server.services.servicegroup;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
@@ -36,8 +38,13 @@ public class ServiceGroupManagerBean implements ServiceGroupManager {
 	}
 
 	@Override
-	public ServiceGroup updateServiceGroup(ServiceGroup serviceGroup) {
-		return  em.merge(serviceGroup);
+	public ServiceGroup updateServiceGroup(ServiceGroup serviceGroup) throws SPSException {
+		try {
+			return  em.merge(serviceGroup);
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
 	}
 
 	@Override

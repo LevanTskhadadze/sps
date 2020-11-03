@@ -1,5 +1,6 @@
 package com.azry.sps.console.shared.servicecommission;
 
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -11,7 +12,7 @@ public interface ServiceCommissionsService extends RemoteService {
 
 	PagingLoadResult<ServiceCommissionsDto> getServiceCommissions(String serviceID, PagingLoadConfig config);
 
-	ServiceCommissionsDto updateServiceCommissions(ServiceCommissionsDto clientCommissions);
+	ServiceCommissionsDto updateServiceCommissions(ServiceCommissionsDto clientCommissions) throws SPSConsoleException;
 
 	void deleteServiceCommissions(long id);
 }

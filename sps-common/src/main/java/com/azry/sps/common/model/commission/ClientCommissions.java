@@ -20,6 +20,8 @@ public class ClientCommissions extends Configurable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	private long priority;
+
 	private boolean allServices;
 
 	@Column(length = 500)

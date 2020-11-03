@@ -1,7 +1,9 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.azry.sps.console.shared.service.ServiceTabService;
@@ -52,8 +54,13 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public ServiceDto editService(ServiceDto service) {
-		return ServiceDto.toDto(serviceManager.editService(ServiceDto.toEntity(service)));
+	public ServiceDto editService(ServiceDto service) throws SPSConsoleException {
+		try {
+			return ServiceDto.toDto(serviceManager.editService(ServiceDto.toEntity(service)));
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override
@@ -62,7 +69,12 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public void changeActivation(long id) {
-		serviceManager.changeActivation(id);
+	public void changeActivation(long id) throws SPSConsoleException {
+		try {
+			serviceManager.changeActivation(id);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 }

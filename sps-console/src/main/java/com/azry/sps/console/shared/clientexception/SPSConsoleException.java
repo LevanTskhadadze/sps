@@ -6,9 +6,7 @@ import com.google.gwt.core.shared.GwtIncompatible;
 public class SPSConsoleException extends Exception {
 	
 	private String messageKey;
-	
-	private String[] params;
-	
+
 	public SPSConsoleException() {
 		super();
 	}
@@ -22,23 +20,16 @@ public class SPSConsoleException extends Exception {
 	public SPSConsoleException(String messageKey) {
 		this.messageKey = messageKey;
 	}
-	
-	public SPSConsoleException(String messageKey, String... params) {
-		this.messageKey = messageKey;
-		this.params = params;
-	}
+
 
 	@GwtIncompatible
-	public SPSConsoleException(SPSException opcEx) {
-		this.messageKey = opcEx.getCode() != null ? opcEx.getCode() : opcEx.getMessage();
-		this.params = opcEx.getParams();
+	public SPSConsoleException(SPSException spsEx) {
+		super(spsEx.getCause());
+		this.messageKey = spsEx.getMessage();
 	}
 
 	public String getMessageKey() {
 		return messageKey;
 	}
 
-	public String[] getParams() {
-		return params;
-	}
 }

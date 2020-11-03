@@ -409,6 +409,5 @@ public class ChannelTab extends Composite {
 	private void clearFilter() {
 		name.setValue(null);
 		active.setValue(null);
-		loader.load();
 	}
 }

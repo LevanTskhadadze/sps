@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.servicegroup;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
 
 import javax.ejb.Local;
@@ -10,7 +11,7 @@ public interface ServiceGroupManager {
 
 	List<ServiceGroup> getFilteredServiceGroups(String name);
 
-	ServiceGroup updateServiceGroup(ServiceGroup serviceGroup);
+	ServiceGroup updateServiceGroup(ServiceGroup serviceGroup) throws SPSException;
 
 	void deleteServiceGroup(Long id);
 }

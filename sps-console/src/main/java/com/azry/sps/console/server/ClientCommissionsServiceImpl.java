@@ -1,8 +1,10 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -26,8 +28,13 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	}
 
 	@Override
-	public ClientCommissionsDto updateClientCommissions(ClientCommissionsDto clientCommissions) {
-		return ClientCommissionsDto.toDTO(clientCommissionsManager.updateClientCommissions(clientCommissions.fromDTO()));
+	public ClientCommissionsDto updateClientCommissions(ClientCommissionsDto clientCommissions) throws SPSConsoleException {
+		try {
+			return ClientCommissionsDto.toDTO(clientCommissionsManager.updateClientCommissions(clientCommissions.fromDTO()));
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

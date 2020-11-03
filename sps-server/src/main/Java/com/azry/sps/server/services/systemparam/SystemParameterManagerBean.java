@@ -1,10 +1,12 @@
 package com.azry.sps.server.services.systemparam;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameterType;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
@@ -52,14 +54,20 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 
 
 	@Override
-	public void editRow(long id, String code, String type, String value, String description) {
-		em.createQuery("UPDATE SystemParameter sp SET sp.type = :type, sp.code = :code, sp.value = :value, sp.description = :desc WHERE sp.id = :id")
-			.setParameter("id", id)
-			.setParameter("type", toEnum(type))
-			.setParameter("code", code)
-			.setParameter("value", value)
-			.setParameter("desc", description)
-			.executeUpdate();
+	public void editRow(long id, String code, String type, String value, String description) throws SPSException {
+		try {
+			em.createQuery("UPDATE SystemParameter sp SET sp.type = :type, sp.code = :code, sp.value = :value, sp.description = :desc WHERE sp.id = :id")
+				.setParameter("id", id)
+				.setParameter("type", toEnum(type))
+				.setParameter("code", code)
+				.setParameter("value", value)
+				.setParameter("desc", description)
+				.executeUpdate();
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
+
 	}
 
 

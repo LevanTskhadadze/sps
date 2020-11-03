@@ -1,11 +1,10 @@
 package com.azry.sps.server.services.usertab;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.users.SystemUser;
-import org.hibernate.StatelessSession;
 
 import javax.ejb.Local;
-import java.util.List;
 import java.util.Map;
 
 @Local
@@ -16,6 +15,6 @@ public interface UserTabManager {
 
 	void remove(long id);
 
-	SystemUser editRow(SystemUser user);
+	SystemUser editRow(SystemUser user) throws SPSException;
 
 }

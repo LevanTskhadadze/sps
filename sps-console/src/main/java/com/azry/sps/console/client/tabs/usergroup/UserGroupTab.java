@@ -454,6 +454,5 @@ public class UserGroupTab extends Composite {
 		name.setValue(null);
 		permission.setValue(null);
 		active.setValue(null);
-		loader.load();
 	}
 }

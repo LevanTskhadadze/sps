@@ -1,5 +1,6 @@
 package com.azry.sps.console.shared.usertab;
 
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -14,9 +15,9 @@ public interface UserTabService extends RemoteService {
 
 	void changeActivation(long id);
 
-	SystemUserDTO editParameter(SystemUserDTO dto);
+	SystemUserDTO editParameter(SystemUserDTO dto) throws SPSConsoleException;
 
-	SystemUserDTO addParameter(SystemUserDTO dto);
+	SystemUserDTO addParameter(SystemUserDTO dto) throws SPSConsoleException;
 
 	void removeParameter(long id);
 

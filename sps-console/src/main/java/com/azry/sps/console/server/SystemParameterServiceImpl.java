@@ -1,10 +1,12 @@
 package com.azry.sps.console.server;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.console.server.helper.SystemParameterDtoHelper;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
 import com.azry.sps.server.services.systemparam.SystemParameterManager;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
@@ -29,8 +31,13 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 		systemParameterManager.remove(id);
 	}
 
-	public void editParameter(long id, String code, String type, String value, String description) {
-		systemParameterManager.editRow(id, code, type, value, description);
+	public void editParameter(long id, String code, String type, String value, String description) throws SPSConsoleException {
+		try {
+			systemParameterManager.editRow(id, code, type, value, description);
+		}
+		catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

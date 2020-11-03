@@ -1,15 +1,17 @@
 package com.azry.sps.server.services.service;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
 
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,7 @@ public class ServiceManagerBean implements ServiceManager {
 			str.append(" AND se.active = :active ");
 		}
 
-		Query query = em.createQuery(queryPrefix + str.toString(), ServiceEntity.class);
+		TypedQuery<ServiceEntity> query = em.createQuery(queryPrefix + str.toString(), ServiceEntity.class);
 		Query count = em.createQuery(countPrefix + str.toString());
 		query.setFirstResult(offset);
 		query.setMaxResults(limit);
@@ -75,11 +77,16 @@ public class ServiceManagerBean implements ServiceManager {
 	}
 
 	@Override
-	public Service editService(Service service) {
-		ServiceEntity entity = service.getEntity();
-		Service srv = em.merge(entity).getService();
-		srv.setVersion(srv.getVersion() + 1);
-		return srv;
+	public Service editService(Service service) throws SPSException {
+		try {
+			ServiceEntity entity = service.getEntity();
+			Service srv = em.merge(entity).getService();
+			srv.setVersion(srv.getVersion() + 1);
+			return srv;
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException");
+		}
 	}
 
 	@Override
@@ -89,11 +96,17 @@ public class ServiceManagerBean implements ServiceManager {
 	}
 
 	@Override
-	public void changeActivation(long id) {
-		ServiceEntity service = em.find(ServiceEntity.class, id);
-		service.setActive(!service.isActive());
+	public void changeActivation(long id) throws SPSException {
+		try {
+			ServiceEntity service = em.find(ServiceEntity.class, id);
+			service.setActive(!service.isActive());
 
-		em.persist(service);
+			em.persist(service);
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
+
 	}
 
 	@Override
