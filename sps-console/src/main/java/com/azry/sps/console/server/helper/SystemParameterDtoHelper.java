@@ -1,7 +1,7 @@
 package com.azry.sps.console.server.helper;
 
-import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
-import com.azry.sps.systemparameters.model.systemparam.SystemParameterType;
+import com.azry.sps.systemparameters.model.SystemParameter;
+import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 

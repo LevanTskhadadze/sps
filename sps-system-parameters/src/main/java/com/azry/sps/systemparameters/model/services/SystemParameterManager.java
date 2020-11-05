@@ -1,5 +1,6 @@
-package com.azry.sps.server.services.systemparam;
+package com.azry.sps.systemparameters.model.services;
 
+import com.azry.sps.systemparameters.model.SystemParameter;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
 
@@ -17,5 +18,5 @@ public interface SystemParameterManager {
 
 	SystemParameter getRow(long id);
 
-	void addEntry(SystemParameter entity);
+	long addEntry(SystemParameter entity);
 }

@@ -6,7 +6,9 @@ import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
-import com.azry.sps.server.services.systemparam.SystemParameterManager;
+import com.azry.sps.integration.sp.ServiceProviderConnector;
+import com.azry.sps.systemparameters.model.services.SystemParameterManager;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
@@ -20,9 +22,11 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 	@Inject
 	SystemParameterManager systemParameterManager;
 
-
+	@Inject
+	ServiceProviderConnector serviceProviderConnector;
 	@Override
 	public List<SystemParameterDto> getSystemParameterTab(Map<String, String> params) {
+		serviceProviderConnector.getInfo("gateway1", 0);
 		return SystemParameterDtoHelper.toDTOs(systemParameterManager.getSystemParameters(params));
 	}
 

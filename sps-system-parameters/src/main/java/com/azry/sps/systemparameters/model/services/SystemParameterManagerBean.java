@@ -1,8 +1,9 @@
-package com.azry.sps.server.services.systemparam;
+package com.azry.sps.systemparameters.model.services;
 
+import com.azry.sps.systemparameters.model.SystemParameter;
+import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.common.exceptions.SPSException;
-import com.azry.sps.systemparameters.model.systemparam.SystemParameter;
-import com.azry.sps.systemparameters.model.systemparam.SystemParameterType;
+
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -79,8 +80,9 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 	}
 
 	@Override
-	public void addEntry(SystemParameter entity) {
+	public long addEntry(SystemParameter entity) {
 		em.persist(entity);
+		return entity.getId();
 	}
 
 	private SystemParameterType toEnum(String str) {
