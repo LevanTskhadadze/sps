@@ -63,8 +63,8 @@ public class ServicesTab extends Composite {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceDto>> callback) {
 				Map<String, Object> params = new HashMap<>();
-				params.put("name", nameField.getValue());
-				params.put("active", activeComboBox.getValue());
+				params.put("name", nameField.getCurrentValue());
+				params.put("active", activeComboBox.getCurrentValue());
 
 
 				ServicesFactory.getServiceTabService().getServices(params,

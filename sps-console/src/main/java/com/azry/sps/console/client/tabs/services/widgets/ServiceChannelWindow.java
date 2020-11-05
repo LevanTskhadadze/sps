@@ -17,6 +17,8 @@ import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServiceChannelWindow extends Composite {
 
@@ -66,8 +68,6 @@ public class ServiceChannelWindow extends Composite {
 		table.getColumnFormatter().setWidth(0, "32px");
 
 		table.getColumnFormatter().setWidth(1, "100%");
-		/*table.getColumnFormatter().setWidth(2, "100%");
-		table.getColumnFormatter().setWidth(3, "100%");*/
 		container.add(table);
 		toggleCheckboxes(!allSelected);
 		initWidget(container);
@@ -99,7 +99,7 @@ public class ServiceChannelWindow extends Composite {
 
 			BigDecimalField minAmountField = new BigDecimalField();
 			minAmountField.setWidth(140);
-			if (newInfo.getMaxAmount() != null) {
+			if (newInfo.getMinAmount() != null) {
 				minAmountField.setValue(newInfo.getMinAmount());
 			}
 
@@ -142,17 +142,13 @@ public class ServiceChannelWindow extends Composite {
 	}
 
 	public ChannelInfo getChannelInfos(){
+		Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
+
 		for (int i = 0; i < rows.size(); i ++){
-
+			logger.log(Level.SEVERE, rows.get(i).getMinAmountField().getValue() + " " + rows.get(i).getMaxAmountField().getValue() + "!!!");
 			channelInfos.get(i).setActive(rows.get(i).getActiveBox().getValue());
-
-			if (rows.get(i).getMinAmountField().getValue() != null) {
-				channelInfos.get(i).setMinAmount(rows.get(i).getMinAmountField().getValue());
-			}
-
-			if (rows.get(i).getMaxAmountField().getValue() != null) {
-				channelInfos.get(i).setMaxAmount(rows.get(i).getMaxAmountField().getValue());
-			}
+			channelInfos.get(i).setMinAmount(rows.get(i).getMinAmountField().getValue());
+			channelInfos.get(i).setMaxAmount(rows.get(i).getMaxAmountField().getValue());
 		}
 
 		return new ChannelInfo(channelInfos, selectAllButton.getValue());

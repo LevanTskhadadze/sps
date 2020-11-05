@@ -262,7 +262,7 @@ public class ClientCommissionsTab extends Composite {
 
 	private String getChannelIdForFilter() {
 		if (channel != null) {
-			ChannelDTO dto = channel.getValue();
+			ChannelDTO dto = channel.getCurrentValue();
 			return dto == null ? null : String.valueOf(dto.getId());
 		}
 		return null;
@@ -270,7 +270,7 @@ public class ClientCommissionsTab extends Composite {
 
 	private String getServiceIdForFilter() {
 		if (service != null) {
-			ServiceEntityDto dto = service.getValue();
+			ServiceEntityDto dto = service.getCurrentValue();
 			return dto == null ? null : String.valueOf(dto.getId());
 		}
 		return null;

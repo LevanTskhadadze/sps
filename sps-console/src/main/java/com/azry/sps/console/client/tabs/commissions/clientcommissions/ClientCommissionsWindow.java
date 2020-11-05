@@ -350,19 +350,19 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 	}
 
 	private ClientCommissionsDto getClientCommissionsForUpdate() {
-		clientCommissionsDto.setPriority(priorityField.getValue());
+		clientCommissionsDto.setPriority(priorityField.getCurrentValue());
 		clientCommissionsDto.setAllServices(allServices.getValue());
 		clientCommissionsDto.setServicesIds(servicesDualListWidget.getSelectedItems());
 		clientCommissionsDto.setAllChannels(allChannels.getValue());
 		clientCommissionsDto.setChannelsIds(channelsDualListWidget.getSelectedItems());
-		clientCommissionsDto.setRateType(rateType.getValue());
-		clientCommissionsDto.setCommission(commission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
-		if (minCommission.getValue() != null) {
-			clientCommissionsDto.setMinCommission(minCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
+		clientCommissionsDto.setRateType(rateType.getCurrentValue());
+		clientCommissionsDto.setCommission(commission.getCurrentValue().setScale(2, BigDecimal.ROUND_FLOOR));
+		if (minCommission.getCurrentValue() != null) {
+			clientCommissionsDto.setMinCommission(minCommission.getCurrentValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
 		else clientCommissionsDto.setMinCommission(null);
-		if (maxCommission.getValue() != null) {
-			clientCommissionsDto.setMaxCommission(maxCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
+		if (maxCommission.getCurrentValue() != null) {
+			clientCommissionsDto.setMaxCommission(maxCommission.getCurrentValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
 		else clientCommissionsDto.setMaxCommission(null);
 		return clientCommissionsDto;

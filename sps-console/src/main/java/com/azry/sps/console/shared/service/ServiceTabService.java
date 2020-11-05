@@ -23,5 +23,5 @@ public interface ServiceTabService extends RemoteService {
 
 	ServiceDto getService(long id);
 
-	void changeActivation(long id) throws SPSConsoleException;
+	void changeActivation(long id, long version) throws SPSConsoleException;
 }

@@ -39,7 +39,6 @@ public class ServiceProviderConnector {
 
 	@PostConstruct
 	public void startup() {
-		System.out.println(">>>>>" + (path == null));
 		client = new ResteasyClientBuilder().build();
 		target = client.target(UriBuilder.fromPath(path.getValue()));
 		proxy = target.proxy(ServicesInterface.class);

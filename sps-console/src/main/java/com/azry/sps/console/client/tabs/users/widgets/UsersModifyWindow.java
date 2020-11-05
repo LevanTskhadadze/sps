@@ -5,6 +5,7 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
@@ -203,47 +204,49 @@ public class UsersModifyWindow extends ZWindow {
 	}
 	private boolean validate() {
 		boolean good = true;
-		if(usernameField.getValue() == null || usernameField.getValue().equals("")) {
+		if(usernameField.getCurrentValue() == null || usernameField.getCurrentValue().equals("")) {
 			good = false;
 			usernameField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(nameField.getValue() == null || nameField.getValue().equals("")) {
+		if(nameField.getCurrentValue() == null || nameField.getCurrentValue().equals("")) {
 			good = false;
 			nameField.markInvalid(Mes.get("requiredField"));
 		}
 
 		if(!redactMode){
-			if(passwordField.getValue() == null || passwordField.getValue().equals("")) {
+			if(passwordField.getCurrentValue() == null || passwordField.getCurrentValue().equals("")) {
 				good = false;
 				passwordField.markInvalid(Mes.get("requiredField"));
 			}
 		}
 
-		if(passwordField.getValue() != null && !passwordField.getValue().equals("")
-			&& !passwordField.getValue().equals(repeatPasswordField.getValue())) {
+		if(passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")
+			&& !passwordField.getCurrentValue().equals(repeatPasswordField.getCurrentValue())) {
 			good = false;
 			repeatPasswordField.markInvalid(Mes.get("passwordMismatch"));
 
 		}
 		boolean groupTabValid = userGroupTab.validate();
-		if(!groupTabValid) {
+		if (!good) {
+			tabPanel.setActiveWidget(formContainer);
+		} else if (!groupTabValid) {
 			tabPanel.setActiveWidget(userGroupTabContainer);
+			DialogUtils.showWarning(Mes.get("groupsRequired"));
 		}
-
 		return good & groupTabValid;
 	}
 
 	private boolean doRedact() {
 		if(!validate()) return false;
 
-		dto.setName(nameField.getValue());
-		dto.setUsername(usernameField.getValue());
-		if(passwordField.getValue() != null && !passwordField.getValue().equals("")) {
-			dto.setPassword(passwordField.getValue());
+		dto.setName(nameField.getCurrentValue());
+		dto.setUsername(usernameField.getCurrentValue());
+		if(passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")) {
+			dto.setPassword(passwordField.getCurrentValue());
 		}
-		if(emailField.getValue() != null && !emailField.getValue().equals("")) {
-			dto.setEmail(emailField.getValue());
+		if(emailField.getCurrentValue() != null && !emailField.getCurrentValue().equals("")) {
+			dto.setEmail(emailField.getCurrentValue());
 		}
 
 		dto.setGroups(userGroupTab.getAllSelectedGroups());
@@ -266,10 +269,10 @@ public class UsersModifyWindow extends ZWindow {
 			return false;
 		}
 		dto = new SystemUserDTO();
-		dto.setName(nameField.getValue());
-		dto.setUsername(usernameField.getValue());
-		dto.setPassword(passwordField.getValue());
-		dto.setEmail(emailField.getValue());
+		dto.setName(nameField.getCurrentValue());
+		dto.setUsername(usernameField.getCurrentValue());
+		dto.setPassword(passwordField.getCurrentValue());
+		dto.setEmail(emailField.getCurrentValue());
 		dto.setGroups(userGroupTab.getAllSelectedGroups());
 		dto.setLastUpdateTime(new Date());
 		dto.setCreateTime(new Date());

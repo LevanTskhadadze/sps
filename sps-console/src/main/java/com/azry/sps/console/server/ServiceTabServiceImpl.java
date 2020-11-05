@@ -69,9 +69,9 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public void changeActivation(long id) throws SPSConsoleException {
+	public void changeActivation(long id, long version) throws SPSConsoleException {
 		try {
-			serviceManager.changeActivation(id);
+			serviceManager.changeActivation(id, version);
 		}
 		catch (SPSException ex) {
 			throw new SPSConsoleException(ex);

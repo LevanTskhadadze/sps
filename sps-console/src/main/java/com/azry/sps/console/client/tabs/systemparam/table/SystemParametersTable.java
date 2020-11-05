@@ -83,6 +83,9 @@ public class SystemParametersTable {
 				.valueProvider(new ZStringProvider<SystemParameterDto>() {
 					@Override
 					public String getProperty(SystemParameterDto systemParameterDto) {
+						if (systemParameterDto.getDescription() == null) {
+							return "";
+						}
 						return String.valueOf(systemParameterDto.getDescription());
 					}
 				})

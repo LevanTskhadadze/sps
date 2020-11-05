@@ -22,7 +22,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -94,7 +93,7 @@ public class ServiceModifyWindow extends ZWindow {
 		add(tabPanel, new MarginData(0));
 
 		setHeight("500px");
-		setWidth("600px");
+		setWidth("700px");
 		String header = Mes.get("ofService") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
 		setHeadingText(header);
 		showInCenter();
@@ -250,43 +249,44 @@ public class ServiceModifyWindow extends ZWindow {
 	private boolean validate() {
 		boolean good = true;
 
-		if (nameField.getValue() == null || nameField.getValue().equals("")) {
+		if (nameField.getCurrentValue() == null || nameField.getCurrentValue().equals("")) {
 			good = false;
 			nameField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if (serviceGroupField.getValue() == null || serviceGroupField.getValue().equals("")) {
-			good = false;
-			serviceGroupField.markInvalid(Mes.get("requiredField"));
-		}
 
-		if (minAmountField.getValue() == null) {
+		if (minAmountField.getCurrentValue() == null) {
 			good = false;
 			minAmountField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if (maxAmountField.getValue() == null) {
+		if (serviceGroupField.getCurrentValue() == null || serviceGroupField.getCurrentValue().equals("")) {
 			good = false;
-			maxAmountField.markInvalid(Mes.get("requiredField"));
+			serviceGroupField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if (debtCodeField.getValue() == null || debtCodeField.getValue().equals("")) {
+		if (debtCodeField.getCurrentValue() == null || debtCodeField.getCurrentValue().equals("")) {
 			good = false;
 			debtCodeField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if (payCodeField.getValue() == null || payCodeField.getValue().equals("")) {
+		if (maxAmountField.getCurrentValue() == null) {
+			good = false;
+			maxAmountField.markInvalid(Mes.get("requiredField"));
+		}
+
+		if (payCodeField.getCurrentValue() == null || payCodeField.getCurrentValue().equals("")) {
 			good = false;
 			payCodeField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if (IBANField.getValue() == null || IBANField.getValue().equals("")) {
+		if (IBANField.getCurrentValue() == null || IBANField.getCurrentValue().equals("")) {
 			good = false;
 			IBANField.markInvalid(Mes.get("requiredField"));
 		}
 
 
-		if (good && minAmountField.getValue().compareTo(maxAmountField.getValue()) > 0) {
+		if (good && minAmountField.getCurrentValue().compareTo(maxAmountField.getCurrentValue()) > 0) {
 			minAmountField.markInvalid(Mes.get("invalidAmountMinMaxValues"));
 			maxAmountField.markInvalid(Mes.get("invalidAmountMinMaxValues"));
 			good = false;
@@ -299,22 +299,25 @@ public class ServiceModifyWindow extends ZWindow {
 		}
 		return good && channelContainer.isValid();
 	}
+	private void retrieveInfo(ServiceDto dto, ServiceChannelWindow.ChannelInfo info) {
+		dto.setName(nameField.getCurrentValue());
+		dto.setProviderAccountIBAN(IBANField.getCurrentValue());
+		dto.setServicePayCode(payCodeField.getCurrentValue());
+		dto.setServiceDebtCode(debtCodeField.getCurrentValue());
+		dto.setMinAmount(minAmountField.getCurrentValue());
+		dto.setMaxAmount(maxAmountField.getCurrentValue());
+		dto.setAllChannels(info.isAllChannels());
+		dto.setGroupId(serviceGroupField.getCurrentValue().getId());
+		dto.setChannels(info.getChannels());
+
+	}
 
 	private boolean doRedact() {
 		if(!validate()) return false;
 
 		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
-		dto.setName(nameField.getValue());
-		dto.setProviderAccountIBAN(IBANField.getValue());
-		dto.setServicePayCode(payCodeField.getValue());
-		dto.setServiceDebtCode(debtCodeField.getValue());
-		dto.setMinAmount(minAmountField.getValue());
-		dto.setMaxAmount(maxAmountField.getValue());
-		dto.setAllChannels(info.isAllChannels());
-		dto.setGroupId(serviceGroupField.getValue().getId());
-		dto.setLastUpdateTime(new Date());
-		dto.setChannels(info.getChannels());
 
+		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(dto,
 			new ServiceCallback<ServiceDto>() {
@@ -335,17 +338,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
 		dto = new ServiceDto();
-		dto.setName(nameField.getValue());
-		dto.setGroupId(serviceGroupField.getValue().getId());
-		dto.setMinAmount(minAmountField.getValue());
-		dto.setMaxAmount(maxAmountField.getValue());
-		dto.setServiceDebtCode(debtCodeField.getValue());
-		dto.setServicePayCode(payCodeField.getValue());
-		dto.setProviderAccountIBAN(IBANField.getValue());
-		dto.setAllChannels(info.isAllChannels());
-		dto.setLastUpdateTime(new Date());
-		dto.setCreateTime(new Date());
-		dto.setChannels(info.getChannels());
+		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(
 			dto,

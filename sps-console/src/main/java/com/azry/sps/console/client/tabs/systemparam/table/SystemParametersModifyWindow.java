@@ -24,6 +24,7 @@ import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private ZTextField codeField;
 
-	private ZSimpleComboBox<String> typeField;
+	private ZSimpleComboBox<SystemParameterDtoType> typeField;
 
 	private Widget valueField;
 
@@ -116,7 +117,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 		return codeField;
 	}
 
-	private ZSimpleComboBox<String> getTypeField() {
+	private ZSimpleComboBox<SystemParameterDtoType> getTypeField() {
 		List<String> types = new ArrayList<>();
 		types.add("string");
 		types.add("integer");
@@ -126,28 +127,28 @@ public class SystemParametersModifyWindow extends ZWindow {
 		types.remove(cur);
 		types.add(0, cur);
 
-		typeField = new ZSimpleComboBox.Builder<String>()
-			.labelProvider(new LabelProvider<String>() {
+		typeField = new ZSimpleComboBox.Builder<SystemParameterDtoType>()
+			.labelProvider(new LabelProvider<SystemParameterDtoType>() {
 				@Override
-				public String getLabel(String item) {
-					return Mes.get(item);
+				public String getLabel(SystemParameterDtoType item) {
+					return Mes.get(item.name());
 				}
 			})
-			.keyProvider(new ModelKeyProvider<String>() {
+			.keyProvider(new ModelKeyProvider<SystemParameterDtoType>() {
 				@Override
-				public String getKey(String item) {
-					return item;
+				public String getKey(SystemParameterDtoType item) {
+					return item.name();
 				}
 			})
 			.enableSorting(false)
-			.values(types)
+			.values(Arrays.asList(SystemParameterDtoType.values()))
 			.width(305)
 			.editable(false)
 			.build();
 
-		typeField.addSelectionHandler(new ZSimpleComboBox.SelectionHandler<String>() {
+		typeField.addSelectionHandler(new ZSimpleComboBox.SelectionHandler<SystemParameterDtoType>() {
 			@Override
-			public void onSelection(String s) {
+			public void onSelection(SystemParameterDtoType s) {
 				formContainer.setWidget(2, 1, getValueField());
 			}
 		});
@@ -156,11 +157,11 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private IsWidget getValueField() {
 		switch (typeField.getCurrentValue()) {
-			case "string":
+			case STRING:
 				return getValueTextField();
-			case "integer":
+			case INTEGER:
 				return getValueNumberField();
-			case "bool":
+			case BOOLEAN:
 				return getValueCheckBox();
 		}
 		return null;
@@ -221,62 +222,50 @@ public class SystemParametersModifyWindow extends ZWindow {
 	}
 
 	private String getValueFieldValue() {
-		switch (typeField.getValue()) {
-			case "bool":
+		switch (typeField.getCurrentValue()) {
+			case BOOLEAN:
 				return ((CheckBox)valueField).getValue().toString();
-			case "integer":
-				return ((IntegerField)valueField).getValue().toString();
-			case "string":
-				return ((TextArea)valueField).getValue();
+			case INTEGER:
+				return ((IntegerField)valueField).getCurrentValue().toString();
+			case STRING:
+				return ((TextArea)valueField).getCurrentValue();
 		}
 		return null;
 	}
 
 	private void markValueField() {
-		switch (typeField.getValue()) {
-			case "bool":
+		switch (typeField.getCurrentValue()) {
+			case BOOLEAN:
 				return;
-			case "integer":
+			case INTEGER:
 				((IntegerField)valueField).markInvalid("invalid");
-			case "string":
+			case STRING:
 				((TextArea)valueField).markInvalid("invalid");
 		}
 	}
 
+	private void retreiveFieldValues() {
+		dto.setCode(codeField.getCurrentValue());
+		dto.setDescription(descField.getCurrentValue());
+		dto.setType(typeField.getCurrentValue());
+		dto.setValue(getValueFieldValue());
+	}
 	private void doRedact() {
-		ServicesFactory.getSystemParameterService().editParameter(dto.getId(),
-			codeField.getValue(),
-			typeField.getValue(),
-			getValueFieldValue(),
-			descField.getValue(),
 
+		ServicesFactory.getSystemParameterService().editParameter(dto,
 			new ServiceCallback<Void>() {
 
 				@Override
 				public void onServiceSuccess(Void unused) {
 					final int index = store.indexOf(dto);
-					store.remove(index);
-					ServicesFactory.getSystemParameterService().getParameter(
-						dto.getId(),
-						new ServiceCallback<SystemParameterDto>() {
-
-							@Override
-							public void onServiceSuccess(SystemParameterDto result) {
-								store.add(index, result);
-								hide();
-							}
-						});
+					store.update(dto);
 				}
 			});
 	}
 
-	private void doAdd(SystemParameterDtoType dtoType) {
-		ServicesFactory.getSystemParameterService().addParameter(
-			codeField.getValue(),
-			dtoType,
-			getValueFieldValue(),
-			descField.getValue(),
-
+	private void doAdd() {
+		retreiveFieldValues();
+		ServicesFactory.getSystemParameterService().addParameter(dto,
 			new ServiceCallback<SystemParameterDto>() {
 
 				@Override
@@ -300,23 +289,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 						validation = false;
 					}
 
-					SystemParameterDtoType dtoType = SystemParameterDtoType.BOOLEAN;
-					switch (typeField.getValue()) {
-						case "string":
-							dtoType = SystemParameterDtoType.STRING;
-							break;
-						case "integer":
-							dtoType = SystemParameterDtoType.INTEGER;
-							break;
-						case "bool":
-							dtoType = SystemParameterDtoType.BOOLEAN;
-							break;
-						default:
-							typeField.markInvalid("invalid");
-							validation = false;
-					}
-
-					if (codeField.getValue() == null || codeField.getValue().equals("")) {
+					if (codeField.getCurrentValue() == null || codeField.getCurrentValue().equals("")) {
 						codeField.markInvalid("invalid");
 						validation = false;
 					}
@@ -325,7 +298,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 						doRedact();
 					}
 					else{
-						doAdd(dtoType);
+						doAdd();
 					}
 
 					hide();

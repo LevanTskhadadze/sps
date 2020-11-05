@@ -2,13 +2,12 @@ package com.azry.sps.systemparameters.model.services;
 
 import com.azry.sps.systemparameters.model.SystemParameter;
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.common.exceptions.SPSException;
 
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.SynchronizationType;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
@@ -55,28 +54,14 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 
 
 	@Override
-	public void editRow(long id, String code, String type, String value, String description) throws SPSException {
-		try {
-			em.createQuery("UPDATE SystemParameter sp SET sp.type = :type, sp.code = :code, sp.value = :value, sp.description = :desc WHERE sp.id = :id")
-				.setParameter("id", id)
-				.setParameter("type", toEnum(type))
-				.setParameter("code", code)
-				.setParameter("value", value)
-				.setParameter("desc", description)
-				.executeUpdate();
-		}
-		catch (OptimisticLockException ex) {
-			throw new SPSException("optimisticLockException", ex);
-		}
-
+	public void editRow(SystemParameter systemParameter) {
+		em.merge(systemParameter);
 	}
 
 
 	@Override
 	public SystemParameter getRow(long id) {
-		return em.createQuery("SELECT sp FROM SystemParameter sp WHERE sp.id = :id", SystemParameter.class)
-			.setParameter("id", id)
-			.getResultList().get(0);
+		return em.find(SystemParameter.class, id);
 	}
 
 	@Override
@@ -85,15 +70,4 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 		return entity.getId();
 	}
 
-	private SystemParameterType toEnum(String str) {
-		switch (str) {
-			case "bool":
-				return SystemParameterType.BOOLEAN;
-			case "integer":
-				return SystemParameterType.INTEGER;
-			case "string":
-				return SystemParameterType.STRING;
-		}
-		return null;
-	}
 }

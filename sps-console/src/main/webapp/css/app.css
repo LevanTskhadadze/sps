@@ -244,7 +244,7 @@ body {
     cursor: pointer;
 }
 
-.viceChannelTable > tbody > tr:first-child > td {
+.serviceChannelTable > tbody > tr:first-child > td {
     padding: 8px;
     border-left: 1px solid silver;
     border-bottom: 1px solid silver;

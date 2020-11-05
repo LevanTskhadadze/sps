@@ -186,7 +186,7 @@ public class ChannelTab extends Composite {
 		RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>>() {
 			@Override
 			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<ChannelDTO>> callback) {
-				ServicesFactory.getChannelService().getFilteredChannels(name.getValue(), active.getCurrentValue(), new ServiceCallback<List<ChannelDTO>>() {
+				ServicesFactory.getChannelService().getFilteredChannels(name.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<ChannelDTO>>() {
 					@Override
 					public void onServiceSuccess(List<ChannelDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));

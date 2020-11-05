@@ -74,8 +74,7 @@ public abstract class  IconEditWindow extends ZWindow {
 					public void onServiceSuccess(ServiceDto result) {
 						store.update(result);
 						hide();
-						Logger logger = Logger.getLogger("!!!");
-						logger.log(Level.SEVERE, event.getResults());
+
 
 						if (event.getResults().contains("\"status\": \"OK\"")) {
 							onSave();

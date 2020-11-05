@@ -6,10 +6,7 @@ import com.azry.sps.common.model.users.SystemUser;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.azry.sps.console.shared.usertab.UserTabService;
-import com.azry.sps.server.services.usertab.UserTabManager;
-import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.server.services.user.SystemUserManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
@@ -23,7 +20,7 @@ import java.util.Map;
 public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabService {
 
 	@Inject
-	UserTabManager userTabManager;
+	SystemUserManager userTabManager;
 
 	@Override
 	public PagingLoadResult<SystemUserDTO> getUsers(int startingIndex, int numberToDisplay, Map<String, String> params) {
@@ -37,8 +34,12 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 	}
 
 	@Override
-	public void changeActivation(long id) {
-		userTabManager.changeActivation(id);
+	public void changeActivation(long id, long version) throws SPSConsoleException {
+		try {
+			userTabManager.changeActivation(id, version);
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override
