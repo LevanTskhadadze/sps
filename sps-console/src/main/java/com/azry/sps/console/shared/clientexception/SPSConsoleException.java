@@ -4,32 +4,25 @@ import com.azry.sps.common.exceptions.SPSException;
 import com.google.gwt.core.shared.GwtIncompatible;
 
 public class SPSConsoleException extends Exception {
-	
-	private String messageKey;
+
 
 	public SPSConsoleException() {
 		super();
 	}
 	
-	public SPSConsoleException(String messageKey, Exception ex) {
-		super(ex);
-		this.messageKey = messageKey;
+	public SPSConsoleException(String message, Exception ex) {
+		super(message, ex);
 		
 	}
 	
-	public SPSConsoleException(String messageKey) {
-		this.messageKey = messageKey;
+	public SPSConsoleException(String message) {
+		super(message);
 	}
 
 
 	@GwtIncompatible
 	public SPSConsoleException(SPSException spsEx) {
 		super(spsEx.getCause());
-		this.messageKey = spsEx.getMessage();
-	}
-
-	public String getMessageKey() {
-		return messageKey;
 	}
 
 }

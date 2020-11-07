@@ -1,0 +1,180 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.bank.emulation.azry.com/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  name="BankServiceImplService" targetNamespace="http://ws.bank.emulation.azry.com/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.bank.emulation.azry.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://ws.bank.emulation.azry.com/">
+            <xs:element name="findClient" type="tns:findClient"/>
+            <xs:element name="findClientResponse" type="tns:findClientResponse"/>
+            <xs:element name="getClientAccounts" type="tns:getClientAccounts"/>
+            <xs:element name="getClientAccountsResponse" type="tns:getClientAccountsResponse"/>
+            <xs:element name="processTransactions" type="tns:processTransactions"/>
+            <xs:element name="processTransactionsResponse" type="tns:processTransactionsResponse"/>
+            <xs:complexType name="getClientAccounts">
+                <xs:sequence>
+                    <xs:element name="ClientId" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getClientAccountsResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:Account"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Account">
+                <xs:sequence>
+                    <xs:element name="iban" type="xs:string"/>
+                    <xs:element name="currency" type="xs:string"/>
+                    <xs:element name="balance" type="xs:decimal"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="findClient">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="personalNumber" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="findClientResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:Client"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Client">
+                <xs:sequence>
+                    <xs:element name="id" type="xs:long"/>
+                    <xs:element name="personalNumber" type="xs:string"/>
+                    <xs:element name="firstName" type="xs:string"/>
+                    <xs:element name="lastName" type="xs:string"/>
+                    <xs:element name="birthDate" type="xs:dateTime"/>
+                    <xs:element name="birthPlace" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="processTransactions">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="TransactionRequest" type="tns:TransactionRequest"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TransactionRequest">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="Transaction" type="tns:Transaction"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Transaction">
+                <xs:sequence>
+                    <xs:element name="transactionId" type="xs:string"/>
+                    <xs:element name="sourceAccount" type="xs:string"/>
+                    <xs:element name="destinationAccount" type="xs:string"/>
+                    <xs:element name="amount" type="xs:decimal"/>
+                    <xs:element name="purpose" type="xs:string"/>
+                    <xs:element name="type" type="tns:transactionType"/>
+                    <xs:element name="clientPersonalNumber" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="processTransactionsResponse">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="return" type="tns:TransactionResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TransactionResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="TransactionResponseEntry" type="tns:TransactionResponseEntry"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="TransactionResponseEntry">
+                <xs:sequence>
+                    <xs:element name="transactionId" type="xs:string"/>
+                    <xs:element name="fiId" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="transactionType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="PRINCIPAL"/>
+                    <xs:enumeration value="COMMISSION"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="BankServiceException" type="tns:BankServiceException"/>
+            <xs:complexType name="BankServiceException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="code" type="xs:string"/>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getClientAccounts">
+        <wsdl:part element="tns:getClientAccounts" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="processTransactions">
+        <wsdl:part element="tns:processTransactions" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="processTransactionsResponse">
+        <wsdl:part element="tns:processTransactionsResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="BankServiceException">
+        <wsdl:part element="tns:BankServiceException" name="BankServiceException"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findClientResponse">
+        <wsdl:part element="tns:findClientResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="findClient">
+        <wsdl:part element="tns:findClient" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getClientAccountsResponse">
+        <wsdl:part element="tns:getClientAccountsResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="BankService">
+        <wsdl:operation name="getClientAccounts">
+            <wsdl:input message="tns:getClientAccounts" name="getClientAccounts"> </wsdl:input>
+            <wsdl:output message="tns:getClientAccountsResponse" name="getClientAccountsResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findClient">
+            <wsdl:input message="tns:findClient" name="findClient"> </wsdl:input>
+            <wsdl:output message="tns:findClientResponse" name="findClientResponse"> </wsdl:output>
+            <wsdl:fault message="tns:BankServiceException" name="BankServiceException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="processTransactions">
+            <wsdl:input message="tns:processTransactions" name="processTransactions"> </wsdl:input>
+            <wsdl:output message="tns:processTransactionsResponse" name="processTransactionsResponse"> </wsdl:output>
+            <wsdl:fault message="tns:BankServiceException" name="BankServiceException"> </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BankServiceImplServiceSoapBinding" type="tns:BankService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getClientAccounts">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getClientAccounts">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getClientAccountsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="findClient">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="findClient">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="findClientResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="BankServiceException">
+                <soap:fault name="BankServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="processTransactions">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="processTransactions">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="processTransactionsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="BankServiceException">
+                <soap:fault name="BankServiceException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BankServiceImplService">
+        <wsdl:port binding="tns:BankServiceImplServiceSoapBinding" name="BankServiceImplPort">
+            <soap:address location="http://localhost:9005/services/bank-services"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

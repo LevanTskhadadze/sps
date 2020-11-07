@@ -1,6 +1,8 @@
 package com.azry.sps.console.client;
 
 
+import com.azry.sps.console.shared.bankintegration.BankIntegrationService;
+import com.azry.sps.console.shared.bankintegration.BankIntegrationServiceAsync;
 import com.azry.sps.console.shared.channel.ChannelService;
 import com.azry.sps.console.shared.channel.ChannelServiceAsync;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
@@ -103,6 +105,15 @@ public class ServicesFactory {
 			serviceCommissionsService = GWT.create(ServiceCommissionsService.class);
 		}
 		return serviceCommissionsService;
+	}
+
+	private static BankIntegrationServiceAsync bankIntegrationService;
+
+	public static BankIntegrationServiceAsync getBankIntegrationService() {
+		if (bankIntegrationService == null) {
+			bankIntegrationService = GWT.create(BankIntegrationService.class);
+		}
+		return bankIntegrationService;
 	}
 
 }

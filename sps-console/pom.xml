@@ -33,10 +33,15 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.azry.sps</groupId>
 			<artifactId>sps-server</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azry.sps</groupId>
+			<artifactId>sps-fi-integration</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -46,7 +51,6 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.sencha.gxt</groupId>
 			<artifactId>gxt</artifactId>

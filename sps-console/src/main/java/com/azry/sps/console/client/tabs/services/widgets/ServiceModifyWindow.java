@@ -5,13 +5,11 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
-import com.azry.sps.common.model.service.ServiceChannelInfo;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
-import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -26,8 +24,6 @@ import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class ServiceModifyWindow extends ZWindow {

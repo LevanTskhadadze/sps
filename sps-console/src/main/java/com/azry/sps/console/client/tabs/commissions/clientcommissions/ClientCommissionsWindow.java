@@ -83,7 +83,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 	private ZButton cancelButton;
 
 	public ClientCommissionsWindow(ClientCommissionsDto dto, List<ServiceEntityDto> serviceEntityDTOs, List<ChannelDTO> channelDTOS, ActionMode actionMode) {
-		super(Mes.get("ofClientCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
+		super(Mes.get("ofClientCommissions") + " " + Mes.get("ActionMode_" + actionMode), 900, 650, false);
 
 		initWidgetLists(serviceEntityDTOs, channelDTOS);
 
@@ -103,10 +103,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		initButtons();
 
 		buildDisplay();
-
-		setHeight("650px");
-		setWidth("900px");
-
+		toggleDualWidget();
 	}
 
 	private void buildDisplay() {
@@ -378,10 +375,24 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 
 	@Override
 	public void onListItemsChanged() {
+		toggleDualWidget();
 		setTabHeader(0, servicesDualListWidget, "services", allServices.getValue());
 		setTabHeader(1, channelsDualListWidget, "channels", allChannels.getValue());
 	}
 
+	private void toggleDualWidget() {
+		if (allServices.getValue()) {
+			servicesDualListWidget.disable();
+		} else {
+			servicesDualListWidget.enable();
+		}
+
+		if (allChannels.getValue()) {
+			channelsDualListWidget.disable();
+		} else {
+			channelsDualListWidget.enable();
+		}
+	}
 
 	public abstract void onSave(ClientCommissionsDto dto);
 }
