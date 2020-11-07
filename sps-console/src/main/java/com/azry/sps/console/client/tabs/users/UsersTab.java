@@ -75,12 +75,12 @@ public class UsersTab extends Composite {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<SystemUserDTO>> callback) {
 				Map<String, String> params = new HashMap<>();
-				params.put("username", usernameField.getValue());
-				params.put("name", nameField.getValue());
-				params.put("email", emailField.getValue());
-				params.put("active", activeComboBox.getValue());
-				if(groupComboBox.getValue() != null) {
-					params.put("groups", groupComboBox.getValue().getName());
+				params.put("username", usernameField.getCurrentValue());
+				params.put("name", nameField.getCurrentValue());
+				params.put("email", emailField.getCurrentValue());
+				params.put("active", activeComboBox.getCurrentValue());
+				if(groupComboBox.getCurrentValue() != null) {
+					params.put("groups", groupComboBox.getCurrentValue().getName());
 				}
 
 				ServicesFactory.getUserTabService().getUsers(loadConfig.getOffset(), loadConfig.getLimit(), params, new ServiceCallback<PagingLoadResult<SystemUserDTO>>() {

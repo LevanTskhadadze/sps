@@ -20,5 +20,5 @@ public interface ServiceTabServiceAsync {
 
 	void removeService(long id, AsyncCallback<Void> callback);
 
-	void changeActivation(long id, AsyncCallback<Void> callback);
+	void changeActivation(long id, long version, AsyncCallback<Void> callback);
 }

@@ -10,8 +10,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsonUtils;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -19,7 +17,6 @@ import com.sencha.gxt.widget.core.client.event.SubmitCompleteEvent;
 import com.sencha.gxt.widget.core.client.form.FileUploadField;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.info.Info;
-import netscape.javascript.JSObject;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,8 +74,7 @@ public abstract class  IconEditWindow extends ZWindow {
 					public void onServiceSuccess(ServiceDto result) {
 						store.update(result);
 						hide();
-						Logger logger = Logger.getLogger("!!!");
-						logger.log(Level.SEVERE, event.getResults());
+
 
 						if (event.getResults().contains("\"status\": \"OK\"")) {
 							onSave();

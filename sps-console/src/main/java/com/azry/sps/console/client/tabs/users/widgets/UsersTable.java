@@ -158,16 +158,20 @@ public class UsersTable {
 						})
 						.clickHandler(new GridClickHandler<SystemUserDTO>() {
 							@Override
-							public void onClick(Cell.Context context, final SystemUserDTO userDTO) {
-									ServicesFactory.getUserTabService().changeActivation(userDTO.getId(), new ServiceCallback<Void>() {
-										@Override
-										public void onServiceSuccess(Void result) {
-											userDTO.setActive(!userDTO.isActive());
-											userDTO.setLastUpdateTime(new Date());
-											store.update(userDTO);
-										}
-									});
-
+							public void onClick(Cell.Context context, final SystemUserDTO dto) {
+								new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
+									@Override
+									public void onConfirm() {
+										dto.setActive(!dto.isActive());
+										ServicesFactory.getUserTabService().changeActivation(dto.getId(), dto.getVersion(), new ServiceCallback<Void>() {
+											@Override
+											public void onServiceSuccess(Void ignored) {
+												dto.setVersion(dto.getVersion() + 1);
+												store.update(dto);
+											}
+										});
+									}
+								}.show();
 							}
 						})
 						.build()

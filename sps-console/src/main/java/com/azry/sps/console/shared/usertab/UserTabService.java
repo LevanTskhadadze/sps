@@ -13,7 +13,7 @@ public interface UserTabService extends RemoteService {
 
 	PagingLoadResult<SystemUserDTO> getUsers(int startingIndex, int numberToDisplay, Map<String, String> params);
 
-	void changeActivation(long id);
+	void changeActivation(long id, long version) throws SPSConsoleException;
 
 	SystemUserDTO editParameter(SystemUserDTO dto) throws SPSConsoleException;
 

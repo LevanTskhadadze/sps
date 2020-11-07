@@ -73,7 +73,6 @@ public class UserGroupTab extends FlexTable {
 		for (CheckBox box : checkBoxes){
 			if(box.getValue()) return true;
 		}
-		DialogUtils.showWarning(Mes.get("groupsRequired"));
 		return false;
 	}
 

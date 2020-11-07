@@ -1,4 +1,4 @@
-package com.azry.sps.systemparameters.model.systemparam;
+package com.azry.sps.systemparameters.model;
 
 import lombok.Data;
 

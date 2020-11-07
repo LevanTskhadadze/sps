@@ -12,9 +12,9 @@ public interface SystemParameterServiceAsync {
 
 	void removeParameter(long id, AsyncCallback<Void> callback);
 
-    void editParameter(long id, String code, String type, String value, String description, AsyncCallback<Void> callback);
+    void editParameter(SystemParameterDto dto, AsyncCallback<Void> callback);
 
     void getParameter(long id, AsyncCallback<SystemParameterDto> callback);
 
-    void addParameter(String code, SystemParameterDtoType type, String value, String desc, AsyncCallback<SystemParameterDto> callback);
+    void addParameter(SystemParameterDto dto, AsyncCallback<SystemParameterDto> callback);
 }

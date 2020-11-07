@@ -153,8 +153,8 @@ public abstract class ChannelWindow extends ZWindow {
 			channelDTO = new ChannelDTO();
 			channelDTO.setActive(true);
 		}
-		channelDTO.setName(nameField.getValue());
-		channelDTO.setFiServiceUnavailabilityAction(fiServiceUnavailabilityAction.getValue());
+		channelDTO.setName(nameField.getCurrentValue());
+		channelDTO.setFiServiceUnavailabilityAction(fiServiceUnavailabilityAction.getCurrentValue());
 		return channelDTO;
 	}
 

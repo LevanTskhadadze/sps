@@ -14,6 +14,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -113,6 +114,7 @@ public class ServiceTable {
 						public ImageResource selectIcon(Cell.Context context, ServiceDto dto) {
 							final String url = ZURLBuilder.create(GWT.getHostPageBaseURL(), "sps/servlet/iconDownload")
 								.param("id", dto.getId())
+								.param("t", 1)
 								.build();
 							return new ImageResource() {
 								@Override
@@ -165,10 +167,11 @@ public class ServiceTable {
 				)
 				.clickHandler(new GridClickHandler<ServiceDto>() {
 					@Override
-					public void onClick(Cell.Context context, ServiceDto dto) {
+					public void onClick(Cell.Context context, final ServiceDto dto) {
 						new IconEditWindow("service", dto.getId(), store) {
 							@Override
 							public void onSave() {
+								store.update(dto);
 							}
 						}.showInCenter();
 					}
@@ -176,6 +179,7 @@ public class ServiceTable {
 				.build()
 			)
 			.build());
+
 
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
 			.header("")
@@ -198,16 +202,20 @@ public class ServiceTable {
 				})
 				.clickHandler(new GridClickHandler<ServiceDto>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDto serviceDto) {
-						ServicesFactory.getServiceTabService().changeActivation(serviceDto.getId(), new ServiceCallback<Void>() {
+					public void onClick(Cell.Context context, final ServiceDto dto) {
+						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
 							@Override
-							public void onServiceSuccess(Void result) {
-								serviceDto.setActive(!serviceDto.isActive());
-								serviceDto.setLastUpdateTime(new Date());
-								store.update(serviceDto);
+							public void onConfirm() {
+								dto.setActive(!dto.isActive());
+								ServicesFactory.getServiceTabService().changeActivation(dto.getId(), dto.getVersion(), new ServiceCallback<Void>() {
+									@Override
+									public void onServiceSuccess(Void ignored) {
+										dto.setVersion(dto.getVersion() + 1);
+										store.update(dto);
+									}
+								});
 							}
-						});
-
+						}.show();
 					}
 				})
 				.build()

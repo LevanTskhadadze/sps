@@ -96,17 +96,14 @@ public class ServiceManagerBean implements ServiceManager {
 	}
 
 	@Override
-	public void changeActivation(long id) throws SPSException {
-		try {
-			ServiceEntity service = em.find(ServiceEntity.class, id);
-			service.setActive(!service.isActive());
-
-			em.persist(service);
+	public void changeActivation(long id, long version) throws SPSException {
+		ServiceEntity service = em.find(ServiceEntity.class, id);
+		if (version != service.getVersion()) {
+			throw new SPSException("optimisticLockException");
 		}
-		catch (OptimisticLockException ex) {
-			throw new SPSException("optimisticLockException", ex);
-		}
+		service.setActive(!service.isActive());
 
+		em.persist(service);
 	}
 
 	@Override

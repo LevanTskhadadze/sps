@@ -20,7 +20,7 @@ public interface ServiceManager {
 
 	void removeService(long id);
 
-	void changeActivation(long id) throws SPSException;
+	void changeActivation(long id, long version) throws SPSException;
 
 	void setIcon(long id, String path);
 

@@ -1,12 +1,10 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.exceptions.SPSException;
-import com.azry.sps.console.server.helper.SystemParameterDtoHelper;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
-import com.azry.sps.server.services.systemparam.SystemParameterManager;
+import com.azry.sps.integration.sp.ServiceProviderConnector;
+import com.azry.sps.systemparameters.model.services.SystemParameterManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
@@ -20,10 +18,12 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 	@Inject
 	SystemParameterManager systemParameterManager;
 
-
+	@Inject
+	ServiceProviderConnector serviceProviderConnector;
 	@Override
 	public List<SystemParameterDto> getSystemParameterTab(Map<String, String> params) {
-		return SystemParameterDtoHelper.toDTOs(systemParameterManager.getSystemParameters(params));
+		serviceProviderConnector.getInfo("gateway1", 0);
+		return SystemParameterDto.toDTOs(systemParameterManager.getSystemParameters(params));
 	}
 
 	@Override
@@ -31,27 +31,17 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 		systemParameterManager.remove(id);
 	}
 
-	public void editParameter(long id, String code, String type, String value, String description) throws SPSConsoleException {
-		try {
-			systemParameterManager.editRow(id, code, type, value, description);
-		}
-		catch (SPSException ex) {
-			throw new SPSConsoleException(ex);
-		}
+	public void editParameter(SystemParameterDto dto) throws SPSConsoleException {
+		systemParameterManager.editRow(SystemParameterDto.toEntity(dto));
 	}
 
 	@Override
 	public SystemParameterDto getParameter(long id) {
-		return SystemParameterDtoHelper.toDTO(systemParameterManager.getRow(id));
+		return SystemParameterDto.toDTO(systemParameterManager.getRow(id));
 	}
 
-	public SystemParameterDto addParameter(String code, SystemParameterDtoType type, String value, String desc) {
-		SystemParameterDto dto = new SystemParameterDto();
-		dto.setCode(code);
-		dto.setType(type);
-		dto.setValue(value);
-		dto.setDescription(desc);
-		systemParameterManager.addEntry(SystemParameterDtoHelper.toEntity(dto));
+	public SystemParameterDto addParameter(SystemParameterDto dto) {
+		systemParameterManager.addEntry(SystemParameterDto.toEntity(dto));
 		return dto;
 	}
 

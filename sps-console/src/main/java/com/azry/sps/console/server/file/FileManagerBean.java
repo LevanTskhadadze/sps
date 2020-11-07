@@ -1,8 +1,12 @@
 package com.azry.sps.console.server.file;
 
+import com.azry.sps.systemparameters.model.SystemParameterType;
+import com.azry.sps.systemparameters.model.sysparam.Parameter;
+import com.azry.sps.systemparameters.model.sysparam.SysParam;
 import org.apache.commons.io.FileUtils;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,22 +14,25 @@ import java.util.Random;
 
 @Stateless
 public class FileManagerBean implements FileManager{
+	@Inject
+	@SysParam(type = SystemParameterType.STRING, code = "service-icon-path")
+	Parameter<String> directoryPath;
 
 	@Override
 	public String uploadIcon(String source, byte[] data) throws IOException {
-		String directory = "/sps/files/" + source + "/";
+		String directory = directoryPath.getValue() + "/" + source + "/";
 		String fileName = getRandomName(10);
 		forceCreateFile(directory, fileName, data);
-		return directory + fileName;
+		return source + "/" + fileName;
 	}
 
 	@Override
-	public byte[] downloadIcon(String path) throws IOException {
-		if (path == null) {
-			path = "";
+	public byte[] downloadIcon(String filePath) throws IOException {
+		if (filePath == null) {
+			filePath = "";
 		}
 
-		File file = new File(path);
+		File file = new File(directoryPath.getValue() + "/" + filePath);
 		return FileUtils.readFileToByteArray(file);
 
 	}
@@ -38,7 +45,7 @@ public class FileManagerBean implements FileManager{
 		StringBuilder generatedString = new StringBuilder();
 
 		for(int i = 0; i < size; i ++){
-			char c = (char)(leftLimit + random.nextInt(rightLimit - leftLimit) - 1);
+			char c = (char)(leftLimit + random.nextInt(rightLimit - leftLimit));
 			generatedString.append(c);
 		}
 		return generatedString.toString();

@@ -116,4 +116,10 @@ public class UserGroupDTO extends ConfigurableDTO implements IsSerializable {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof UserGroupDTO)) return false;
+		return getId() == ((UserGroupDTO) obj).getId();
+	}
 }
