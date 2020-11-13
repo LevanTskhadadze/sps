@@ -92,11 +92,38 @@ public class ClientDTO implements IsSerializable {
 		return null;
 	}
 
+	@GwtIncompatible
+	public static ClientDTO toDTO(com.azry.sps.common.model.client.Client client) {
+		if (client != null) {
+			ClientDTO dto = new ClientDTO();
+			dto.setPersonalNumber(client.getPersonalNumber());
+			dto.setFirstName(client.getFirstName());
+			dto.setLastName(client.getLastName());
+			dto.setBirthDate(client.getBirthDate());
+			dto.setBirthPlace(client.getBirthPlace());
+
+			return dto;
+		}
+		return null;
+	}
+
 
 	@GwtIncompatible
 	public Client fromDTO() {
 		Client client = new Client();
 		client.setId(this.getId());
+		client.setPersonalNumber(this.getPersonalNumber());
+		client.setFirstName(this.getFirstName());
+		client.setLastName(this.getLastName());
+		client.setBirthDate(this.getBirthDate());
+		client.setBirthPlace(this.getBirthPlace());
+
+		return client;
+	}
+
+	@GwtIncompatible
+	public com.azry.sps.common.model.client.Client entityFromDTO() {
+		com.azry.sps.common.model.client.Client client = new com.azry.sps.common.model.client.Client();
 		client.setPersonalNumber(this.getPersonalNumber());
 		client.setFirstName(this.getFirstName());
 		client.setLastName(this.getLastName());
