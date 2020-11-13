@@ -1,7 +1,6 @@
 package com.azry.sps.console.shared.systemparameter;
 
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.List;

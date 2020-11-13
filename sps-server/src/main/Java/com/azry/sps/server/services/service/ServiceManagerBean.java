@@ -1,12 +1,16 @@
 package com.azry.sps.server.services.service;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
+import com.azry.sps.common.model.service.ServiceColumnNames;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
@@ -19,6 +23,9 @@ import java.util.Map;
 
 @Stateless
 public class ServiceManagerBean implements ServiceManager {
+
+	@Inject
+	Event<UpdateCacheEvent> updateCacheEventEvent;
 
 	@PersistenceContext
 	EntityManager em;
@@ -40,7 +47,7 @@ public class ServiceManagerBean implements ServiceManager {
 	}
 
 	@Override
-	public ListResult<Service> getServices(Map<String, Object> params, int offset, int limit) {
+	public ListResult<Service> getServices(Map<String, String> params, int offset, int limit) {
 		if (params == null) params = new HashMap<>();
 
 		String queryPrefix = "SELECT se FROM ServiceEntity se ";
@@ -49,13 +56,17 @@ public class ServiceManagerBean implements ServiceManager {
 		Map<String, Object> values = new HashMap<>();
 
 
-		if (params.containsKey("name") && params.get("name") != null && !params.get("name").equals("")) {
-			values.put("name", params.get("name"));
+		if (params.containsKey(ServiceColumnNames.NAME.getName())
+					&& params.get(ServiceColumnNames.NAME.getName()) != null
+					&& !params.get(ServiceColumnNames.NAME.getName()).equals("")) {
+			values.put(ServiceColumnNames.NAME.getName(), params.get(ServiceColumnNames.NAME.getName()));
 			str.append(" AND se.name LIKE :name ");
 		}
 
-		if (params.containsKey("active") && params.get("active") != null && !params.get("active").equals("")) {
-			values.put("active", params.get("active"));
+		if (params.containsKey(ServiceColumnNames.ACTIVE.getName())
+					&& params.get(ServiceColumnNames.ACTIVE.getName()) != null
+					&& !params.get(ServiceColumnNames.ACTIVE.getName()).equals("")) {
+			values.put(ServiceColumnNames.ACTIVE.getName(), params.get(ServiceColumnNames.ACTIVE.getName()));
 			str.append(" AND se.active = :active ");
 		}
 
@@ -66,9 +77,9 @@ public class ServiceManagerBean implements ServiceManager {
 
 		for (Map.Entry<String, Object> entry : values.entrySet()) {
 
-			if (entry.getKey().equals("active")) {
-				query.setParameter(entry.getKey(), entry.getValue().equals("1"));
-				count.setParameter(entry.getKey(), entry.getValue().equals("1"));
+			if (entry.getKey().equals(ServiceColumnNames.ACTIVE.getName())) {
+				query.setParameter(entry.getKey(), entry.getValue().equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus()));
+				count.setParameter(entry.getKey(), entry.getValue().equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus()));
 				continue;
 			}
 			query.setParameter(entry.getKey(), "%" + entry.getValue() + "%");
@@ -103,6 +114,7 @@ public class ServiceManagerBean implements ServiceManager {
 			ServiceEntity entity = service.getEntity();
 			Service srv = em.merge(entity).getService();
 			srv.setVersion(srv.getVersion() + 1);
+			updateCache();
 			return srv;
 		}
 		catch (OptimisticLockException ex) {
@@ -114,6 +126,7 @@ public class ServiceManagerBean implements ServiceManager {
 	public void removeService(long id) {
 		ServiceEntity entity = em.find(ServiceEntity.class, id);
 		em.remove(entity);
+		updateCache();
 	}
 
 	@Override
@@ -125,6 +138,7 @@ public class ServiceManagerBean implements ServiceManager {
 		service.setActive(!service.isActive());
 
 		em.persist(service);
+		updateCache();
 	}
 
 	@Override
@@ -146,5 +160,9 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public Service getService(long id) {
 		return em.find(ServiceEntity.class, id).getService();
+	}
+
+	private void updateCache() {
+		updateCacheEventEvent.fire(new UpdateCacheEvent(ServiceEntity.class.getSimpleName()));
 	}
 }

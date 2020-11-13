@@ -40,6 +40,4 @@ public class ServiceEntity extends Configurable {
 		return service;
 	}
 
-
-
 }

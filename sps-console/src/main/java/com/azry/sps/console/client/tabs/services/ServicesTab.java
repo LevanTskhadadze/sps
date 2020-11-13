@@ -62,7 +62,7 @@ public class ServicesTab extends Composite {
 		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>>() {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceDto>> callback) {
-				Map<String, Object> params = new HashMap<>();
+				Map<String, String> params = new HashMap<>();
 				params.put("name", nameField.getCurrentValue());
 				params.put("active", activeComboBox.getCurrentValue());
 

@@ -6,6 +6,8 @@ import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
+import com.azry.sps.server.caching.CachedConfigurationService;
+import com.azry.sps.server.caching.clientcommissions.ClientCommissionsCachingManager;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
@@ -21,9 +23,12 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	@Inject
 	ClientCommissionsManager clientCommissionsManager;
 
+	@Inject
+	CachedConfigurationService cache;
+
 	@Override
 	public PagingLoadResult<ClientCommissionsDto> getFilteredClientCommissions(String serviceId, String channelId, PagingLoadConfig config) {
-		ListResult<ClientCommissions> listResult =  clientCommissionsManager.getFilteredClientCommissions(serviceId, channelId, config.getOffset(), config.getLimit());
+		ListResult<ClientCommissions> listResult =  cache.filterClientCommissions(serviceId, channelId, config.getOffset(), config.getLimit());
 		return new  PagingLoadResultBean<>(ClientCommissionsDto.toDTOs(listResult.getResultList()), listResult.getResultCount(), config.getOffset());
 	}
 

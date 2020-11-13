@@ -16,7 +16,7 @@ public interface ServiceManager {
 
 	List<Service> getAllServices();
 
-	ListResult<Service> getServices(Map<String, Object> params, int offset, int limit);
+	ListResult<Service> getServices(Map<String, String> params, int offset, int limit);
 
 	List<Service> getServicesByServiceGroup(long groupId);
 

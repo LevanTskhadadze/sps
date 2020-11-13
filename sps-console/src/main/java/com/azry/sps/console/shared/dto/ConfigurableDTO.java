@@ -14,6 +14,8 @@ public class ConfigurableDTO implements IsSerializable {
 
 	private long version;
 
+
+
 	public Date getCreateTime() {
 		return createTime;
 	}

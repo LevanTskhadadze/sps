@@ -279,6 +279,18 @@ public class ServiceCommissionsTab extends Composite {
 		List<ColumnConfig<ServiceCommissionsDto, ?>> columns = new ArrayList<>();
 
 		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+			.width(50)
+//			.fixed()
+			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+				@Override
+				public String getProperty(ServiceCommissionsDto dto) {
+					return String.valueOf(dto.getPriority());
+				}
+			})
+			.header(Mes.get("priority"))
+			.build());
+
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
 			.width(250)
 //			.fixed()
 			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {

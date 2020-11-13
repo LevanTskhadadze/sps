@@ -1,7 +1,8 @@
 package com.azry.sps.integration.sp;
 
-import com.azry.sps.integration.sp.dto.AbonentInfo;
-import com.azry.sps.integration.sp.dto.AbonentRequest;
+import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.integration.sp.dto.AbonentDto;
+import com.azry.sps.integration.sp.dto.AbonentInfoDto;
 import com.azry.sps.integration.sp.dto.PaymentDto;
 import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.model.sysparam.Parameter;
@@ -20,12 +21,13 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
-@Singleton
+@Singleton(name = "sp-integration-service")
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 @DependsOn("sysParamProducer")
-public class ServiceProviderConnector {
+public class ServiceProviderIntegrationService {
 
 	@Inject
 	@SysParam(type = SystemParameterType.STRING, code = "sp-integration-url", defaultValue = "http://localhost:9006")
@@ -37,20 +39,33 @@ public class ServiceProviderConnector {
 
 	@PostConstruct
 	public void startup() {
-		client = new ResteasyClientBuilder().build();
+		client = new ResteasyClientBuilder()
+			.connectTimeout(5, TimeUnit.SECONDS).build();
 		target = client.target(UriBuilder.fromPath(path.getValue()));
 		proxy = target.proxy(ServicesInterface.class);
 	}
 
 	public synchronized AbonentInfo getInfo(String serviceCode, long id) {
 
-		AbonentInfo abonentInfo = proxy.getAbonent(new AbonentRequest("gateway-" + serviceCode, String.valueOf(id)));
-		return abonentInfo;
+
+		try {
+			AbonentInfo abonentInfo = proxy.getAbonent(new AbonentRequest("gateway-" + serviceCode, String.valueOf(id)));
+			return abonentInfo;
+		} catch (Exception ex) {
+			throw new SPSException("SPConnectionFailed", ex);
+		}
 	}
 
-	public synchronized boolean pay(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) {
-		Response payment = proxy.pay(new PaymentDto(serviceCode, agentPaymentId, abonentCode, amount));
-		System.out.println("HTTP code: " + payment.getStatus());
-		return true;
+	public synchronized boolean pay(String serviceCode, long agentPaymentId, long abonentCode, BigDecimal amount) throws SPSException {
+		try {
+			Response payment = proxy.pay(new PaymentDto(serviceCode,
+				String.valueOf(agentPaymentId),
+				String.valueOf(abonentCode),
+				amount));
+			System.out.println("HTTP code: " + payment.getStatus());
+			return true;
+		} catch (Exception ex) {
+			throw new SPSException("SPConnectionFailed", ex);
+		}
 	}
 }

@@ -23,11 +23,21 @@ public class ServiceCommissionsDto extends ConfigurableDTO implements IsSerializ
 
 	private CommissionRateTypeDTO rateType;
 
+	private long priority;
+
 	private BigDecimal minCommission;
 
 	private BigDecimal maxCommission;
 
 	private BigDecimal Commission;
+
+	public long getPriority() {
+		return priority;
+	}
+
+	public void setPriority(long priority) {
+		this.priority = priority;
+	}
 
 	public long getId() {
 		return id;
@@ -101,6 +111,7 @@ public class ServiceCommissionsDto extends ConfigurableDTO implements IsSerializ
 			dto.setCreateTime(serviceCommissions.getCreateTime());
 			dto.setLastUpdateTime(serviceCommissions.getLastUpdateTime());
 			dto.setVersion(serviceCommissions.getVersion());
+			dto.setPriority(serviceCommissions.getPriority());
 
 			return dto;
 		}
@@ -132,6 +143,7 @@ public class ServiceCommissionsDto extends ConfigurableDTO implements IsSerializ
 		cc.setCreateTime(this.getCreateTime());
 		cc.setLastUpdateTime(this.getLastUpdateTime());
 		cc.setVersion(this.getVersion());
+		cc.setPriority(this.getPriority());
 
 		return cc;
 	}

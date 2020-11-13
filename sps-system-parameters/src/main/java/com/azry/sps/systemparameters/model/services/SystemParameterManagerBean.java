@@ -1,13 +1,11 @@
 package com.azry.sps.systemparameters.model.services;
 
 import com.azry.sps.systemparameters.model.SystemParameter;
-import com.azry.sps.systemparameters.model.SystemParameterType;
 
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.SynchronizationType;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;

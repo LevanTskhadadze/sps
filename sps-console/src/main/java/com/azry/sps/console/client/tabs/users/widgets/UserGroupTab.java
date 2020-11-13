@@ -1,6 +1,5 @@
 package com.azry.sps.console.client.tabs.users.widgets;
 
-import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.dom.client.Style;
