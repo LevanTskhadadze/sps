@@ -4,7 +4,6 @@ import com.azry.sps.fi.bankws.Client;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.util.Date;
 
 public class ClientDTO implements IsSerializable {
@@ -21,7 +20,6 @@ public class ClientDTO implements IsSerializable {
 
 	private String birthPlace;
 
-	@XmlElement(required = true)
 	public long getId() {
 		return id;
 	}
@@ -30,7 +28,6 @@ public class ClientDTO implements IsSerializable {
 		this.id = id;
 	}
 
-	@XmlElement(required = true)
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
@@ -39,7 +36,6 @@ public class ClientDTO implements IsSerializable {
 		this.personalNumber = personalNumber;
 	}
 
-	@XmlElement(required = true)
 	public String getFirstName() {
 		return firstName;
 	}
@@ -48,7 +44,6 @@ public class ClientDTO implements IsSerializable {
 		this.firstName = firstName;
 	}
 
-	@XmlElement(required = true)
 	public String getLastName() {
 		return lastName;
 	}
@@ -57,7 +52,6 @@ public class ClientDTO implements IsSerializable {
 		this.lastName = lastName;
 	}
 
-	@XmlElement(required = true)
 	public Date getBirthDate() {
 		return birthDate;
 	}
@@ -66,7 +60,6 @@ public class ClientDTO implements IsSerializable {
 		this.birthDate = birthDate;
 	}
 
-	@XmlElement(required = true)
 	public String getBirthPlace() {
 		return birthPlace;
 	}
