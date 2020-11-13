@@ -14,7 +14,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -24,9 +23,7 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ServiceTable {
@@ -56,7 +53,7 @@ public class ServiceTable {
 
 		List<ColumnConfig<ServiceDto, ?>> columns = new ArrayList<>();
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
-			.header("id")
+			.header(Mes.get("id"))
 			.width(20)
 			.valueProvider(new ZStringProvider<ServiceDto>() {
 				@Override

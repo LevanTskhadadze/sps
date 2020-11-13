@@ -3,7 +3,11 @@ package com.azry.sps.integration.sp.dto;
 
 import java.math.BigDecimal;
 
-public class AbonentInfoDto {
+public class AbonentInfo {
+
+	private GetInfoStatus status;
+
+	private String message;
 
 	String abonentInfo;
 
@@ -23,5 +27,21 @@ public class AbonentInfoDto {
 
 	public void setDebt(BigDecimal debt) {
 		this.debt = debt;
+	}
+
+	public GetInfoStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(GetInfoStatus status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

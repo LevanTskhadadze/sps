@@ -25,16 +25,22 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	@Inject
 	ServiceManager serviceManager;
 
-	public List<ServiceEntityDto> getAllServices(){
-		return ServiceEntityDto.toDtos(serviceManager.getAllServices());
-	}
-
 	Comparator<Service> serviceComparator = new Comparator<Service>() {
 		@Override
 		public int compare(Service s1, Service s2) {
 			return s1.getName().compareTo(s2.getName());
 		}
 	};
+
+	@Override
+	public List<ServiceEntityDto> getAllServiceEntities(){
+		return ServiceEntityDto.toDtos(serviceManager.getAllServiceEntities());
+	}
+
+	@Override
+	public List<ServiceDto> getAllServices() {
+		return ServiceDto.toDtos(serviceManager.getAllServices());
+	}
 
 	@Override
 	public PagingLoadResult<ServiceDto> getServices(Map<String, Object> params, int offset, int limit) {
@@ -46,6 +52,11 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 			result.getResultCount(),
 			offset
 		);
+	}
+
+	@Override
+	public List<ServiceDto> getServicesByServiceGroup(long groupId) {
+		return ServiceDto.toDtos(serviceManager.getServicesByServiceGroup(groupId));
 	}
 
 	@Override

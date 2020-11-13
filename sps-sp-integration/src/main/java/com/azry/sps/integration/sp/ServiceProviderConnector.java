@@ -1,12 +1,11 @@
 package com.azry.sps.integration.sp;
 
-import com.azry.sps.integration.sp.dto.AbonentDto;
-import com.azry.sps.integration.sp.dto.AbonentInfoDto;
+import com.azry.sps.integration.sp.dto.AbonentInfo;
+import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PaymentDto;
+import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.model.sysparam.Parameter;
 import com.azry.sps.systemparameters.model.sysparam.SysParam;
-import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.SystemParametersProducer;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -17,7 +16,6 @@ import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -44,9 +42,9 @@ public class ServiceProviderConnector {
 		proxy = target.proxy(ServicesInterface.class);
 	}
 
-	public synchronized AbonentInfoDto getInfo(String serviceCode, long id) {
+	public synchronized AbonentInfo getInfo(String serviceCode, long id) {
 
-		AbonentInfoDto abonentInfo = proxy.getAbonent(new AbonentDto(serviceCode, String.valueOf(id)));
+		AbonentInfo abonentInfo = proxy.getAbonent(new AbonentRequest("gateway-" + serviceCode, String.valueOf(id)));
 		return abonentInfo;
 	}
 

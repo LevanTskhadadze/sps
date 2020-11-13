@@ -12,9 +12,13 @@ import java.util.Map;
 @Local
 public interface ServiceManager {
 
-	List<ServiceEntity> getAllServices();
+	List<ServiceEntity> getAllServiceEntities();
+
+	List<Service> getAllServices();
 
 	ListResult<Service> getServices(Map<String, Object> params, int offset, int limit);
+
+	List<Service> getServicesByServiceGroup(long groupId);
 
 	Service editService(Service service) throws SPSException;
 

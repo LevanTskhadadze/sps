@@ -1,15 +1,11 @@
 package com.azry.sps.integration.sp.dto;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
 
-
-public class AbonentDto {
+public class AbonentRequest {
 	String serviceCode;
 	String abonentCode;
 
-	public AbonentDto(String gate, String id) {
+	public AbonentRequest(String gate, String id) {
 		this.serviceCode = gate;
 		this.abonentCode = id;
 	}

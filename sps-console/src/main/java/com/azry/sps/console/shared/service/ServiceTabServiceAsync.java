@@ -10,9 +10,13 @@ import java.util.Map;
 
 public interface ServiceTabServiceAsync {
 
-	void getAllServices(AsyncCallback<List<ServiceEntityDto>> callback);
+	void getAllServiceEntities(AsyncCallback<List<ServiceEntityDto>> callback);
+
+	void getAllServices(AsyncCallback<List<ServiceDto>> async);
 
 	void getServices(Map<String, Object> params, int offset, int limit, AsyncCallback<PagingLoadResult<ServiceDto>> callback);
+
+	void getServicesByServiceGroup(long groupId, AsyncCallback<List<ServiceDto>> async);
 
 	void getService(long id, AsyncCallback<ServiceDto> callback);
 

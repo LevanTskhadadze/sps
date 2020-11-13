@@ -13,9 +13,13 @@ import java.util.Map;
 @RemoteServiceRelativePath("servlet/serviceTab")
 public interface ServiceTabService extends RemoteService {
 
-	List<ServiceEntityDto> getAllServices();
+	List<ServiceEntityDto> getAllServiceEntities();
+
+	List<ServiceDto> getAllServices();
 
 	PagingLoadResult<ServiceDto> getServices(Map<String, Object> params, int offset, int limit);
+
+	List<ServiceDto> getServicesByServiceGroup(long groupId);
 
 	ServiceDto editService(ServiceDto service) throws SPSConsoleException;
 

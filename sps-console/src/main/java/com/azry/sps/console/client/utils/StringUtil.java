@@ -8,14 +8,27 @@ public class StringUtil {
 
 		StringBuilder sb = new StringBuilder();
 
-		String loopDel = "";
+		String Del = "";
 
 		for(String s : list) {
 
-			sb.append(loopDel);
+			sb.append(Del);
 			sb.append(s);
 
-			loopDel = del;
+			Del = del;
+		}
+
+		return sb.toString();
+	}
+
+	public static String joinEndWithDel(List<String> list, String del) {
+
+		StringBuilder sb = new StringBuilder();
+
+		for(String s : list) {
+
+			sb.append(s);
+			sb.append(del);
 		}
 
 		return sb.toString();
@@ -25,14 +38,14 @@ public class StringUtil {
 
 		StringBuilder sb = new StringBuilder();
 
-		String loopDel = "";
+		String Del = "";
 
 		for(String s : list) {
 
-			sb.append(loopDel);
+			sb.append(Del);
 			sb.append(Mes.get(s));
 
-			loopDel = del;
+			Del = del;
 		}
 
 		return sb.toString();

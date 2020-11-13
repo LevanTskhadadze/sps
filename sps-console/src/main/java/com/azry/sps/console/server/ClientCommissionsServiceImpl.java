@@ -28,6 +28,11 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	}
 
 	@Override
+	public ClientCommissionsDto getClientCommission(long serviceId) {
+		return ClientCommissionsDto.toDTO(clientCommissionsManager.getClientCommission(serviceId));
+	}
+
+	@Override
 	public ClientCommissionsDto updateClientCommissions(ClientCommissionsDto clientCommissions) throws SPSConsoleException {
 		try {
 			return ClientCommissionsDto.toDTO(clientCommissionsManager.updateClientCommissions(clientCommissions.fromDTO()));

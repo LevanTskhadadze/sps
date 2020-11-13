@@ -24,10 +24,19 @@ public class ServiceManagerBean implements ServiceManager {
 	EntityManager em;
 
 	@Override
-	public List<ServiceEntity> getAllServices() {
+	public List<ServiceEntity> getAllServiceEntities() {
 
 		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
 			.getResultList();
+	}
+
+	@Override
+	public List<Service> getAllServices() {
+		List<Service> services = new ArrayList<>();
+		for (ServiceEntity serviceEntity : getAllServiceEntities()) {
+			services.add(serviceEntity.getService());
+		}
+		return services;
 	}
 
 	@Override
@@ -74,6 +83,18 @@ public class ServiceManagerBean implements ServiceManager {
 		}
 		return new ListResult<>(services, (int)((long)count.getSingleResult()));
 
+	}
+
+	@Override
+	public List<Service> getServicesByServiceGroup(long groupId) {
+		List <Service> services = new ArrayList<>();
+		List<ServiceEntity> serviceEntities = getAllServiceEntities();
+		for (ServiceEntity serviceEntity : serviceEntities) {
+			if (serviceEntity.getService().getGroupId() == groupId) {
+				services.add(serviceEntity.getService());
+			}
+		}
+		return services;
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class ClientCommissionsTab extends Composite {
 	}
 
 	private void getData() {
-		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceEntityDto>>() {
+		ServicesFactory.getServiceTabService().getAllServiceEntities(new ServiceCallback<List<ServiceEntityDto>>() {
 			@Override
 			public void onServiceSuccess(List<ServiceEntityDto> result) {
 				serviceEntityDTOs = result;

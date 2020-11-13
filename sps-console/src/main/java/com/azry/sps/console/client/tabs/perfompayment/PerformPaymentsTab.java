@@ -11,6 +11,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.bankclient.AccountDTO;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
+import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.google.gwt.user.client.ui.Label;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -40,6 +41,8 @@ public class PerformPaymentsTab extends Composite {
 	private ZButton clientInfoButton;
 	private ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
 	private ZButton clearButton;
+
+	PaymentTable paymentTable;
 
 
 
@@ -76,10 +79,24 @@ public class PerformPaymentsTab extends Composite {
 					ServicesFactory.getBankIntegrationService().findClient(String.valueOf(idNField.getCurrentValue()), new ServiceCallback<ClientDTO>() {
 						@Override
 						public void onServiceSuccess(final ClientDTO dto) {
+
+							initClientInfo(dto);
+
+							ServicesFactory.getPaymentListService().getPaymentList(dto.getPersonalNumber(), new ServiceCallback<PaymentListDTO>() {
+								@Override
+								public void onServiceSuccess(PaymentListDTO result) {
+									if (paymentTable == null) {
+										paymentTable = new PaymentTable(dto, result);
+										container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
+										container.forceLayout();
+									}
+								}
+							});
+
 							ServicesFactory.getBankIntegrationService().getClientAccounts(dto.getId(), new ServiceCallback<List<AccountDTO>>() {
 								@Override
 								public void onServiceSuccess(List<AccountDTO> result) {
-									initClientInfo(dto, result);
+									clientAccountsComboBox.replaceAll(result);
 								}
 							});
 						}
@@ -113,7 +130,7 @@ public class PerformPaymentsTab extends Composite {
 		return customerTabPanel;
 	}
 
-	private void initClientInfo(final ClientDTO dto, List<AccountDTO> accountDTOS) {
+	private void initClientInfo(final ClientDTO dto) {
 		if (flag == true) {
 			clearClientInfo();
 		}
@@ -142,7 +159,6 @@ public class PerformPaymentsTab extends Composite {
 				}
 			})
 			.noSelectionLabel(Mes.get("clientIban"))
-			.values(accountDTOS)
 			.enableSorting(false)
 			.editable(false)
 			.width(350)
@@ -161,6 +177,8 @@ public class PerformPaymentsTab extends Composite {
 		if (flag == true) {
 			customerInfoBar.remove(clientInfoButton);
 			customerInfoBar.remove(clientAccountsComboBox);
+			container.remove(paymentTable);
+			paymentTable = null;
 			flag = false;
 		}
 	}

@@ -11,6 +11,8 @@ public interface ClientCommissionsManager {
 
 	ListResult<ClientCommissions> getFilteredClientCommissions(String service, String channel, int offset, int limit);
 
+	ClientCommissions getClientCommission(long serviceId);
+
 	ClientCommissions updateClientCommissions(ClientCommissions clientCommissions) throws SPSException;
 
 	void deleteClientCommissions(long id);

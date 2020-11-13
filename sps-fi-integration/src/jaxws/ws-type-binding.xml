@@ -2,6 +2,6 @@
 <jxb:bindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb" version="2.0" xmlns="http://java.sun.com/xml/ns/jaxws"
 			  xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<jxb:globalBindings>
-		<jxb:javaType name="java.util.Date" xmlType="xs:dateTime" parseMethod="com.azry.sps.fi.DateAdapter.parseDate" printMethod="com.azry.sps.fi.DateAdapter.printDate"/>
+		<jxb:javaType name="java.util.Date" xmlType="xs:dateTime" parseMethod="com.azry.sps.fi.utils.DateAdapter.parseDate" printMethod="com.azry.sps.fi.utils.DateAdapter.printDate"/>
 	</jxb:globalBindings>
 </jxb:bindings>

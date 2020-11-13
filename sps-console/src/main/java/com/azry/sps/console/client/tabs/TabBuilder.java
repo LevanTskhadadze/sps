@@ -332,7 +332,7 @@ public class TabBuilder {
 
 	public static HTML getPerformPaymentsTabMenuItem(final TabPanel centerPanel, final Menu menu) {
 
-		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
+		String img = "<i style='width:16px; height:16px;' class='fa fa-star'></i>";
 
 		final HTML menuItem = new HTML(img + Mes.get("performPayment"));
 		menuItem.setStyleName("menuItem");
@@ -354,7 +354,7 @@ public class TabBuilder {
 				centerPanel.add(performPaymentsTab, Mes.get("performPaymentsTab"));
 
 				TabItemConfig config = centerPanel.getConfig(performPaymentsTab);
-				config.setIcon(FAIconsProvider.getIcons().briefcase());
+				config.setIcon(FAIconsProvider.getIcons().star());
 				config.setClosable(true);
 
 				centerPanel.update(performPaymentsTab, config);

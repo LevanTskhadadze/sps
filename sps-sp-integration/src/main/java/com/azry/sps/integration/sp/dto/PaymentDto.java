@@ -2,7 +2,7 @@ package com.azry.sps.integration.sp.dto;
 
 import java.math.BigDecimal;
 
-public class PaymentDto {
+public class  PaymentDto {
 
 	private String serviceCode;
 

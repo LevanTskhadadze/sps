@@ -7,6 +7,10 @@ import com.azry.sps.console.shared.channel.ChannelService;
 import com.azry.sps.console.shared.channel.ChannelServiceAsync;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsServiceAsync;
+import com.azry.sps.console.shared.paymentlist.PaymentListService;
+import com.azry.sps.console.shared.paymentlist.PaymentListServiceAsync;
+import com.azry.sps.console.shared.providerintegration.ProviderIntegrationService;
+import com.azry.sps.console.shared.providerintegration.ProviderIntegrationServiceAsync;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.console.shared.service.ServiceTabServiceAsync;
 import com.azry.sps.console.shared.servicecommission.ServiceCommissionsService;
@@ -116,4 +120,21 @@ public class ServicesFactory {
 		return bankIntegrationService;
 	}
 
+	private static ProviderIntegrationServiceAsync providerIntegrationService;
+
+	public static ProviderIntegrationServiceAsync getProviderIntegrationService() {
+		if (providerIntegrationService == null) {
+			providerIntegrationService = GWT.create(ProviderIntegrationService.class);
+		}
+		return providerIntegrationService;
+	}
+
+	private static PaymentListServiceAsync paymentListService;
+
+	public static PaymentListServiceAsync getPaymentListService() {
+		if (paymentListService == null) {
+			paymentListService = GWT.create(PaymentListService.class);
+		}
+		return paymentListService;
+	}
 }

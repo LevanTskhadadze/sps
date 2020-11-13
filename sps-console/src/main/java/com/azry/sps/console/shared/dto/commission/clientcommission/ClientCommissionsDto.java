@@ -162,9 +162,9 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 		cc.setId(this.getId());
 		cc.setPriority(this.getPriority());
 		cc.setAllServices(this.isAllServices());
-		cc.setServicesIds(StringUtil.join(this.getServicesIds(), ","));
+		cc.setServicesIds(StringUtil.joinEndWithDel(this.getServicesIds(), ","));
 		cc.setAllChannels(this.isAllChannels());
-		cc.setChannelsIds(StringUtil.join(this.getChannelsIds(), ","));
+		cc.setChannelsIds(StringUtil.joinEndWithDel(this.getChannelsIds(), ","));
 		cc.setRateType(CommissionRateType.valueOf(this.getRateType().name()));
 		cc.setMinCommission(this.getMinCommission());
 		cc.setMaxCommission(this.getMaxCommission());

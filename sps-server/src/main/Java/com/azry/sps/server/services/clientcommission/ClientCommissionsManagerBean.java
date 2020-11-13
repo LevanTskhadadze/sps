@@ -28,8 +28,9 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			if (serviceId.equals("-1")) {
 				sql += "AND c.allServices = TRUE ";
 			} else {
-				sql += "AND c.allServices = TRUE OR LOWER(c.servicesIds) LIKE :service ";
-				params.put("service", "%" + serviceId + "%");
+				sql += "AND c.allServices = TRUE OR c.servicesIds LIKE :firstService OR c.servicesIds LIKE :service ";
+				params.put("firstService", serviceId + ",%");
+				params.put("service", "%," + serviceId + ",%");
 			}
 		}
 
@@ -37,8 +38,9 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			if (channelId.equals("-1")) {
 				sql += "AND c.allChannels = TRUE ";
 			} else {
-				sql += "AND c.allCannels = TRUE OR c.channelsIds LIKE :channel ";
-				params.put("channel", "%" + channelId + "%");
+				sql += "AND c.allCannels = TRUE OR c.channelsIds LIKE :firstChannel OR c.channelsIds LIKE :channel ";
+				params.put("firstChannel", channelId + ",%");
+				params.put("channel", "%," + channelId + ",%");
 			}
 		}
 
@@ -57,6 +59,15 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 		List<ClientCommissions> clientCommissions = query.getResultList();
 
 		return new ListResult<>(clientCommissions, (int)(long) count.getSingleResult());
+	}
+
+	public ClientCommissions getClientCommission(long serviceId){
+		return em.createQuery("SELECT c FROM ClientCommissions c WHERE c.allServices = TRUE OR c.servicesIds " +
+			"LIKE :firstService OR c.servicesIds LIKE :service ORDER BY c.priority", ClientCommissions.class)
+			.setParameter("firstService", serviceId + ",%")
+			.setParameter("service", "%," + serviceId + ",%")
+			.setMaxResults(1)
+			.getSingleResult();
 	}
 
 	@Override

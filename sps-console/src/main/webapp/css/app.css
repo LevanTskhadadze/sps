@@ -263,3 +263,75 @@ body {
 .payments-page-tab-panel > div:first-child ul {
     background: white !important;
 }
+
+.payment-list-table {
+    border-collapse: collapse;
+}
+
+.payment-list-table > tbody > tr:first-child {
+    background: #d3ecfd;
+    line-height: 25px;
+}
+
+.payment-list-table > tbody > tr:first-child > td {
+    font-size: 14px;
+}
+
+.payment-list-table > tbody > tr > td {
+    border: 1px solid #bdbdbd;
+    font-size: 12px;
+    padding: 5px;
+}
+
+.verify-abonent-code-button > div:first-child {
+    background: white !important;
+    border: none;
+}
+
+
+.abonent-info-success > div:first-child {
+    background-color: #bcffc2;
+}
+
+.abonent-info-failure > div:first-child {
+    background-color: #fbc6c6;
+}
+
+.loader {
+    background-image: url("images/loading.gif");
+    height: 16px;
+    width: 16px;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    display: block;
+    margin: auto;
+}
+
+.loading-indicator {
+    display: inline-block;
+    background: url(images/loading.gif);
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.table-cell-loading {
+    background-color: #eaeaea;
+}
+
+.table-cell-loaded{
+    background-color: #bcffc2;
+}
+
+.table-cell-loaded-error {
+    background-color: #fffcb4;
+}
+
+.table-cell-loaded-not-found {
+    background-color: #fbc6c6;
+}
+
+.payment-entry-list-row {
+    font-size: 12px;
+    height: 43px;
+}
