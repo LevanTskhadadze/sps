@@ -5,6 +5,7 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.channel.ChannelTab;
 import com.azry.sps.console.client.tabs.commissions.clientcommissions.ClientCommissionsTab;
 import com.azry.sps.console.client.tabs.commissions.servicecommissions.ServiceCommissionsTab;
+import com.azry.sps.console.client.tabs.payment.PaymentTab;
 import com.azry.sps.console.client.tabs.perfompayment.PerformPaymentsTab;
 import com.azry.sps.console.client.tabs.servicegroup.ServiceGroupTab;
 import com.azry.sps.console.client.tabs.services.ServicesTab;
@@ -359,6 +360,44 @@ public class TabBuilder {
 
 				centerPanel.update(performPaymentsTab, config);
 				centerPanel.setActiveWidget(performPaymentsTab);
+				menu.hide();
+			}
+		});
+		return menuItem;
+	}
+
+
+	private static PaymentTab paymentTab;
+
+	public static HTML getPaymentTabMenuItem(final TabPanel centerPanel, final Menu menu) {
+
+		String img = "<i style='width:16px; height:16px;' class='fa fa-credit-card'></i>";
+
+		final HTML menuItem = new HTML(img + Mes.get("payments"));
+		menuItem.setStyleName("menuItem");
+		menuItem.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				if (paymentTab != null) {
+					if (paymentTab.getTitle().equals("closed")) {
+						paymentTab = null;
+					}
+					else {
+						centerPanel.setActiveWidget(paymentTab);
+						menu.hide();
+						return;
+					}
+				}
+
+				paymentTab = new PaymentTab();
+				centerPanel.add(paymentTab, Mes.get("payments"));
+
+				TabItemConfig config = centerPanel.getConfig(paymentTab);
+				config.setIcon(FAIconsProvider.getIcons().credit_card());
+				config.setClosable(true);
+
+				centerPanel.update(paymentTab, config);
+				centerPanel.setActiveWidget(paymentTab);
 				menu.hide();
 			}
 		});

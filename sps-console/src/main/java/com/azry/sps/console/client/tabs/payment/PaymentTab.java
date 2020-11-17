@@ -2,20 +2,27 @@ package com.azry.sps.console.client.tabs.payment;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
+import com.azry.gxt.client.zcomp.ZDateField;
 import com.azry.gxt.client.zcomp.ZGrid;
+import com.azry.gxt.client.zcomp.ZMultiSelectComboBox;
+import com.azry.gxt.client.zcomp.ZNumberField;
 import com.azry.gxt.client.zcomp.ZPagingToolBar;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
-import com.azry.sps.console.client.tabs.users.widgets.UsersModifyWindow;
-import com.azry.sps.console.client.tabs.users.widgets.UsersTable;
+import com.azry.sps.console.client.tabs.payment.widgets.PaymentTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
-import com.azry.sps.console.shared.dto.users.SystemUserDTO;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentDto;
+import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+import com.sencha.gxt.core.client.util.Padding;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -24,36 +31,46 @@ import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 import com.sencha.gxt.data.shared.loader.PagingLoader;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
+import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PaymentTab {
-/*
+public class PaymentTab extends Composite {
+
+
+
 	private final VerticalLayoutContainer content;
 
-	private ZTextField usernameField;
+	private ZNumberField<Long> idField;
 
-	private ZTextField nameField;
+	private ZTextField agentPaymentIdField;
 
-	private ZTextField emailField;
+	private ZDateField creationStartTimeField;
 
-	private ZSimpleComboBox<UserGroupDTO> groupComboBox;
+	private ZDateField creationEndTimeField;
 
-	private ZSimpleComboBox<String> activeComboBox;
+	private ZSimpleComboBox<ServiceDto> serviceComboBox;
 
-	private PagingLoader<PagingLoadConfig, PagingLoadResult<SystemUserDTO>> pagingLoader;
+	private ZSimpleComboBox<ChannelDTO> channelComboBox;
 
-	ZGrid<SystemUserDTO> grid;
+	private ZMultiSelectComboBox<PaymentStatusDto> paymentStatusComboBox;
 
-	public PaymentTab(List<> result){
+	private PagingLoader<PagingLoadConfig, PagingLoadResult<PaymentDto>> pagingLoader;
+
+	ZGrid<PaymentDto> grid;
+
+	public PaymentTab(){
 		super();
 		content = new VerticalLayoutContainer();
-		buildGroupField(result);
 
 		initToolbar();
 
@@ -63,26 +80,35 @@ public class PaymentTab {
 
 		initPaging();
 
-
-
 	}
 
 	private void initPaging() {
-		RpcProxy<PagingLoadConfig, PagingLoadResult<SystemUserDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<SystemUserDTO>>() {
+		RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDto>>() {
 			@Override
-			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<SystemUserDTO>> callback) {
-				Map<String, String> params = new HashMap<>();
-				params.put("username", usernameField.getCurrentValue());
-				params.put("name", nameField.getCurrentValue());
-				params.put("email", emailField.getCurrentValue());
-				params.put("active", activeComboBox.getCurrentValue());
-				if(groupComboBox.getCurrentValue() != null) {
-					params.put("groups", groupComboBox.getCurrentValue().getName());
+			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDto>> callback) {
+				Map<String, Serializable> params = new HashMap<>();
+				if (idField.getCurrentValue() != null) {
+					params.put("id", idField.getCurrentValue());
+				}
+				if (agentPaymentIdField.getCurrentValue() != null) {
+					params.put("agentPaymentId", agentPaymentIdField.getCurrentValue());
+				}
+				if (creationStartTimeField.getCurrentValue() != null) {
+					params.put("startTime", creationStartTimeField.getCurrentValue());
+				}
+				if (creationEndTimeField.getCurrentValue() != null) {
+					params.put("endTime", creationEndTimeField.getCurrentValue());
+				}
+				if (serviceComboBox.getCurrentValue() != null) {
+					params.put("service", serviceComboBox.getCurrentValue().getId());
+				}
+				if (channelComboBox.getCurrentValue() != null) {
+					params.put("channel", channelComboBox.getCurrentValue().getId());
 				}
 
-				ServicesFactory.getUserTabService().getUsers(loadConfig.getOffset(), loadConfig.getLimit(), params, new ServiceCallback<PagingLoadResult<SystemUserDTO>>() {
+				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDto>>() {
 					@Override
-					public void onServiceSuccess(PagingLoadResult<SystemUserDTO> result) {
+					public void onServiceSuccess(PagingLoadResult<PaymentDto> result) {
 						callback.onSuccess(result);
 					}
 				});
@@ -91,13 +117,13 @@ public class PaymentTab {
 		};
 		pagingLoader = new PagingLoader<>(proxy);
 
-		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, SystemUserDTO, PagingLoadResult<SystemUserDTO>>(UsersTable.getListStore()));
+		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, PaymentDto, PagingLoadResult<PaymentDto>>(PaymentTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
+		pagingPossibleValues.add(20);
 		pagingPossibleValues.add(50);
 		pagingPossibleValues.add(100);
 		pagingPossibleValues.add(200);
-		pagingPossibleValues.add(5);
 		ZPagingToolBar pager = new ZPagingToolBar.Builder<>(pagingLoader)
 			.possibleValue(pagingPossibleValues)
 			.build();
@@ -107,77 +133,81 @@ public class PaymentTab {
 	}
 
 	private void initToolbar() {
-		usernameField = new ZTextField.Builder()
-			.emptyText(Mes.get("username"))
+		idField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor())
+			.emptyText(Mes.get("id"))
 			.build();
 
-		nameField = new ZTextField.Builder()
-			.emptyText(Mes.get("name"))
+		agentPaymentIdField = new ZTextField.Builder()
+			.emptyText(Mes.get("agentPaymentId"))
 			.build();
 
-		emailField = new ZTextField.Builder()
-			.emptyText(Mes.get("email"))
+		creationStartTimeField = new ZDateField.Builder()
+			.pattern(PaymentDto.DATE_PATTERN)
+			.value(new Date())
 			.build();
 
-		buildActiveComboBox();
-	}
+		creationEndTimeField = new ZDateField.Builder()
+			.pattern(PaymentDto.DATE_PATTERN)
+			.value(new Date())
+			.build();
 
-	private void buildActiveComboBox() {
-		List<String> values = new ArrayList<>();
-		values.add("1");
-		values.add("0");
-		activeComboBox = new ZSimpleComboBox.Builder<String>()
-			.keyProvider(new ModelKeyProvider<String>() {
+		serviceComboBox = new ZSimpleComboBox.Builder<ServiceDto>()
+			.keyProvider(new ModelKeyProvider<ServiceDto>() {
 				@Override
-				public String getKey(String item) {
-					return item;
-				}
-			})
-			.labelProvider(new LabelProvider<String>() {
-				@Override
-				public String getLabel(String item) {
-					return (item.equals("1") ? Mes.get("active") : Mes.get("inactive"));
-				}
-			})
-			.values(values)
-			.editable(false)
-			.width(200)
-			.listWidth(400)
-			.noSelectionLabel(Mes.get("active") + "/" + Mes.get("inactive"))
-			.build();
-	}
-
-	private void buildGroupField(List<UserGroupDTO> entries){
-		groupComboBox = new ZSimpleComboBox.Builder<UserGroupDTO>()
-			.emptyText(Mes.get("valueEmptyText"))
-			.keyProvider(new ModelKeyProvider<UserGroupDTO>() {
-				@Override
-				public String getKey(UserGroupDTO item) {
+				public String getKey(ServiceDto item) {
 					return String.valueOf(item.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<UserGroupDTO>() {
+			.labelProvider(new LabelProvider<ServiceDto>() {
 				@Override
-				public String getLabel(UserGroupDTO item) {
+				public String getLabel(ServiceDto item) {
 					return item.getName();
 				}
 			})
-			.values(entries)
-			.editable(false)
-			.width(200)
-			.noSelectionLabel(Mes.get("allGroups"))
-			.listWidth(400)
-			.enableSorting(false)
+			.noSelectionLabel(Mes.get("chooseService"))
 			.build();
 
-		groupComboBox.getElement().getStyle().setOverflow(Style.Overflow.HIDDEN);
-	}
+		channelComboBox = new ZSimpleComboBox.Builder<ChannelDTO>()
+			.keyProvider(new ModelKeyProvider<ChannelDTO>() {
+				@Override
+				public String getKey(ChannelDTO item) {
+					return String.valueOf(item.getId());
+				}
+			})
+			.labelProvider(new LabelProvider<ChannelDTO>() {
+				@Override
+				public String getLabel(ChannelDTO item) {
+					return item.getName();
+				}
+			})
+			.noSelectionLabel(Mes.get("chooseChannel"))
+			.build();
 
+		paymentStatusComboBox = new ZMultiSelectComboBox.Builder<PaymentStatusDto>()
+			.keyProvider(new ModelKeyProvider<PaymentStatusDto>() {
+				@Override
+				public String getKey(PaymentStatusDto item) {
+					return item == null ? null : item.name();
+				}
+			})
+			.labelProvider(new LabelProvider<PaymentStatusDto>() {
+				@Override
+				public String getLabel(PaymentStatusDto item) {
+					return item == null ? null : item.name();
+				}
+			})
+			.width(200)
+			.noSelectionLabel(Mes.get("paymentStatus"))
+			.values(Arrays.asList(PaymentStatusDto.values()))
+			.build();
+
+
+	}
 
 	private void assembleContent(){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(UsersTable.setListStore(new ArrayList<SystemUserDTO>()), UsersTable.getMyColumnModel());
+		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDto>()), PaymentTable.getMyColumnModel());
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -185,26 +215,42 @@ public class PaymentTab {
 
 	}
 
-	private ZToolBar getToolbar() {
-		ZToolBar toolbar = new ZToolBar();
-		toolbar.setEnableOverflow(false);
-		toolbar.add(usernameField);
-		toolbar.add(nameField);
-		toolbar.add(emailField);
-		toolbar.add(groupComboBox);
-		toolbar.add(activeComboBox);
+	private VerticalLayoutContainer getToolbar() {
+		ZToolBar upperToolbar = new ZToolBar();
+		ZToolBar lowerToolbar = new ZToolBar();
+		VerticalLayoutContainer container = new VerticalLayoutContainer();
+		upperToolbar.setEnableOverflow(false);
 
-		toolbar.add(getSearchButton());
-		toolbar.add(getClearButton());
+		upperToolbar.add(idField);
+		upperToolbar.add(agentPaymentIdField);
 
+		upperToolbar.add(serviceComboBox);
+		upperToolbar.add(channelComboBox);
+		upperToolbar.add(paymentStatusComboBox);
+		upperToolbar.getWidget(2).getParent().getElement().getStyle().setTop(0, Style.Unit.PX);
 
-		toolbar.add(getAddButton());
+		lowerToolbar.add(new HTML(Mes.get("paymentCreationTime") + ": "));
+		lowerToolbar.add(creationStartTimeField);
+		lowerToolbar.add(new HTML(Mes.get("from")));
+		lowerToolbar.add(creationEndTimeField);
+		lowerToolbar.add(new HTML(Mes.get("to")));
 
-		toolbar.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setHeight(2, Style.Unit.EM);
-		toolbar.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
-		return toolbar;
+		upperToolbar.add(getSearchButton());
+		upperToolbar.add(getClearButton());
+		upperToolbar.add(getAddButton());
+
+		container.add(upperToolbar);
+		upperToolbar.addStyleName("toolbar");
+		container.add(lowerToolbar);
+
+		container.addStyleName("toolbar-container");
+		container.getElement().getStyle().setFontSize(13, Style.Unit.PX);
+		container.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
+		container.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
+//		container.getElement().getStyle().setHeight(2, Style.Unit.EM);
+		container.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
+
+		return container;
 	}
 
 
@@ -231,7 +277,7 @@ public class PaymentTab {
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					new UsersModifyWindow(null, UsersTable.getListStore());
+					//new PaMo(null, UsersTable.getListStore());
 				}
 			})
 			.build();
@@ -245,13 +291,15 @@ public class PaymentTab {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					usernameField.setText(null);
-					emailField.setText(null);
-					nameField.setText(null);
-					groupComboBox.setValue(null);
-					activeComboBox.setValue(null);
+					idField.setText(null);
+					agentPaymentIdField.setText(null);
+					creationStartTimeField.setText(null);
+					creationEndTimeField.setText(null);
+					serviceComboBox.setValue(null);
+					channelComboBox.setValue(null);
+					paymentStatusComboBox.setValue(null);
 				}
 			} )
 			.build();
-	}*/
+	}
 }

@@ -97,10 +97,10 @@ public class UsersTab extends Composite {
 		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, SystemUserDTO, PagingLoadResult<SystemUserDTO>>(UsersTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
+		pagingPossibleValues.add(20);
 		pagingPossibleValues.add(50);
 		pagingPossibleValues.add(100);
 		pagingPossibleValues.add(200);
-		pagingPossibleValues.add(5);
 		ZPagingToolBar pager = new ZPagingToolBar.Builder<>(pagingLoader)
 			.possibleValue(pagingPossibleValues)
 			.build();

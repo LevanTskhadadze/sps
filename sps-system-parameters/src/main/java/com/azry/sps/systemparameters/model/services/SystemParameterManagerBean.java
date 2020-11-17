@@ -65,6 +65,7 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 	@Override
 	public long addEntry(SystemParameter entity) {
 		em.persist(entity);
+
 		return entity.getId();
 	}
 

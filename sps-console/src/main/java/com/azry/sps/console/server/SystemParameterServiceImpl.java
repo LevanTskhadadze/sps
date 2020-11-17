@@ -43,7 +43,7 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 	}
 
 	public SystemParameterDto addParameter(SystemParameterDto dto) {
-		systemParameterManager.addEntry(SystemParameterDto.toEntity(dto));
+		dto.setId(systemParameterManager.addEntry(SystemParameterDto.toEntity(dto)));
 		return dto;
 	}
 

@@ -29,9 +29,6 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	@Inject
 	CachedConfigurationService cache;
 
-	public List<ServiceEntityDto> getAllServices(){
-		return ServiceEntityDto.toDtos(serviceManager.getAllServices());
-	}
 
 	Comparator<Service> serviceComparator = new Comparator<Service>() {
 		@Override

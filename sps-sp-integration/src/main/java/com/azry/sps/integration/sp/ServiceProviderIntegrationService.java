@@ -1,8 +1,8 @@
 package com.azry.sps.integration.sp;
 
 import com.azry.sps.common.exceptions.SPSException;
-import com.azry.sps.integration.sp.dto.AbonentDto;
-import com.azry.sps.integration.sp.dto.AbonentInfoDto;
+import com.azry.sps.integration.sp.dto.AbonentInfo;
+import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PaymentDto;
 import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.model.sysparam.Parameter;
@@ -45,12 +45,11 @@ public class ServiceProviderIntegrationService {
 		proxy = target.proxy(ServicesInterface.class);
 	}
 
-	public synchronized AbonentInfo getInfo(String serviceCode, long id) {
+	public synchronized AbonentInfo getInfo(String serviceCode, long id) throws SPSException{
 
 
 		try {
-			AbonentInfo abonentInfo = proxy.getAbonent(new AbonentRequest("gateway-" + serviceCode, String.valueOf(id)));
-			return abonentInfo;
+			return proxy.getAbonent(new AbonentRequest("gateway-" + serviceCode, String.valueOf(id)));
 		} catch (Exception ex) {
 			throw new SPSException("SPConnectionFailed", ex);
 		}

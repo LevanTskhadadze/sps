@@ -87,6 +87,9 @@ public class ConsoleEntryPoint implements EntryPoint {
 		HTML performPaymentsTabMenuItem = TabBuilder.getPerformPaymentsTabMenuItem(centerPanel, menu);
 		menu.add(performPaymentsTabMenuItem);
 
+		HTML paymentTabMenuItem = TabBuilder.getPaymentTabMenuItem(centerPanel, menu);
+		menu.add(paymentTabMenuItem);
+
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());
 		button.setHTML(getMenuInnerHTML());

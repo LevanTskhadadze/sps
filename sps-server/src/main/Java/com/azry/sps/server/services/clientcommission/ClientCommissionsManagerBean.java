@@ -4,7 +4,6 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
-import com.azry.sps.common.model.service.ServiceEntity;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;

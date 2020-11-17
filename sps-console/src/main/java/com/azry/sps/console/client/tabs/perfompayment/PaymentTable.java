@@ -11,7 +11,6 @@ import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.core.client.util.Margins;
@@ -27,9 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
-import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_LEFT;
 import static com.google.gwt.user.client.ui.HasVerticalAlignment.ALIGN_MIDDLE;
-import static com.google.gwt.user.client.ui.HasVerticalAlignment.ALIGN_TOP;
 
 public class PaymentTable extends Composite {
 
@@ -157,7 +154,7 @@ public class PaymentTable extends Composite {
 	}
 
 	private void addEmptyRow(FlexTable table) {
-		TableUtils.setCell(table, 1, 0, new HTML("<div class='empty-table'>" + Mes.get("emptyTableText") + "</div>"), "100%", null, ALIGN_TOP, ALIGN_LEFT);
+		//TableUtils.setCell(table, 1, 0, new HTML("<div class='empty-table'>" + Mes.get("emptyTableText") + "</div>"), "100%", null, ALIGN_TOP, ALIGN_LEFT);
 		table.getFlexCellFormatter().setColSpan(1, 0, table.getCellCount(0));
 	}
 
