@@ -11,5 +11,7 @@ public interface PaymentListService extends RemoteService {
 
 	PaymentListDTO getPaymentList(String personalNumber);
 
-	PaymentListDTO addPaymentListEntry(ClientDTO client, PaymentListEntryDTO paymentListEntry);
+	PaymentListEntryDTO addPaymentListEntry(ClientDTO client, PaymentListEntryDTO paymentListEntry);
+
+	void deletePaymentListEntry(long id);
 }

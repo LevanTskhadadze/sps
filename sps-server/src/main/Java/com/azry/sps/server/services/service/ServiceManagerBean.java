@@ -5,8 +5,10 @@ import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
+import com.azry.sps.server.services.paymentlist.PaymentListManager;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
@@ -22,6 +24,10 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@PersistenceContext
 	EntityManager em;
+
+	@Inject
+	PaymentListManager paymentListManager;
+
 
 	@Override
 	public List<ServiceEntity> getAllServiceEntities() {
@@ -113,7 +119,10 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public void removeService(long id) {
 		ServiceEntity entity = em.find(ServiceEntity.class, id);
-		em.remove(entity);
+		if (entity != null) {
+			em.remove(entity);
+			paymentListManager.deletePaymentListEntriesByServiceId(id);
+		}
 	}
 
 	@Override
@@ -145,6 +154,11 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@Override
 	public Service getService(long id) {
-		return em.find(ServiceEntity.class, id).getService();
+		try {
+			return em.find(ServiceEntity.class, id).getService();
+		}
+		catch (NullPointerException ex) {
+			return null;
+		}
 	}
 }

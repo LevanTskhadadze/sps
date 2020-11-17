@@ -1,7 +1,8 @@
 package com.azry.sps.common.model.paymentlist;
 
 import com.azry.sps.common.model.client.Client;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class PaymentList {
 
 	@Id

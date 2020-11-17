@@ -335,3 +335,18 @@ body {
     font-size: 12px;
     height: 43px;
 }
+
+.payment-list-total-amount {
+    font-size: 14px;
+    font-weight: bold;
+    color: green;
+    margin-right: 50px;
+}
+
+.payment-table-container{
+    padding: 10px;
+}
+
+.payment-list-table-total-amount-row {
+    height: 35px;
+}

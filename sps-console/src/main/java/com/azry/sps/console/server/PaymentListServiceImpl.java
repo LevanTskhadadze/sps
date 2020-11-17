@@ -1,6 +1,6 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.model.paymentlist.PaymentList;
+import com.azry.sps.common.model.paymentlist.PaymentListEntry;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
@@ -23,8 +23,13 @@ public class PaymentListServiceImpl extends RemoteServiceServlet implements Paym
 	}
 
 	@Override
-	public PaymentListDTO addPaymentListEntry(ClientDTO client, PaymentListEntryDTO paymentListEntry) {
-		PaymentList paymentList = paymentListManager.addPaymentListEntry(client.entityFromDTO(), paymentListEntry.fromDTO());
-		return PaymentListDTO.toDTO(paymentList);
+	public PaymentListEntryDTO addPaymentListEntry(ClientDTO client, PaymentListEntryDTO paymentListEntry) {
+		PaymentListEntry paymentList = paymentListManager.addPaymentListEntry(client.entityFromDTO(), paymentListEntry.fromDTO());
+		return PaymentListEntryDTO.toDTO(paymentList);
+	}
+
+	@Override
+	public void deletePaymentListEntry(long id) {
+		paymentListManager.deletePaymentListEntry(id);
 	}
 }

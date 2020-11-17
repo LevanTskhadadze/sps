@@ -14,4 +14,8 @@ public class NumberFormatUtils {
 		}
 		return AMOUNT_NUMBER_FORMAT.format(number);
 	}
+
+	public static boolean equalsWithFormat(BigDecimal a, BigDecimal b) {
+		return format(a).equals(format(b));
+	}
 }

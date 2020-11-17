@@ -42,7 +42,7 @@ public class PerformPaymentsTab extends Composite {
 	private ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
 	private ZButton clearButton;
 
-	PaymentTable paymentTable;
+	PaymentListTable paymentTable;
 
 
 
@@ -76,31 +76,33 @@ public class PerformPaymentsTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					ServicesFactory.getBankIntegrationService().findClient(String.valueOf(idNField.getCurrentValue()), new ServiceCallback<ClientDTO>() {
-						@Override
-						public void onServiceSuccess(final ClientDTO dto) {
+					if (isValid()) {
+						ServicesFactory.getBankIntegrationService().findClient(String.valueOf(idNField.getCurrentValue()), new ServiceCallback<ClientDTO>() {
+							@Override
+							public void onServiceSuccess(final ClientDTO dto) {
 
-							initClientInfo(dto);
+								initClientInfo(dto);
 
-							ServicesFactory.getPaymentListService().getPaymentList(dto.getPersonalNumber(), new ServiceCallback<PaymentListDTO>() {
-								@Override
-								public void onServiceSuccess(PaymentListDTO result) {
-									if (paymentTable == null) {
-										paymentTable = new PaymentTable(dto, result);
-										container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
-										container.forceLayout();
+								ServicesFactory.getPaymentListService().getPaymentList(dto.getPersonalNumber(), new ServiceCallback<PaymentListDTO>() {
+									@Override
+									public void onServiceSuccess(PaymentListDTO paymentListDTO) {
+										if (paymentTable == null) {
+											paymentTable = new PaymentListTable(dto, paymentListDTO);
+											container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
+											container.forceLayout();
+										}
 									}
-								}
-							});
+								});
 
-							ServicesFactory.getBankIntegrationService().getClientAccounts(dto.getId(), new ServiceCallback<List<AccountDTO>>() {
-								@Override
-								public void onServiceSuccess(List<AccountDTO> result) {
-									clientAccountsComboBox.replaceAll(result);
-								}
-							});
-						}
-					});
+								ServicesFactory.getBankIntegrationService().getClientAccounts(dto.getId(), new ServiceCallback<List<AccountDTO>>() {
+									@Override
+									public void onServiceSuccess(List<AccountDTO> result) {
+										clientAccountsComboBox.replaceAll(result);
+									}
+								});
+							}
+						});
+					}
 				}
 			})
 			.build();
@@ -113,6 +115,7 @@ public class PerformPaymentsTab extends Composite {
 				@Override
 				public void onSelect(SelectEvent event) {
 					clearClientInfo();
+					clearIdField();
 				}
 			})
 			.build();
@@ -128,6 +131,18 @@ public class PerformPaymentsTab extends Composite {
 		customerTabPanel.add(customerInfoBar, new TabItemConfig(Mes.get("client")));
 		customerTabPanel.addStyleName("payments-page-tab-panel");
 		return customerTabPanel;
+	}
+
+	private boolean isValid() {
+		if (idNField.getValue() == null) {
+			idNField.markInvalid(Mes.get("inputIdNumber"));
+			return false;
+		}
+		else if (String.valueOf(idNField.getValue()).length() != 11) {
+			idNField.markInvalid(Mes.get("idNumberInvalidLength"));
+			return false;
+		}
+		return true;
 	}
 
 	private void initClientInfo(final ClientDTO dto) {
@@ -181,5 +196,9 @@ public class PerformPaymentsTab extends Composite {
 			paymentTable = null;
 			flag = false;
 		}
+	}
+
+	private void clearIdField() {
+		idNField.setValue(null);
 	}
 }

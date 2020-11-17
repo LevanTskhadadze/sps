@@ -11,5 +11,9 @@ public interface PaymentListManager {
 
 	PaymentList getPaymentList(String personalNumber);
 
-	PaymentList addPaymentListEntry(Client client, PaymentListEntry paymentListEntry);
+	PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry);
+
+	void deletePaymentListEntry(long id);
+
+	public void deletePaymentListEntriesByServiceId(long id);
 }

@@ -30,7 +30,7 @@ public class PaymentListManagerBean implements PaymentListManager {
 	}
 
 	@Override
-	public PaymentList addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) {
+	public PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) {
 		PaymentList paymentList = getPaymentList(client.getPersonalNumber());
 		if (paymentList == null) {
 			paymentList = new PaymentList();
@@ -38,6 +38,21 @@ public class PaymentListManagerBean implements PaymentListManager {
 		}
 		paymentListEntry.setPaymentList(paymentList);
 		paymentList.getEntries().add(paymentListEntry);
-		return em.merge(paymentList);
+		em.merge(paymentList);
+		return paymentListEntry;
+	}
+
+	@Override
+	public void deletePaymentListEntry(long id) {
+		PaymentListEntry entry = em.find(PaymentListEntry.class, id);
+		if (entry != null) {
+			em.remove(entry);
+		}
+	}
+
+	public void deletePaymentListEntriesByServiceId(long id) {
+		em.createQuery("DELETE FROM PaymentListEntry p WHERE p.serviceId = :id")
+			.setParameter("id", id)
+			.executeUpdate();
 	}
 }

@@ -57,7 +57,6 @@ public class PaymentListEntryDTO implements IsSerializable {
 			dto.setId(entity.getId());
 			dto.setAbonentCode(entity.getAbonentCode());
 			dto.setServiceId(entity.getServiceId());
-//			dto.setPaymentList(PaymentListDTO.toDTO(entity.getPaymentList()));
 
 			return dto;
 		}
@@ -84,7 +83,6 @@ public class PaymentListEntryDTO implements IsSerializable {
 		entity.setId(this.getId());
 		entity.setServiceId(this.getServiceId());
 		entity.setAbonentCode(this.getAbonentCode());
-//		entity.setPaymentList(this.getPaymentList().fromDTO());
 
 		return entity;
 	}

@@ -136,25 +136,27 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 
 	@GwtIncompatible
 	public static ServiceDto toDto(Service service) {
-		ServiceDto dto = new ServiceDto();
+		if (service != null) {
+			ServiceDto dto = new ServiceDto();
+ 			dto.setId(service.getId());
+			dto.setName(service.getName());
+			dto.setIcon(service.getIcon());
+			dto.setGroupId(service.getGroupId());
+			dto.setAllChannels(service.isAllChannels());
+			dto.setChannels(ServiceChannelInfoDto.toDtos(service.getChannels()));
+			dto.setMinAmount(service.getMinAmount());
+			dto.setMaxAmount(service.getMaxAmount());
+			dto.setServiceDebtCode(service.getServiceDebtCode());
+			dto.setServicePayCode(service.getServicePayCode());
+			dto.setProviderAccountIBAN(service.getProviderAccountIBAN());
+			dto.setActive(service.isActive());
+			dto.setVersion(service.getVersion());
+			dto.setCreateTime(service.getCreateTime());
+			dto.setLastUpdateTime(service.getLastUpdateTime());
 
-		dto.setId(service.getId());
-		dto.setName(service.getName());
-		dto.setIcon(service.getIcon());
-		dto.setGroupId(service.getGroupId());
-		dto.setAllChannels(service.isAllChannels());
-		dto.setChannels(ServiceChannelInfoDto.toDtos(service.getChannels()));
-		dto.setMinAmount(service.getMinAmount());
-		dto.setMaxAmount(service.getMaxAmount());
-		dto.setServiceDebtCode(service.getServiceDebtCode());
-		dto.setServicePayCode(service.getServicePayCode());
-		dto.setProviderAccountIBAN(service.getProviderAccountIBAN());
-		dto.setActive(service.isActive());
-		dto.setVersion(service.getVersion());
-		dto.setCreateTime(service.getCreateTime());
-		dto.setLastUpdateTime(service.getLastUpdateTime());
-
-		return dto;
+			return dto;
+		}
+		return null;
 	}
 
 	@GwtIncompatible
