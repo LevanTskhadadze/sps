@@ -69,8 +69,6 @@ public class ClientCommissionsCachingManager implements CachingService<ClientCom
 					filteredClientCommissions.remove(clientCommissions);
 				}
 			}
-
-
 		}
 
 		if (offset >= filteredClientCommissions.size()) {

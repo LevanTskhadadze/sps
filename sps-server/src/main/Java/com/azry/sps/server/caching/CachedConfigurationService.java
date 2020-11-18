@@ -1,10 +1,11 @@
 package com.azry.sps.server.caching;
 
 
-
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
+import com.azry.sps.common.model.channels.Channel;
 import com.azry.sps.common.model.commission.ClientCommissions;
+import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.common.model.service.Service;
 
 import javax.ejb.Local;
@@ -34,59 +35,10 @@ public interface CachedConfigurationService {
 
 	ListResult<ClientCommissions> filterClientCommissions(String serviceId, String channelId, int offset, int limit);
 
-/*
-	List<ServiceProvider> getAllServiceProviders();
+	List<Channel> getChannels();
 
-	ServiceProvider getServiceProvider(long serviceProviderId);
+	List<Channel> getFilteredChannels(String name, Boolean isActive);
 
-	Channel getChannel(long channelId);
+	ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit);
 
-	List<Channel> getAllChannels();
-
-	List<GroupCommissions> getAllGroupCommissions();
-
-	List<AccountsInfo> getAccountsInfo();
-
-	PointOfSale getPointOfSale(long pointOfSaleId);
-
-	Region getRegion(Long regionId);
-
-	ServiceGroup getServiceGroup(Long serviceGroupId);
-
-	Agent getAgent(String code);
-
-	List<Agent> getAllAgents();
-
-	List<Agent> getAgents(List<String> codes);
-
-	List<PointOfSale> getPointOfSales();
-
-	List<Region> getAllRegions();
-
-	ListResult<Region> filterRegions(RegionsFilter filter);
-
-	List<ServiceGroup> getAllServiceGroups();
-
-	ListResult<ServiceGroup> filterServiceGroups(ServiceGroupsFilter filter);
-
-	ListResult<Channel> filterChannels(ChannelsFilter filter);
-
-	ListResult<ServiceProvider> filterServiceProviders(ServiceProvidersFilter filter);
-
-	ListResult<Offer> filterOffers(OffersFilter offersFilter);
-
-	ListResult<Agent> filterAgents(AgentsFilter filter);
-
-	ListResult<PointOfSale> filterPointOfSales(PointOfSalesFilter filter);
-
-	ListResult<AccountsInfo> filterAccountsInfos(AccountsInfosFilter filter);
-
-	List<Offer> getAllOffers();
-
-	Offer getOffer(long serviceId);
-
-	PaymentAutomaticManualActionConfiguration getPaymentAutomaticManualActionConfiguration(long id);
-
-	List<PaymentAutomaticManualActionConfiguration> getAllPaymentAutomaticManualActionConfigurations();
-*/
 }
