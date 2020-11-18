@@ -21,6 +21,8 @@ import com.azry.sps.console.shared.servicegroup.ServiceGroupService;
 import com.azry.sps.console.shared.servicegroup.ServiceGroupServiceAsync;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
 import com.azry.sps.console.shared.systemparameter.SystemParameterServiceAsync;
+import com.azry.sps.console.shared.transactionorder.TransactionOrderService;
+import com.azry.sps.console.shared.transactionorder.TransactionOrderServiceAsync;
 import com.azry.sps.console.shared.usergroup.UserGroupService;
 import com.azry.sps.console.shared.usergroup.UserGroupServiceAsync;
 import com.azry.sps.console.shared.users.UserService;
@@ -149,4 +151,6 @@ public class ServicesFactory {
 		}
 		return paymentService;
 	}
+
+
 }

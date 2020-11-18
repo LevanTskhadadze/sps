@@ -9,6 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,12 +44,12 @@ public class PaymentManagerBean implements PaymentManager {
 			sql.append("AND p.createTime <= TRY_CONVERT(datetime, :endTime) ");
 		}
 
-		if (params.get("service") != null && !params.get("service").equals("")) {
-			sql.append("AND p.serviceId = :service ");
+		if (params.get("serviceId") != null && !params.get("serviceId").equals("")) {
+			sql.append("AND p.serviceId = :serviceId ");
 		}
 
-		if (params.get("channel") != null && !params.get("channel").equals("")) {
-			sql.append("AND p.channelId = :channel ");
+		if (params.get("channel") != null && !params.get("channelId").equals("")) {
+			sql.append("AND p.channelId = :channelId ");
 		}
 		if (statuses != null && statuses.size() > 0) {
 			sql.append("AND p.status IN (");
@@ -61,29 +65,6 @@ public class PaymentManagerBean implements PaymentManager {
 		TypedQuery<Long> count = em.createQuery(countPrefix + sql.toString(), Long.class);
 
 		for(Map.Entry<String, Serializable> entry : params.entrySet()) {
-			/*if (entry.getKey().equals("startTime") || entry.getKey().equals("endTime")) {
-				try {
-					query.setParameter(entry.getKey(), new SimpleDateFormat(Payment.DATE_FORMAT).parse(entry.getValue()));
-					count.setParameter(entry.getKey(), new SimpleDateFormat(Payment.DATE_FORMAT).parse(entry.getValue()));
-				} catch (ParseException ex) {
-					ex.printStackTrace();
-				}
-				continue;
-			}
-
-			if (entry.getKey().equals("service") || entry.getKey().equals("channel")) {
-				long id = Long.parseLong(entry.getValue());
-				query.setParameter(entry.getKey(), BigInteger.valueOf(id));
-				count.setParameter(entry.getKey(), BigInteger.valueOf(id));
-				continue;
-			}
-
-			if (entry.getKey().equals("id")) {
-				long id = Long.parseLong(entry.getValue());
-				query.setParameter(entry.getKey(), id);
-				count.setParameter(entry.getKey(), id);
-				continue;
-			}*/
 			query.setParameter(entry.getKey(), entry.getValue());
 			count.setParameter(entry.getKey(), entry.getValue());
 		}
@@ -100,6 +81,15 @@ public class PaymentManagerBean implements PaymentManager {
 		query.setMaxResults(limit);
 
 		return new ListResult<>(query.getResultList(), count.getSingleResult().intValue());
+	}
+
+	@Override
+	public List<Payment> getChanges(String agentPaymentId) {
+		TypedQuery<Payment> query =
+			em.createQuery("SELECT p FROM Payment p WHERE p.agentPaymentId = :id ORDER BY p.statusChangeTime ASC ", Payment.class)
+				.setParameter("id", agentPaymentId);
+
+		return query.getResultList();
 	}
 
 	@Override

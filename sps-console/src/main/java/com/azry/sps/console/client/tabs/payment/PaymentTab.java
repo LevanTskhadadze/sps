@@ -86,22 +86,22 @@ public class PaymentTab extends Composite {
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDto>> callback) {
 				Map<String, Serializable> params = new HashMap<>();
 				if (idField.getCurrentValue() != null) {
-					params.put("id", idField.getCurrentValue());
+					params.put(PaymentDto.Columns.id.name(), idField.getCurrentValue());
 				}
 				if (agentPaymentIdField.getCurrentValue() != null) {
-					params.put("agentPaymentId", agentPaymentIdField.getCurrentValue());
+					params.put(PaymentDto.Columns.agentPaymentId.name(), agentPaymentIdField.getCurrentValue());
 				}
 				if (creationStartTimeField.getCurrentValue() != null) {
-					params.put("startTime", creationStartTimeField.getCurrentValue());
+					params.put(PaymentDto.Columns.startTime.name(), creationStartTimeField.getCurrentValue());
 				}
 				if (creationEndTimeField.getCurrentValue() != null) {
-					params.put("endTime", creationEndTimeField.getCurrentValue());
+					params.put(PaymentDto.Columns.endTime.name(), creationEndTimeField.getCurrentValue());
 				}
 				if (serviceComboBox.getCurrentValue() != null) {
-					params.put("service", serviceComboBox.getCurrentValue().getId());
+					params.put(PaymentDto.Columns.serviceId.name(), serviceComboBox.getCurrentValue().getId());
 				}
 				if (channelComboBox.getCurrentValue() != null) {
-					params.put("channel", channelComboBox.getCurrentValue().getId());
+					params.put(PaymentDto.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
 				}
 
 				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDto>>() {
@@ -235,7 +235,6 @@ public class PaymentTab extends Composite {
 
 		upperToolbar.add(getSearchButton());
 		upperToolbar.add(getClearButton());
-		upperToolbar.add(getAddButton());
 
 		container.add(upperToolbar);
 		upperToolbar.addStyleName("toolbar");
@@ -262,20 +261,6 @@ public class PaymentTab extends Composite {
 				public void onSelect(SelectEvent event) {
 					pagingLoader.load();
 
-				}
-			})
-			.build();
-	}
-
-	private ZButton getAddButton(){
-		return new ZButton.Builder()
-			.appearance (new Css3ButtonCellAppearance<String>())
-			.icon (FAIconsProvider.getIcons().plus())
-			.text (Mes.get("addEntry"))
-			.handler (new SelectEvent.SelectHandler() {
-				@Override
-				public void onSelect(SelectEvent event) {
-					//new PaMo(null, UsersTable.getListStore());
 				}
 			})
 			.build();

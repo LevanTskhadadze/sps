@@ -1,9 +1,15 @@
 package com.azry.sps.console.client.tabs.payment.widgets;
 
 import com.azry.gxt.client.zcomp.ZColumnConfig;
+import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
+import com.azry.gxt.client.zcomp.helper.GridClickHandler;
+import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
+import com.azry.sps.console.shared.dto.payment.PaymentInfoDto;
+import com.google.gwt.cell.client.Cell;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
@@ -147,104 +153,31 @@ public class PaymentTable {
 			})
 			.build());
 
-/*
+
 		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
 			.header("")
 			.width(32)
-			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
-				.gridStore(store)
-				.dynamicIcon(new IconSelector<PaymentDto>() {
-					@Override
-					public ImageResource selectIcon(Cell.Context context, PaymentDto PaymentDto) {
-						if(PaymentDto.isActive()) return FAIconsProvider.getIcons().green();
-						return FAIconsProvider.getIcons().red();
-					}
-				})
-				.dynamicTooltip(new TooltipSelector<PaymentDto>() {
-					@Override
-					public String selectTooltip(Cell.Context context, PaymentDto serviceDto) {
-						if(serviceDto.isActive()) return Mes.get("deactivation");
-						return Mes.get("activation");
-					}
-				})
-				.clickHandler(new GridClickHandler<PaymentDto>() {
-					@Override
-					public void onClick(Cell.Context context, final PaymentDto dto) {
-						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
-							@Override
-							public void onConfirm() {
-								dto.setActive(!dto.isActive());
-								ServicesFactory.getServiceTabService().changeActivation(dto.getId(), dto.getVersion(), new ServiceCallback<Void>() {
-									@Override
-									public void onServiceSuccess(Void ignored) {
-										dto.setVersion(dto.getVersion() + 1);
-										store.update(dto);
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build()
-
-			)
 			.fixed()
-			.build());
-
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
-			.header("")
-			.width(32)
 			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
 				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().pencil())
+				.icon(FAIconsProvider.getIcons().play())
 				.clickHandler(new GridClickHandler<PaymentDto>() {
 					@Override
-					public void onClick(Cell.Context context, final PaymentDto PaymentDto) {
-						ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+					public void onClick(Cell.Context context, final PaymentDto paymentDto) {
+						ServicesFactory.getPaymentService().getPaymentInfo(paymentDto.getAgentPaymentId(), paymentDto.getId(), new ServiceCallback<PaymentInfoDto>() {
 							@Override
-							public void onServiceSuccess(List<ChannelDTO> result) {
-								new ServiceModifyWindow(PaymentDto, store, result);
+							public void onServiceSuccess(PaymentInfoDto result) {
+								result.setPaymentDto(paymentDto);
+								new PaymentWindow(result);
 							}
 						});
-
-					}
-				})
-				.build()
-
-			)
-			.fixed()
-			.build());
-
-
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
-			.header("")
-			.width(32)
-			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
-				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().trash())
-				.clickHandler(new GridClickHandler<PaymentDto>() {
-					@Override
-					public void onClick(Cell.Context context, final PaymentDto PaymentDto) {
-
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getServiceTabService().removeService(PaymentDto.getId(), new ServiceCallback<Void>() {
-
-									@Override
-									public void onServiceSuccess(Void unused) {
-										store.remove(PaymentDto);
-									}
-								});
-							}
-						}.show();
 					}
 				})
 				.build()
 			)
-			.fixed()
+
 			.build());
-*/
+
 		return new ColumnModel<>(columns);
 	}
 

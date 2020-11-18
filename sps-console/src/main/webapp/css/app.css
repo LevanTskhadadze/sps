@@ -13,6 +13,13 @@ body {
 .toolbar-container > div > div {
     padding: 0 !important;
 }
+.fieldSet {
+    font-size: 11px;
+    margin-left: 1%;
+    border: solid 1px lightgrey;
+    border-radius: 5px;
+}
+
 .navbar {
     padding-left: 20px;
     /*width: 100%;*/
