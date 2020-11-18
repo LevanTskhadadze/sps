@@ -6,8 +6,13 @@ body {
     font-family: tahoma, arial, helvetica, sans-serif;
 }
 
+.toolbar > div > div {
+    top: 4px !important;
+}
 
-
+.toolbar-container > div > div {
+    padding: 0 !important;
+}
 .navbar {
     padding-left: 20px;
     /*width: 100%;*/

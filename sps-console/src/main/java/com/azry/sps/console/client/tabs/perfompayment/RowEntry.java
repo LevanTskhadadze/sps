@@ -31,6 +31,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_LEFT;
@@ -38,9 +39,9 @@ import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_RIGHT;
 
 public class RowEntry {
 
-	private int row;
+	private final int row;
 
-	private FlexTable table;
+	private final FlexTable table;
 
 	private String abonentInfo;
 	private BigDecimal debt;
@@ -49,10 +50,10 @@ public class RowEntry {
 	private ZButton deleteB;
 
 
-	private PaymentListEntryDTO paymentListEntryDTO;
+	private final PaymentListEntryDTO paymentListEntryDTO;
 	private ServiceDto serviceDto;
 	private ClientCommissionsDto clientCommissionsDto;
-	private PaymentListTable paymentListTable;
+	private final PaymentListTable paymentListTable;
 
 
 	private Boolean loaded;
@@ -63,7 +64,7 @@ public class RowEntry {
 		loaded = false;
 		commissionVerified = false;
 		abonentInfo = "";
-		commission = new BigDecimal(0.00);
+		commission = new BigDecimal("0.00");
 		this.paymentListTable = paymentListTable;
 		this.paymentListEntryDTO = paymentListEntryDTO;
 		this.table = table;
@@ -80,20 +81,20 @@ public class RowEntry {
 	}
 
 	public void buildRow(){
-		LoadCellData();
+		loadCellData();
 		setCommissionCell(new Label(""), "table-cell-loading", ALIGN_RIGHT, true);
 		TableUtils.setCell(table, row, 5, amountF, null,  null, null, false);
 		TableUtils.setCell(table, row, 6, deleteB, null,  null, null, false);
 	}
 
-	public void LoadCellData() {
+	public void loadCellData() {
 		setServiceCell();
 		setAbonentCells(abonentInfo, "","table-cell-loading", ALIGN_CENTER, true);
 
 		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDto.getServiceDebtCode(), Long.valueOf(paymentListEntryDTO.getAbonentCode()), new AsyncCallback<AbonentInfoDTO>() {
 			@Override
 			public void onFailure(Throwable throwable) {
-				setAbonentCells(Mes.get("noIntegrationConnection"), "?", "table-cell-loaded-error", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("noProviderConnection"), "?", "table-cell-loaded-error", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 			}
@@ -128,12 +129,12 @@ public class RowEntry {
 				paymentListTable.updateAggregateDebt();
 				break;
 			case BAD_REQUEST:
-				setAbonentCells(Mes.get("BAD_REQUEST"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("abonentNotFound"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 				break;
 			case ABONENT_NOT_FOUND:
-				setAbonentCells(Mes.get("ABONENT_NOT_FOUND"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("abonentNotFound"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 				break;
@@ -199,12 +200,12 @@ public class RowEntry {
 	private void checkMinMaxAmount() {
 		if (amountF.getValue().compareTo(serviceDto.getMinAmount()) < 0) {
 			amountF.setValue(serviceDto.getMinAmount());
-			amountF.markInvalid(Mes.get("serviceMinAmountLimit") + ": " + serviceDto.getMinAmount());
+			amountF.markInvalid(Mes.get("minAmount") + ": " + serviceDto.getMinAmount());
 			paymentListTable.updateAggregatePaymentAmount();
 		}
 		if (amountF.getValue().compareTo(serviceDto.getMaxAmount()) > 0) {
 			amountF.setValue(serviceDto.getMaxAmount());
-			amountF.markInvalid(Mes.get("serviceMaxAmountLimit") + ": " + serviceDto.getMinAmount());
+			amountF.markInvalid(Mes.get("maxAmount") + ": " + serviceDto.getMinAmount());
 			paymentListTable.updateAggregatePaymentAmount();
 		}
 	}
@@ -213,6 +214,7 @@ public class RowEntry {
 		commissionVerified = false;
 		if (amountF.getValue() != null) {
 			paymentListTable.updateAggregatePaymentAmount();
+			paymentListTable.getPayB().disable();
 		}
 		if (clientCommissionsDto != null) {
 			if (amountF.getCurrentValue() == null || NumberFormatUtils.equalsWithFormat(amountF.getCurrentValue(), BigDecimal.ZERO)) {
@@ -250,7 +252,7 @@ public class RowEntry {
 		Image infoIcon = new Image();
 		String infoIconUrl = FAIconsProvider.getIcons().info_circle().getSafeUri().asString();
 		infoIcon.setPixelSize(20,20);
-		infoIcon.setTitle(Mes.get("commissionNotFound"));
+		infoIcon.setTitle(Mes.get("commissionNotConfigured"));
 		infoIcon.setUrl(infoIconUrl);
 		container.add(new Label("?"));
 		container.add(infoIcon);
@@ -272,7 +274,7 @@ public class RowEntry {
 			return NumberFormatUtils.format(commission);
 		}
 		else {
-			commission = clientCommissionsDto.getCommission().divide(new BigDecimal(100));
+			commission = clientCommissionsDto.getCommission().divide(new BigDecimal(100), RoundingMode.UP);
 			return NumberFormatUtils.format(commission);
 		}
 	}
@@ -295,5 +297,18 @@ public class RowEntry {
 
 	public boolean isCommissionVerified() {
 		return commissionVerified;
+	}
+
+	public PaymentListEntryDTO getPaymentListEntryDTO() {
+		return paymentListEntryDTO;
+	}
+
+	public ServiceDto getServiceDto() {
+		return serviceDto;
+	}
+
+	public void clearAmountF() {
+		amountF.setValue(BigDecimal.ZERO);
+		amountF.removeToolTip();
 	}
 }

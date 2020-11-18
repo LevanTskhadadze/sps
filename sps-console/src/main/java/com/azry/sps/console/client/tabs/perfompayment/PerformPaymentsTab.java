@@ -29,25 +29,21 @@ import java.util.List;
 
 public class PerformPaymentsTab extends Composite {
 
-	private VerticalLayoutContainer container;
-	private TabPanel customerTabPanel;
+	private final VerticalLayoutContainer container;
 	private ZToolBar customerInfoBar;
 
-	private boolean flag;
+	private boolean clientInfoLoaded;
 
-	private ZFieldLabel idNLabel;
 	private ZNumberField<Long> idNField;
-	private ZButton searchButton;
 	private ZButton clientInfoButton;
 	private ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
-	private ZButton clearButton;
 
 	PaymentListTable paymentTable;
 
 
 
 	public PerformPaymentsTab() {
-		flag = false;
+		clientInfoLoaded = false;
 		container = new VerticalLayoutContainer();
 		container.add(buildCustomerTabPanel(), new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
 		initWidget(container);
@@ -58,9 +54,9 @@ public class PerformPaymentsTab extends Composite {
 		BoxLayoutContainer.BoxLayoutData flex = new BoxLayoutContainer.BoxLayoutData();
 		flex.setFlex(1);
 
-		customerTabPanel = new TabPanel();
+		TabPanel customerTabPanel = new TabPanel();
 
-		idNLabel = new ZFieldLabel.Builder()
+		ZFieldLabel idNLabel = new ZFieldLabel.Builder()
 			.labelWidth(100)
 			.label(Mes.get("idNumber"))
 			.field(idNField)
@@ -69,7 +65,7 @@ public class PerformPaymentsTab extends Composite {
 
 		idNField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).width(250).required().build();
 
-		searchButton = new ZButton.Builder()
+		ZButton searchButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.text(Mes.get("search"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -87,7 +83,7 @@ public class PerformPaymentsTab extends Composite {
 									@Override
 									public void onServiceSuccess(PaymentListDTO paymentListDTO) {
 										if (paymentTable == null) {
-											paymentTable = new PaymentListTable(dto, paymentListDTO);
+											paymentTable = new PaymentListTable(dto, paymentListDTO, clientAccountsComboBox);
 											container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
 											container.forceLayout();
 										}
@@ -107,7 +103,7 @@ public class PerformPaymentsTab extends Composite {
 			})
 			.build();
 
-		clearButton = new ZButton.Builder()
+		ZButton clearButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().eraser())
 			.text(Mes.get("clear"))
 			.tooltip(Mes.get("clearFilter"))
@@ -146,7 +142,7 @@ public class PerformPaymentsTab extends Composite {
 	}
 
 	private void initClientInfo(final ClientDTO dto) {
-		if (flag == true) {
+		if (clientInfoLoaded) {
 			clearClientInfo();
 		}
 		clientInfoButton = new ZButton.Builder()
@@ -178,6 +174,7 @@ public class PerformPaymentsTab extends Composite {
 			.editable(false)
 			.width(350)
 			.build();
+		clientAccountsComboBox.setTooltipErrorHandler();
 
 
 		customerInfoBar.insert(clientInfoButton, 3);
@@ -185,16 +182,16 @@ public class PerformPaymentsTab extends Composite {
 		int height = customerInfoBar.getOffsetHeight();
 		customerInfoBar.forceLayout();
 		customerInfoBar.setHeight(height);
-		flag = true;
+		clientInfoLoaded = true;
 	}
 
 	private void clearClientInfo() {
-		if (flag == true) {
+		if (clientInfoLoaded) {
 			customerInfoBar.remove(clientInfoButton);
 			customerInfoBar.remove(clientAccountsComboBox);
 			container.remove(paymentTable);
 			paymentTable = null;
-			flag = false;
+			clientInfoLoaded = false;
 		}
 	}
 

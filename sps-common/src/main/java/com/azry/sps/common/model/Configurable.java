@@ -21,5 +21,4 @@ public class Configurable {
 	@Version
 	private long version;
 
-
 }

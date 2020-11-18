@@ -2,14 +2,20 @@ package com.azry.sps.console.client.tabs.perfompayment;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
+import com.azry.gxt.client.zcomp.ZConfirmDialog;
+import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.bankclient.AccountDTO;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentDto;
+import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -23,6 +29,7 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
@@ -31,8 +38,6 @@ import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_RIGHT;
 
 public class PaymentListTable extends Composite {
 
-	private TabPanel tabPanel;
-	private VerticalLayoutContainer vContainer;
 	private ZToolBar toolBar;
 	private FlexTable paymentListTable;
 
@@ -40,11 +45,14 @@ public class PaymentListTable extends Composite {
 	ZButton debtCommissionsB;
 	ZButton payB;
 
+	ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
+
 	List<RowEntry> tableRows = new ArrayList<>();
 
 	ClientDTO clientDTO;
 
-	public PaymentListTable(ClientDTO clientDTO, PaymentListDTO paymentListDTO) {
+	public PaymentListTable(ClientDTO clientDTO, PaymentListDTO paymentListDTO, ZSimpleComboBox<AccountDTO> clientAccountsComboBox) {
+		this.clientAccountsComboBox = clientAccountsComboBox;
 		this.clientDTO = clientDTO;
 		initToolBar();
 		initFlexTable(paymentListDTO);
@@ -52,8 +60,8 @@ public class PaymentListTable extends Composite {
 	}
 
 	private void buildDisplay() {
-		vContainer = new VerticalLayoutContainer();
-		tabPanel = new TabPanel();
+		VerticalLayoutContainer vContainer = new VerticalLayoutContainer();
+		TabPanel tabPanel = new TabPanel();
 		vContainer.add(toolBar, new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 		vContainer.add(paymentListTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 		vContainer.setBorders(true);
@@ -96,7 +104,7 @@ public class PaymentListTable extends Composite {
 
 		debtCommissionsB = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().refresh())
-			.text(Mes.get(Mes.get("debt/commission")))
+			.text(Mes.get("debtCommission"))
 			.appearance(new Css3ButtonCellAppearance<String>())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -118,6 +126,8 @@ public class PaymentListTable extends Composite {
 			})
 			.build();
 
+		payB.disable();
+
 		toolBar.add(new Label(), flex);
 		toolBar.add(add);
 		toolBar.add(debtCommissionsB);
@@ -125,13 +135,52 @@ public class PaymentListTable extends Composite {
 	}
 
 	private void onPayBClicked() {
+		if (isClientAccountsComboBoxValid()) {
+			GWT.log(String.valueOf(clientAccountsComboBox.getValue()));
+			new ZConfirmDialog(Mes.get("confirm"), Mes.get("createPaymentConfirmation")) {
+				@Override
+				public void onConfirm() {
+					final List<PaymentDto> paymentList = new ArrayList<>();
+					for (RowEntry entry : tableRows) {
+						PaymentDto payment = new PaymentDto();
+						if (entry.isCommissionVerified()) {
+//							payment.setAgentPaymentId();
+							payment.setServiceId(entry.getPaymentListEntryDTO().getServiceId());
+//							payment.setChannelId();
+							payment.setAbonentCode(entry.getPaymentListEntryDTO().getAbonentCode());
+							payment.setAmount(entry.getPaymentAmount());
+							payment.setClCommission(entry.getCommission());
+//							payment.setSvcCommission();
+							payment.setStatus(PaymentStatusDto.CREATED);
+//							payment.statusChangeTime;
+//							payment.statusMessage;
+							payment.setCreateTime(new Date());
+							payment.setClient(clientDTO);
 
+							paymentList.add(payment);
+						}
+						entry.clearAmountF();
+					}
+
+					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>() {
+						@Override
+						public void onServiceSuccess(Void result) {
+							new CreatedPaymentWindow(paymentList).showInCenter();
+						}
+					});
+				}
+			}.show();
+		}
 	}
 
 	private void debtCommissionsBClicked() {
 		for (RowEntry row: tableRows) {
+			if (!row.isLoaded()) {
+				row.loadCellData();
+			}
 			if (!NumberFormatUtils.equalsWithFormat(row.getPaymentAmount(), BigDecimal.ZERO)) {
 				row.updateCommissionValue();
+				payB.enable();
 			}
 			updateAggregateCommission();
 			updateAggregateTotalAmount();
@@ -161,7 +210,7 @@ public class PaymentListTable extends Composite {
 		TableUtils.setCell(paymentListTable, row, column++, new Label(Mes.get("debt")), "100px",  null, ALIGN_CENTER, false);
 		TableUtils.setCell(paymentListTable, row, column++, new Label(Mes.get("clientCommissionShort")), "100px",  null, ALIGN_CENTER, false);
 		TableUtils.setCell(paymentListTable, row, column++, new Label(Mes.get("amount")), "150px",  null, ALIGN_CENTER, false);
-		TableUtils.setCell(paymentListTable, row, column++, new Label(""), "30px",  null, ALIGN_CENTER, false);
+		TableUtils.setCell(paymentListTable, row, column, new Label(""), "30px",  null, ALIGN_CENTER, false);
 	}
 
 	private void addEmptyRow() {
@@ -242,5 +291,17 @@ public class PaymentListTable extends Composite {
 
 	List<RowEntry> getTableRows() {
 		return tableRows;
+	}
+
+	public ZButton getPayB() {
+		return payB;
+	}
+
+	private boolean isClientAccountsComboBoxValid() {
+		if (clientAccountsComboBox.getValue() == null) {
+			clientAccountsComboBox.markInvalid(Mes.get("chooseAccount"));
+			return false;
+		}
+		return true;
 	}
 }

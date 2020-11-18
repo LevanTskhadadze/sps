@@ -17,7 +17,7 @@ public interface ServiceTabService extends RemoteService {
 
 	List<ServiceDto> getAllServices();
 
-	PagingLoadResult<ServiceDto> getServices(Map<String, Object> params, int offset, int limit);
+	PagingLoadResult<ServiceDto> getServices(Map<String, String> params, int offset, int limit);
 
 	List<ServiceDto> getServicesByServiceGroup(long groupId);
 

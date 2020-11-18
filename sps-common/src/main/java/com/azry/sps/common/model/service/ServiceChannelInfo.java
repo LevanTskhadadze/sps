@@ -19,4 +19,18 @@ public class ServiceChannelInfo {
 	@Column(precision = 10, scale = 2)
 	private BigDecimal maxAmount;
 
+	public ServiceChannelInfo(long id) {
+		this.channelId = id;
+	}
+
+	public ServiceChannelInfo() {
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof ServiceChannelInfo)) return false;
+
+		return channelId  == ((ServiceChannelInfo) obj).getChannelId();
+	}
+
 }

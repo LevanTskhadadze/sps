@@ -1,6 +1,5 @@
 package com.azry.sps.console.shared.usertab;
 
-import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;

@@ -1,8 +1,9 @@
 package com.azry.sps.integration.sp.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class  PaymentDto {
+public class PaymentDto implements Serializable {
 
 	private String serviceCode;
 

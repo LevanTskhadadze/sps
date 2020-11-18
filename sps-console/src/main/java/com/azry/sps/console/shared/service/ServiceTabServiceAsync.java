@@ -14,7 +14,7 @@ public interface ServiceTabServiceAsync {
 
 	void getAllServices(AsyncCallback<List<ServiceDto>> async);
 
-	void getServices(Map<String, Object> params, int offset, int limit, AsyncCallback<PagingLoadResult<ServiceDto>> callback);
+	void getServices(Map<String, String> params, int offset, int limit, AsyncCallback<PagingLoadResult<ServiceDto>> callback);
 
 	void getServicesByServiceGroup(long groupId, AsyncCallback<List<ServiceDto>> async);
 

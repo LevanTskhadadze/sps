@@ -3,6 +3,7 @@ package com.azry.sps.console.client.tabs.commissions.servicecommissions;
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZFieldLabel;
+import com.azry.gxt.client.zcomp.ZNumberField;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
@@ -29,6 +30,7 @@ import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.BigDecimalSpinnerField;
+import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.toolbar.ToolBar;
 
 import java.math.BigDecimal;
@@ -62,6 +64,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private ZSimpleComboBox<CommissionRateTypeDTO> rateType;
 
 	private BigDecimalSpinnerField minCommission;
+
+	private ZNumberField<Long> priorityField;
 
 	private BigDecimalSpinnerField maxCommission;
 
@@ -119,6 +123,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 		tabPanel = new TabPanel();
 
+		priorityField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).required().build();
+
 		commission = getBigDecimalField(true);
 
 		rateType = new ZSimpleComboBox.Builder<CommissionRateTypeDTO>()
@@ -159,6 +165,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private IsWidget getParametersPanel() {
 		VerticalLayoutContainer paramContainer = new VerticalLayoutContainer();
+		paramContainer.add(getFieldLabel(priorityField, "priority", true), FIELD_LAYOUT_DATA);
 		paramContainer.add(getFieldLabel(rateType, "rateType", true), FIELD_LAYOUT_DATA);
 		paramContainer.add(getFieldLabel(commission, "commission", true), FIELD_LAYOUT_DATA);
 		paramContainer.add(getFieldLabel(minCommission, "minCommission", false), FIELD_LAYOUT_DATA);
@@ -167,6 +174,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	}
 
 	private void setFieldValues() {
+		priorityField.setValue(serviceCommissionsDto.getPriority());
 		rateType.setValue(serviceCommissionsDto.getRateType());
 		commission.setValue(serviceCommissionsDto.getCommission());
 		minCommission.setValue(serviceCommissionsDto.getMinCommission());
@@ -283,7 +291,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 
 	private boolean isValid() {
-		return rateType.isValid() &&
+		return priorityField.isValid() &&
+			rateType.isValid() &&
 			commission.isValid() &&
 			validateAmountLimits();
 	}
@@ -311,6 +320,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	}
 
 	private ServiceCommissionsDto getServiceCommissionsForUpdate() {
+		serviceCommissionsDto.setPriority(priorityField.getCurrentValue());
 		serviceCommissionsDto.setAllServices(allServices.getValue());
 		serviceCommissionsDto.setServicesIds(servicesDualListWidget.getSelectedItems());
 		serviceCommissionsDto.setRateType(rateType.getValue());

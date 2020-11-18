@@ -62,7 +62,7 @@ public class ServicesTab extends Composite {
 		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>>() {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceDto>> callback) {
-				Map<String, Object> params = new HashMap<>();
+				Map<String, String> params = new HashMap<>();
 				params.put("name", nameField.getCurrentValue());
 				params.put("active", activeComboBox.getCurrentValue());
 
@@ -84,10 +84,10 @@ public class ServicesTab extends Composite {
 		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceDto, PagingLoadResult<ServiceDto>>(ServiceTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
+		pagingPossibleValues.add(20);
 		pagingPossibleValues.add(50);
 		pagingPossibleValues.add(100);
 		pagingPossibleValues.add(200);
-		pagingPossibleValues.add(5);
 		ZPagingToolBar pager = new ZPagingToolBar.Builder<>(pagingLoader)
 			.possibleValue(pagingPossibleValues)
 			.build();

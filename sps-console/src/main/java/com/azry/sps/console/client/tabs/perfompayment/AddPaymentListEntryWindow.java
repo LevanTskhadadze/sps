@@ -35,8 +35,6 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 	private final VerticalLayoutContainer container;
 
-	private VerticalLayoutContainer vLayoutWrapper;
-
 	private ZSimpleComboBox<ServiceGroupDTO> serviceGroupsCB;
 
 	private ZSimpleComboBox<ServiceDto> serviceCB;
@@ -45,12 +43,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 	private ZTextField abonenCodeInfo;
 
-	private ZButton verifyAbonentCodeB;
-
 	private ZButton saveButton;
-
-	private ZButton cancelButton;
-
 
 
 	public AddPaymentListEntryWindow() {
@@ -98,7 +91,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			.comparator(new Comparator<ServiceGroupDTO>() {
 				@Override
 				public int compare(ServiceGroupDTO o1, ServiceGroupDTO o2) {
-					return Long.valueOf(o1.getPriority()).compareTo(Long.valueOf(o2.getPriority()));
+					return Long.compare(o1.getPriority(), o2.getPriority());
 				}
 			})
 			.editable(false)
@@ -155,7 +148,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 		abonentCodeF = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).width(255).required().build();
 
-		verifyAbonentCodeB = new ZButton.Builder()
+		ZButton verifyAbonentCodeB = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -170,7 +163,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 		verifyAbonentCodeB.addStyleName("verify-abonent-code-button");
 
-		vLayoutWrapper = new VerticalLayoutContainer();
+		VerticalLayoutContainer vLayoutWrapper = new VerticalLayoutContainer();
 		HorizontalLayoutContainer abonentCodeHorizontalWrapper = new HorizontalLayoutContainer();
 		vLayoutWrapper.add(getFieldLabel(abonentCodeF, "abonentCode", true));
 		abonentCodeHorizontalWrapper.add(vLayoutWrapper);
@@ -197,7 +190,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			})
 			.build();
 
-		cancelButton = new ZButton.Builder()
+		ZButton cancelButton = new ZButton.Builder()
 			.text(Mes.get("cancel"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {

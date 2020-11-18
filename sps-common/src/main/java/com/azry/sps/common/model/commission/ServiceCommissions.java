@@ -32,6 +32,8 @@ public class ServiceCommissions extends Configurable {
 	@Column(precision = 10, scale = 2)
 	private BigDecimal minCommission;
 
+	private long priority;
+
 	@Column(precision = 10, scale = 2)
 	private BigDecimal maxCommission;
 

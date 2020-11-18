@@ -12,11 +12,9 @@ import com.azry.sps.console.client.tabs.users.widgets.UsersModifyWindow;
 import com.azry.sps.console.client.tabs.users.widgets.UsersTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.dom.client.Style;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -97,10 +95,10 @@ public class UsersTab extends Composite {
 		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, SystemUserDTO, PagingLoadResult<SystemUserDTO>>(UsersTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
+		pagingPossibleValues.add(20);
 		pagingPossibleValues.add(50);
 		pagingPossibleValues.add(100);
 		pagingPossibleValues.add(200);
-		pagingPossibleValues.add(5);
 		ZPagingToolBar pager = new ZPagingToolBar.Builder<>(pagingLoader)
 			.possibleValue(pagingPossibleValues)
 			.build();

@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XmlUtils {
-	private static Map<Class, JAXBContext> contextMap = new HashMap<>();
+	private static final Map<Class<?>, JAXBContext> contextMap = new HashMap<>();
 
 	public static <T> String toXml(T object){
 		if (object == null) {
 			return null;
 		}
-		Class clazz = object.getClass();
+		Class<?> clazz = object.getClass();
 		JAXBContext context = getContext(clazz);
 		try {
 			Marshaller marshaller = context.createMarshaller();
@@ -29,7 +29,7 @@ public class XmlUtils {
 		}
 	}
 
-	public static <T> T fromXML(String xml, Class clazz) {
+	public static <T> T fromXML(String xml, Class<?> clazz) {
 		if (xml == null || clazz == null) {
 			return null;
 		}
@@ -46,7 +46,7 @@ public class XmlUtils {
 	}
 
 
-	public static JAXBContext getContext(Class cl){
+	public static JAXBContext getContext(Class<?> cl){
 		if (!contextMap.containsKey(cl)) {
 			try {
 				JAXBContext context = JAXBContext.newInstance(cl);

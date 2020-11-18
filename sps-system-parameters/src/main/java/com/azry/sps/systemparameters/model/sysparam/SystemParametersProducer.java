@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
@@ -100,7 +99,7 @@ public class SystemParametersProducer {
 	}
 
 	@Timeout
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	 @SuppressWarnings({"rawtypes", "unchecked"})
 	public void reload() {
 		synchronized (SystemParametersProducer.class) {
 			log.debug("Loading system parameters");

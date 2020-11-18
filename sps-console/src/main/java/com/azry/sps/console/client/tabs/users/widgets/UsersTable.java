@@ -21,7 +21,6 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class UsersTable {

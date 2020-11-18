@@ -18,9 +18,6 @@ import com.sencha.gxt.widget.core.client.form.FileUploadField;
 import com.sencha.gxt.widget.core.client.form.FormPanel;
 import com.sencha.gxt.widget.core.client.info.Info;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public abstract class  IconEditWindow extends ZWindow {
 
 	private final static String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
