@@ -236,6 +236,7 @@ public class RowEntry {
 							paymentListTable.getTableRows().remove(getEntry());
 							if (paymentListTable.getTableRows().isEmpty()) {
 								paymentListTable.addEmptyRow();
+								paymentListTable.setAggregatesValues();
 							}
 							else {
 								for (RowEntry entry: paymentListTable.getTableRows()) {
