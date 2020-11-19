@@ -15,6 +15,15 @@ import java.util.List;
 @Data
 public class PaymentDto implements IsSerializable {
 
+	public enum Columns {
+		id,
+		agentPaymentId,
+		startTime,
+		endTime,
+		serviceId,
+		channelId
+	}
+
 	public static final String DATE_PATTERN = "dd/MM/yyyy HH:mm";
 
 	private long id;

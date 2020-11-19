@@ -4,9 +4,9 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
-import com.azry.sps.common.model.service.ServiceColumnNames;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
+import com.azry.sps.server.caching.CachedConfigurationService;
 import com.azry.sps.server.services.paymentlist.PaymentListManager;
 
 import javax.ejb.Stateless;
@@ -15,8 +15,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,28 +32,30 @@ public class ServiceManagerBean implements ServiceManager {
 	@Inject
 	PaymentListManager paymentListManager;
 
+	@Inject
+	CachedConfigurationService cachedConfigurationService;
 
-	@Override
-	public List<ServiceEntity> getAllServiceEntities() {
-
-		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
-			.getResultList();
-	}
+//	@Override
+//	public List<ServiceEntity> getAllServiceEntities() {
+//		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
+//			.getResultList();
+//	}
 
 	@Override
 	public List<Service> getAllServices() {
-		List<Service> services = new ArrayList<>();
-		for (ServiceEntity serviceEntity : getAllServiceEntities()) {
-			services.add(serviceEntity.getService());
-		}
-		return services;
+		return cachedConfigurationService.getAllServices();
+//		List<Service> services = new ArrayList<>();
+//		for (ServiceEntity serviceEntity : getAllServiceEntities()) {
+//			services.add(serviceEntity.getService());
+//		}
+//		return services;
 	}
 
 	@Override
 	public ListResult<Service> getServices(Map<String, String> params, int offset, int limit) {
 		if (params == null) params = new HashMap<>();
-
-		String queryPrefix = "SELECT se FROM ServiceEntity se ";
+		return cachedConfigurationService.filterServices(params, offset, limit);
+		/*String queryPrefix = "SELECT se FROM ServiceEntity se ";
 		String countPrefix = "SELECT COUNT(se.id) FROM ServiceEntity se ";
 		StringBuilder str = new StringBuilder(" WHERE 1 = 1");
 		Map<String, Object> values = new HashMap<>();
@@ -98,16 +98,16 @@ public class ServiceManagerBean implements ServiceManager {
 			services.add(entity.getService());
 		}
 		return new ListResult<>(services, (int)((long)count.getSingleResult()));
-
+		*/
 	}
 
 	@Override
 	public List<Service> getServicesByServiceGroup(long groupId) {
 		List <Service> services = new ArrayList<>();
-		List<ServiceEntity> serviceEntities = getAllServiceEntities();
-		for (ServiceEntity serviceEntity : serviceEntities) {
-			if (serviceEntity.getService().getGroupId() == groupId) {
-				services.add(serviceEntity.getService());
+		List<Service> serviceEntities = getAllServices();
+		for (Service service : serviceEntities) {
+			if (service.getGroupId() == groupId) {
+				services.add(service);
 			}
 		}
 		return services;
@@ -116,9 +116,13 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public Service editService(Service service) throws SPSException {
 		try {
+			int add = 1;
 			ServiceEntity entity = service.getEntity();
+			if (em.find(ServiceEntity.class, entity.getId()) == null) {
+				add = 0;
+			}
 			Service srv = em.merge(entity).getService();
-			srv.setVersion(srv.getVersion() + 1);
+			srv.setVersion(srv.getVersion() + add);
 			updateCache();
 			return srv;
 		}
@@ -160,14 +164,20 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@Override
 	public String getIcon(long id) {
-		ServiceEntity entity = em.find(ServiceEntity.class, id);
-		Service srv = XmlUtils.fromXML(entity.getData(), Service.class);
+		//ServiceEntity entity = em.find(ServiceEntity.class, id);
+		Service srv = cachedConfigurationService.getService(id);
+
+//		if (entity == null) {
+//			srv = new Service();
+//		}
+//		srv = XmlUtils.fromXML(entity.getData(), Service.class);
 		return srv.getIcon();
 	}
 
 	@Override
 	public Service getService(long id) {
-		return em.find(ServiceEntity.class, id).getService();
+		return cachedConfigurationService.getService(id);
+//		return em.find(ServiceEntity.class, id).getService();
 	}
 
 	private void updateCache() {

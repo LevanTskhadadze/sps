@@ -13,8 +13,6 @@ import java.util.Map;
 @RemoteServiceRelativePath("servlet/serviceTab")
 public interface ServiceTabService extends RemoteService {
 
-	List<ServiceEntityDto> getAllServiceEntities();
-
 	List<ServiceDto> getAllServices();
 
 	PagingLoadResult<ServiceDto> getServices(Map<String, String> params, int offset, int limit);

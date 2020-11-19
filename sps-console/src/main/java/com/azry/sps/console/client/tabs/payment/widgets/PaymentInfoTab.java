@@ -6,14 +6,13 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.math.BigDecimal;
 
 
-public class PaymentInfoTab extends TabPanel {
+public class PaymentInfoTab extends VerticalLayoutContainer {
 	
 	private static final int FIELD_WIDTH = 290;
 
@@ -26,19 +25,9 @@ public class PaymentInfoTab extends TabPanel {
 		super();
 		this.dto = dto;
 
-		VerticalLayoutContainer formContainer = new VerticalLayoutContainer();
-		formContainer.setStyleName("editForm");
-		formContainer.add(constructForm(), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
-		add(formContainer, Mes.get("paymentInfo"));
+		setStyleName("editForm");
+		add(constructForm(), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 
-		/*add(tabPanel, new MarginData(0));
-
-		setHeight("500px");
-		setWidth("700px");
-		String header = Mes.get("ofService") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
-		setHeadingText(header);
-		showInCenter();
-		 */
 	}
 	
 	private FlexTable constructForm() {
@@ -52,7 +41,7 @@ public class PaymentInfoTab extends TabPanel {
 		formTable.setWidget(3, 0, new HTML(Mes.get("statusMessage") + ":"));
 		formTable.setWidget(4, 0, new HTML(Mes.get("amount") + ":"));
 		formTable.setWidget(5, 0, new HTML(Mes.get("clientCommission") + ":"));
-		formTable.setWidget(6, 0, new HTML(Mes.get("creationTime") + ":"));
+		formTable.setWidget(6, 0, new HTML(Mes.get("createTime") + ":"));
 		formTable.setWidget(7, 0, new HTML(Mes.get("lastUpdateTime") + ":"));
 		formTable.getWidget(1, 0).setWidth("220px");
 
@@ -93,7 +82,7 @@ public class PaymentInfoTab extends TabPanel {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		statusField.setValue(dto.getStatus().name());
+		statusField.setValue(Mes.get("PAYMENT_" + dto.getStatus().name()));
 		return statusField;
 	}
 
@@ -102,7 +91,7 @@ public class PaymentInfoTab extends TabPanel {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		statusField.setValue(dto.getStatusMessage());
+		statusMessageField.setValue(dto.getStatusMessage());
 		return statusMessageField;
 	}
 
@@ -111,6 +100,7 @@ public class PaymentInfoTab extends TabPanel {
 		BigDecimalField amountField = new BigDecimalField();
 		amountField.setWidth(FIELD_WIDTH);
 		amountField.setValue(dto.getAmount());
+		amountField.setEnabled(false);
 		return amountField;
 	}
 
@@ -118,6 +108,7 @@ public class PaymentInfoTab extends TabPanel {
 		BigDecimalField clientCommissionField = new BigDecimalField();
 		clientCommissionField.setWidth(FIELD_WIDTH);
 		clientCommissionField.setValue(dto.getClCommission() == null ? new BigDecimal(0) : dto.getClCommission());
+		clientCommissionField.setEnabled(false);
 		return clientCommissionField;
 	}
 
@@ -125,6 +116,7 @@ public class PaymentInfoTab extends TabPanel {
 		ZDateField createTimeField = new ZDateField.Builder()
 			.width(FIELD_WIDTH)
 			.enabled(false)
+			.pattern(PaymentDto.DATE_PATTERN)
 			.build();
 		createTimeField.setValue(dto.getCreateTime());
 		return createTimeField;
@@ -133,9 +125,10 @@ public class PaymentInfoTab extends TabPanel {
 	private ZDateField getLastChangeTimeField() {
 		ZDateField lastChangeTimeField = new ZDateField.Builder()
 			.width(FIELD_WIDTH)
+			.pattern(PaymentDto.DATE_PATTERN)
 			.enabled(false)
 			.build();
-		lastChangeTimeField.setValue(dto.getCreateTime());
+		lastChangeTimeField.setValue(dto.getStatusChangeTime());
 		return lastChangeTimeField;
 	}
 

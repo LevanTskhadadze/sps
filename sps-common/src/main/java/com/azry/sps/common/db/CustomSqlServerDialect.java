@@ -36,5 +36,6 @@ public class CustomSqlServerDialect extends SQLServer2008Dialect {
 		registerFunction("trunc_day", new VarArgsSQLFunction( StandardBasicTypes.TIMESTAMP, "dateadd(dd, datediff(dd, 0, ", ",", "), 0)" ));
 		registerFunction("trunc_month", new VarArgsSQLFunction( StandardBasicTypes.TIMESTAMP, "dateadd(mm, datediff(mm, 0, ", ",", "), 0)" ));
 		registerFunction("trunc_year", new VarArgsSQLFunction( StandardBasicTypes.TIMESTAMP, "dateadd(yy, datediff(yy, 0, ", ",", "), 0)" ));
+		registerFunction("trunc_year", new VarArgsSQLFunction( StandardBasicTypes.BOOLEAN, "dateadd(yy, datediff(yy, 0, ", ",", "), 0)" ));
 	}
 }

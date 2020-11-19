@@ -20,7 +20,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -54,7 +54,7 @@ import java.util.List;
 
 public class ServiceCommissionsTab extends Composite {
 
-	private List<ServiceEntityDto> serviceEntityDTOs;
+	private List<ServiceDto> serviceDTOs;
 
 	private final VerticalLayoutContainer verticalLayoutContainer;
 
@@ -64,7 +64,7 @@ public class ServiceCommissionsTab extends Composite {
 
 	private ZPagingToolBar pagingToolBar;
 
-	private ZSimpleComboBox<ServiceEntityDto> service;
+	private ZSimpleComboBox<ServiceDto> service;
 
 
 	private final ListStore<ServiceCommissionsDto> gridStore = new ListStore<>(new ModelKeyProvider<ServiceCommissionsDto>() {
@@ -81,17 +81,17 @@ public class ServiceCommissionsTab extends Composite {
 
 	public ServiceCommissionsTab() {
 		initToolbar();
-		ServicesFactory.getServiceTabService().getAllServiceEntities(new ServiceCallback<List<ServiceEntityDto>>() {
+		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
 			@Override
-			public void onServiceSuccess(List<ServiceEntityDto> result) {
-				serviceEntityDTOs = result;
-				Collections.sort(serviceEntityDTOs,new Comparator<ServiceEntityDto>() {
+			public void onServiceSuccess(List<ServiceDto> result) {
+				serviceDTOs = result;
+				Collections.sort(serviceDTOs,new Comparator<ServiceDto>() {
 					@Override
-					public int compare(ServiceEntityDto o1, ServiceEntityDto o2) {
+					public int compare(ServiceDto o1, ServiceDto o2) {
 						return o1.getName().compareTo(o2.getName());
 					}
 				});
-				initServiceComboboxData(serviceEntityDTOs);
+				initServiceComboboxData(serviceDTOs);
 			}
 		});
 		verticalLayoutContainer = new VerticalLayoutContainer();
@@ -108,23 +108,23 @@ public class ServiceCommissionsTab extends Composite {
 
 	private void initToolbar() {
 
-		service = new ZSimpleComboBox.Builder<ServiceEntityDto>()
-			.keyProvider(new ModelKeyProvider<ServiceEntityDto>() {
+		service = new ZSimpleComboBox.Builder<ServiceDto>()
+			.keyProvider(new ModelKeyProvider<ServiceDto>() {
 				@Override
-				public String getKey(ServiceEntityDto dto) {
+				public String getKey(ServiceDto dto) {
 					return String.valueOf(dto.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<ServiceEntityDto>() {
+			.labelProvider(new LabelProvider<ServiceDto>() {
 				@Override
-				public String getLabel(ServiceEntityDto dto) {
+				public String getLabel(ServiceDto dto) {
 					return dto.getName();
 				}
 			})
 			.noSelectionLabel(Mes.get("allServices"))
-			.template(new AbstractSafeHtmlRenderer<ServiceEntityDto>() {
+			.template(new AbstractSafeHtmlRenderer<ServiceDto>() {
 				@Override
-				public SafeHtml render(ServiceEntityDto object) {
+				public SafeHtml render(ServiceDto object) {
 					String inlineStyle = "font-size: 13px;";
 					if (object.getId() == -1) {
 						inlineStyle += "color: grey; border-top: 1px dotted grey; border-bottom: 1px dotted grey;";
@@ -170,7 +170,7 @@ public class ServiceCommissionsTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new ServiceCommissionsWindow(null, serviceEntityDTOs, ActionMode.ADD) {
+					new ServiceCommissionsWindow(null, serviceDTOs, ActionMode.ADD) {
 						@Override
 						public void onSave(ServiceCommissionsDto dto) {
 							gridStore.add(dto);
@@ -196,16 +196,16 @@ public class ServiceCommissionsTab extends Composite {
 	}
 
 
-	private void initServiceComboboxData(List<ServiceEntityDto> dtos) {
+	private void initServiceComboboxData(List<ServiceDto> dtos) {
 
-		service.add(new ServiceEntityDto(-1, Mes.get("allServicesSelected")));
+		service.add(new ServiceDto(-1, Mes.get("allServicesSelected")));
 		service.addAll(dtos);
 	}
 
 
 	private String getServiceIdForFilter() {
 		if (service != null) {
-			ServiceEntityDto dto = service.getValue();
+			ServiceDto dto = service.getValue();
 			return dto == null ? null : String.valueOf(dto.getId());
 		}
 		return null;
@@ -377,7 +377,7 @@ public class ServiceCommissionsTab extends Composite {
 				.clickHandler(new GridClickHandler<ServiceCommissionsDto>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceCommissionsDto dto) {
-						new ServiceCommissionsWindow(dto, serviceEntityDTOs, ActionMode.EDIT) {
+						new ServiceCommissionsWindow(dto, serviceDTOs, ActionMode.EDIT) {
 							@Override
 							public void onSave(ServiceCommissionsDto dto) {
 								gridStore.update(dto);

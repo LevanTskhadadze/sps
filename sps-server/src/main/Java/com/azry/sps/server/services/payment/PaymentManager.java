@@ -14,6 +14,8 @@ public interface PaymentManager {
 
 	ListResult<Payment> getPayments(int offset, int limit, Map<String, Serializable> params, List<PaymentStatus> statuses);
 
+	List<Payment> getChanges(String agentPaymentId);
+
 	void addPayments(List<Payment> payments);
 
 }

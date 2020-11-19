@@ -5,7 +5,6 @@ import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.server.caching.CachedConfigurationService;
 import com.azry.sps.server.services.service.ServiceManager;
@@ -36,11 +35,6 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 			return s1.getName().compareTo(s2.getName());
 		}
 	};
-
-	@Override
-	public List<ServiceEntityDto> getAllServiceEntities(){
-		return ServiceEntityDto.toDtos(serviceManager.getAllServiceEntities());
-	}
 
 	@Override
 	public List<ServiceDto> getAllServices() {

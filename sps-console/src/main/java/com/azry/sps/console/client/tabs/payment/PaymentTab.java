@@ -10,6 +10,7 @@ import com.azry.gxt.client.zcomp.ZPagingToolBar;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
+import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.payment.widgets.PaymentTable;
 import com.azry.sps.console.client.utils.Mes;
@@ -18,6 +19,7 @@ import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -66,15 +68,15 @@ public class PaymentTab extends Composite {
 
 	ZGrid<PaymentDto> grid;
 
-	public PaymentTab(){
+	public PaymentTab(List<ServiceDto> services, List<ChannelDTO> channels){
 		super();
 		content = new VerticalLayoutContainer();
 
-		initToolbar();
+		initToolbar(services, channels);
 
 		initWidget(content);
 
-		assembleContent();
+		assembleContent(services, channels);
 
 		initPaging();
 
@@ -86,22 +88,22 @@ public class PaymentTab extends Composite {
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDto>> callback) {
 				Map<String, Serializable> params = new HashMap<>();
 				if (idField.getCurrentValue() != null) {
-					params.put("id", idField.getCurrentValue());
+					params.put(PaymentDto.Columns.id.name(), idField.getCurrentValue());
 				}
 				if (agentPaymentIdField.getCurrentValue() != null) {
-					params.put("agentPaymentId", agentPaymentIdField.getCurrentValue());
+					params.put(PaymentDto.Columns.agentPaymentId.name(), agentPaymentIdField.getCurrentValue());
 				}
 				if (creationStartTimeField.getCurrentValue() != null) {
-					params.put("startTime", creationStartTimeField.getCurrentValue());
+					params.put(PaymentDto.Columns.startTime.name(), creationStartTimeField.getCurrentValue());
 				}
 				if (creationEndTimeField.getCurrentValue() != null) {
-					params.put("endTime", creationEndTimeField.getCurrentValue());
+					params.put(PaymentDto.Columns.endTime.name(), creationEndTimeField.getCurrentValue());
 				}
 				if (serviceComboBox.getCurrentValue() != null) {
-					params.put("service", serviceComboBox.getCurrentValue().getId());
+					params.put(PaymentDto.Columns.serviceId.name(), serviceComboBox.getCurrentValue().getId());
 				}
 				if (channelComboBox.getCurrentValue() != null) {
-					params.put("channel", channelComboBox.getCurrentValue().getId());
+					params.put(PaymentDto.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
 				}
 
 				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDto>>() {
@@ -130,7 +132,7 @@ public class PaymentTab extends Composite {
 		pagingLoader.load();
 	}
 
-	private void initToolbar() {
+	private void initToolbar(List<ServiceDto> services, List<ChannelDTO> channels) {
 		idField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor())
 			.emptyText(Mes.get("id"))
 			.build();
@@ -163,6 +165,8 @@ public class PaymentTab extends Composite {
 				}
 			})
 			.noSelectionLabel(Mes.get("chooseService"))
+			.editable(false)
+			.values(services)
 			.build();
 
 		channelComboBox = new ZSimpleComboBox.Builder<ChannelDTO>()
@@ -179,6 +183,8 @@ public class PaymentTab extends Composite {
 				}
 			})
 			.noSelectionLabel(Mes.get("chooseChannel"))
+			.editable(false)
+			.values(channels)
 			.build();
 
 		paymentStatusComboBox = new ZMultiSelectComboBox.Builder<PaymentStatusDto>()
@@ -202,10 +208,10 @@ public class PaymentTab extends Composite {
 
 	}
 
-	private void assembleContent(){
+	private void assembleContent(List<ServiceDto> services, List<ChannelDTO> channels){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDto>()), PaymentTable.getMyColumnModel());
+		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDto>()), PaymentTable.getMyColumnModel(services, channels));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -235,7 +241,6 @@ public class PaymentTab extends Composite {
 
 		upperToolbar.add(getSearchButton());
 		upperToolbar.add(getClearButton());
-		upperToolbar.add(getAddButton());
 
 		container.add(upperToolbar);
 		upperToolbar.addStyleName("toolbar");
@@ -262,20 +267,6 @@ public class PaymentTab extends Composite {
 				public void onSelect(SelectEvent event) {
 					pagingLoader.load();
 
-				}
-			})
-			.build();
-	}
-
-	private ZButton getAddButton(){
-		return new ZButton.Builder()
-			.appearance (new Css3ButtonCellAppearance<String>())
-			.icon (FAIconsProvider.getIcons().plus())
-			.text (Mes.get("addEntry"))
-			.handler (new SelectEvent.SelectHandler() {
-				@Override
-				public void onSelect(SelectEvent event) {
-					//new PaMo(null, UsersTable.getListStore());
 				}
 			})
 			.build();

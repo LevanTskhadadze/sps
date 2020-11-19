@@ -15,6 +15,7 @@ import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -82,10 +83,10 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 
 	private ZButton cancelButton;
 
-	public ClientCommissionsWindow(ClientCommissionsDto dto, List<ServiceEntityDto> serviceEntityDTOs, List<ChannelDTO> channelDTOS, ActionMode actionMode) {
+	public ClientCommissionsWindow(ClientCommissionsDto dto, List<ServiceDto> serviceDTOs, List<ChannelDTO> channelDTOS, ActionMode actionMode) {
 		super(Mes.get("ofClientCommissions") + " " + Mes.get("ActionMode_" + actionMode), 900, 650, false);
 
-		initWidgetLists(serviceEntityDTOs, channelDTOS);
+		initWidgetLists(serviceDTOs, channelDTOS);
 
 		initFields();
 
@@ -167,7 +168,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		BigDecimalSpinnerField field = new BigDecimalSpinnerField();
 		field.setAllowNegative(false);
 		field.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
-		field.setIncrement(new BigDecimal(0.01));
+		field.setIncrement(new BigDecimal("0.01"));
 		field.setAllowBlank(!required);
 		field.getPropertyEditor().getFormat().overrideFractionDigits(0, 10);
 		return field;
@@ -191,9 +192,9 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		maxCommission.setValue(clientCommissionsDto.getMaxCommission());
 	}
 
-	private void initWidgetLists(List<ServiceEntityDto> serviceEntityDTOs, List<ChannelDTO> channelDTOs) {
+	private void initWidgetLists(List<ServiceDto> serviceDTOs, List<ChannelDTO> channelDTOs) {
 
-		for (ServiceEntityDto service: serviceEntityDTOs) {
+		for (ServiceDto service: serviceDTOs) {
 			allServicesWidgetList.add(new DualListWidgetItem(String.valueOf(service.getId()), service.getName()));
 		}
 
