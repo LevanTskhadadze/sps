@@ -31,36 +31,15 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 
 		return cachingService.getFilteredServiceCommissions(serviceId, offset, limit);
 
-//		String sql = "FROM ServiceCommissions c WHERE 1 = 1 ";
-//		Map<String, String> params = new HashMap<>();
-//
-//		if (serviceId != null){
-//			if (serviceId.equals("-1")) {
-//				sql += "AND c.allServices = TRUE ";
-//			} else {
-//				sql += "AND (c.allServices = TRUE OR FUNCTION('dbo.checkWord', :service, c.serviceIds, ',')) ";
-//				params.put("service", serviceId);
-//			}
-//		}
-//		sql += "ORDER BY c.priority";
-//		TypedQuery<ServiceCommissions> query = em.createQuery(sql, ServiceCommissions.class);
-//		query.setFirstResult(offset);
-//		query.setMaxResults(limit);
-//
-//		long count = em.createQuery("select COUNT(c.id) FROM ServiceCommissions c", Long.class).getSingleResult();
-//
-//		for (Map.Entry<String, String> entry : params.entrySet()) {
-//			query.setParameter(entry.getKey(), entry.getValue());
-//		}
-//		List<ServiceCommissions> serviceCommissions = query.getResultList();
-//
-//		return new ListResult<>(serviceCommissions, (int) count);
 	}
 
 	@Override
 	public ServiceCommissions updateServiceCommissions(ServiceCommissions serviceCommissions) throws SPSException {
 		try {
-			return em.merge(serviceCommissions);
+			ServiceCommissions commission = em.merge(serviceCommissions);
+			updateCache();
+			return commission;
+
 		}
 		catch (OptimisticLockException ex) {
 			throw new SPSException("optimisticLockException", ex);
@@ -72,6 +51,7 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 		ServiceCommissions serviceCommissions = em.find(ServiceCommissions.class, id);
 		if (serviceCommissions != null) {
 			em.remove(serviceCommissions);
+			updateCache();
 		}
 	}
 

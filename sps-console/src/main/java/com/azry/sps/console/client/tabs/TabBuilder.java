@@ -259,7 +259,7 @@ public class TabBuilder {
 
 	public static HTML getClientCommissionsMenuItem(final TabPanel centerPanel, final Menu menu) {
 
-		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
+		String img = "<i style='width:16px; height:16px;' class='fa fa-money'></i>";
 
 		final HTML menuItem = new HTML(img + Mes.get("clientCommissions"));
 		menuItem.setStyleName("menuItem");
@@ -281,7 +281,7 @@ public class TabBuilder {
 				centerPanel.add(clientCommissionsTab, Mes.get("clientCommissions"));
 
 				TabItemConfig config = centerPanel.getConfig(clientCommissionsTab);
-				config.setIcon(FAIconsProvider.getIcons().briefcase());
+				config.setIcon(FAIconsProvider.getIcons().money());
 				config.setClosable(true);
 
 				centerPanel.update(clientCommissionsTab, config);

@@ -293,6 +293,14 @@ body {
     border: none;
 }
 
+.abonent-info-loading > div:first-child {
+    background-color: #eaeaea;
+    background-image: url("images/loading.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: block;
+    margin: auto;
+}
 
 .abonent-info-success > div:first-child {
     background-color: #bcffc2;
@@ -300,6 +308,10 @@ body {
 
 .abonent-info-failure > div:first-child {
     background-color: #fbc6c6;
+}
+
+.abonent-info-connection-error > div:first-child {
+    background-color: #fffcb4;
 }
 
 .loader {
@@ -320,19 +332,19 @@ body {
     vertical-align: middle;
 }
 
-.table-cell-loading {
+.payment-table-loading {
     background-color: #eaeaea;
 }
 
-.table-cell-loaded{
+.payment-table-loaded{
     background-color: #bcffc2;
 }
 
-.table-cell-loaded-error {
+.payment-table-connection-error {
     background-color: #fffcb4;
 }
 
-.table-cell-loaded-not-found {
+.payment-table-loaded-not-found {
     background-color: #fbc6c6;
 }
 

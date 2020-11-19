@@ -39,41 +39,14 @@ public class ChannelManagerBean implements ChannelManager {
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 
 		return cachingService.getFilteredChannels(name, isActive);
-
-//		String sql = "FROM Channel c ";
-//		Map<String, String> params = new HashMap<>();
-//
-//
-//		if (isActive == null){
-//			sql += "WHERE 1 = 1 ";
-//		}
-//
-//		else if (isActive) {
-//			sql += "WHERE c.active = TRUE ";
-//		}
-//
-//		else {
-//			sql += "WHERE c.active = FALSE ";
-//		}
-//
-//		if (name != null && !name.trim().isEmpty()){
-//			sql += "AND LOWER(c.name) like :name ";
-//			params.put("name", "%" + name.toLowerCase() + "%");
-//		}
-//
-//		TypedQuery<Channel> query = em.createQuery(sql, Channel.class);
-//
-//		for (Map.Entry<String, String> entry : params.entrySet()) {
-//			query.setParameter(entry.getKey(), entry.getValue());
-//		}
-//
-//		return query.getResultList();
 	}
 
 	@Override
 	public Channel updateChannel(Channel channel) throws SPSException {
 		try {
-			return em.merge(channel);
+			Channel tempChannel = em.merge(channel);
+			updateCache();
+			return tempChannel;
 		}
 		catch (OptimisticLockException ex) {
 			throw new SPSException("optimisticLockException", ex);
@@ -85,6 +58,7 @@ public class ChannelManagerBean implements ChannelManager {
 		Channel channel = em.find(Channel.class, id);
 		if (channel != null) {
 			em.remove(channel);
+			updateCache();
 		}
 	}
 

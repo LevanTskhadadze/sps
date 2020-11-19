@@ -17,7 +17,6 @@ import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
 import com.sencha.gxt.widget.core.client.Composite;
@@ -152,20 +151,24 @@ public class PaymentListTable extends Composite {
 							payment.setClCommission(entry.getCommission());
 //							payment.setSvcCommission();
 							payment.setStatus(PaymentStatusDto.CREATED);
-//							payment.statusChangeTime;
+							payment.setStatusChangeTime(new Date());
 //							payment.statusMessage;
 							payment.setCreateTime(new Date());
 							payment.setClient(clientDTO);
 
 							paymentList.add(payment);
 						}
-						entry.clearAmountF();
 					}
 
 					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>() {
 						@Override
 						public void onServiceSuccess(Void result) {
 							new CreatedPaymentWindow(paymentList).showInCenter();
+							for (RowEntry entry : tableRows) {
+								entry.clearAmountF();
+								entry.updateCommissionValue();
+							}
+							setAggregatesValues();
 						}
 					});
 				}
@@ -192,7 +195,7 @@ public class PaymentListTable extends Composite {
 		paymentListTable.addStyleName("payment-list-table");
 
 		addTableHeader();
-		if (paymentListDTO != null) {
+		if (paymentListDTO != null && !paymentListDTO.getEntries().isEmpty()) {
 			addPaymentList(paymentListDTO);
 		}
 		else {
@@ -213,9 +216,16 @@ public class PaymentListTable extends Composite {
 		TableUtils.setCell(paymentListTable, row, column, new Label(""), "30px",  null, ALIGN_CENTER, false);
 	}
 
-	private void addEmptyRow() {
-		TableUtils.setCell(paymentListTable, 1, 0, new HTML("<div class='empty-table'>" + Mes.get("emptyTableText") + "</div>"), "100%", null, ALIGN_LEFT, false);
-		paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
+	protected void addEmptyRow() {
+		if (paymentListTable.getRowCount() == 1) {
+			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), "100%", "empty-table", ALIGN_LEFT, false);
+			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
+		}
+		else {
+			paymentListTable.insertRow(1);
+			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), "100%", "empty-table", ALIGN_LEFT, false);
+			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
+		}
 	}
 
 	private void addPaymentList(PaymentListDTO paymentList) {
@@ -231,7 +241,7 @@ public class PaymentListTable extends Composite {
 
 
 
-	private void setAggregatesValues() {
+	protected void setAggregatesValues() {
 		updateAggregateCommission();
 		updateAggregateDebt();
 		updateAggregatePaymentAmount();

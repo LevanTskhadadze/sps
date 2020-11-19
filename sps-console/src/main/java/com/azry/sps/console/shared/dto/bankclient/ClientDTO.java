@@ -102,7 +102,7 @@ public class ClientDTO implements IsSerializable {
 
 
 	@GwtIncompatible
-	public Client fromDTO() {
+	public Client bankClientFromDTO() {
 		Client client = new Client();
 		client.setId(this.getId());
 		client.setPersonalNumber(this.getPersonalNumber());

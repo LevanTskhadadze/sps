@@ -39,7 +39,7 @@ import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_RIGHT;
 
 public class RowEntry {
 
-	private final int row;
+	private int row;
 
 	private final FlexTable table;
 
@@ -82,19 +82,19 @@ public class RowEntry {
 
 	public void buildRow(){
 		loadCellData();
-		setCommissionCell(new Label(""), "table-cell-loading", ALIGN_RIGHT, true);
+		setCommissionCell(new Label(""), "payment-table-loading", ALIGN_RIGHT, true);
 		TableUtils.setCell(table, row, 5, amountF, null,  null, null, false);
 		TableUtils.setCell(table, row, 6, deleteB, null,  null, null, false);
 	}
 
 	public void loadCellData() {
 		setServiceCell();
-		setAbonentCells(abonentInfo, "","table-cell-loading", ALIGN_CENTER, true);
+		setAbonentCells(abonentInfo, "","payment-table-loading", ALIGN_CENTER, true);
 
 		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDto.getServiceDebtCode(), Long.valueOf(paymentListEntryDTO.getAbonentCode()), new AsyncCallback<AbonentInfoDTO>() {
 			@Override
 			public void onFailure(Throwable throwable) {
-				setAbonentCells(Mes.get("noProviderConnection"), "?", "table-cell-loaded-error", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("noProviderConnection"), "?", "payment-table-connection-error", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 			}
@@ -109,14 +109,14 @@ public class RowEntry {
 		ServicesFactory.getClientCommissionsService().getClientCommission(serviceDto.getId(), new AsyncCallback<ClientCommissionsDto>() {
 			@Override
 			public void onFailure(Throwable throwable) {
-				setCommissionCell(getCommissionCellErrorWidget(), "table-cell-loaded-not-found", ALIGN_CENTER, false);
+				setCommissionCell(getCommissionCellErrorWidget(), "payment-table-loaded-not-found", ALIGN_CENTER, false);
 				amountF.disable();
 			}
 
 			@Override
 			public void onSuccess(ClientCommissionsDto dto) {
 				clientCommissionsDto = dto;
-				setCommissionCell(new Label(NumberFormatUtils.format(commission)), "table-cell-loaded", ALIGN_RIGHT, false);
+				setCommissionCell(new Label(NumberFormatUtils.format(commission)), "payment-table-loaded", ALIGN_RIGHT, false);
 			}
 		});
 	}
@@ -124,17 +124,13 @@ public class RowEntry {
 	private void updateRow(GetInfoStatusDTO status) {
 		switch(status) {
 			case SUCCESS:
-				setAbonentCells(abonentInfo, NumberFormatUtils.format(debt) ,"table-cell-loaded", ALIGN_RIGHT, false);
+				setAbonentCells(abonentInfo, NumberFormatUtils.format(debt) ,"payment-table-loaded", ALIGN_RIGHT, false);
 				loaded = true;
 				paymentListTable.updateAggregateDebt();
 				break;
 			case BAD_REQUEST:
-				setAbonentCells(Mes.get("abonentNotFound"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
-				amountF.disable();
-				loaded = false;
-				break;
 			case ABONENT_NOT_FOUND:
-				setAbonentCells(Mes.get("abonentNotFound"), "?", "table-cell-loaded-not-found", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("abonentNotFound"), "?", "payment-table-loaded-not-found", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 				break;
@@ -147,7 +143,7 @@ public class RowEntry {
 			amountF.enable();
 		}
 		else {
-			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDto), null,  "table-cell-loaded-error", ALIGN_LEFT, false);
+			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDto), null,  "payment-table-connection-error", ALIGN_LEFT, false);
 			amountF.disable();
 		}
 	}
@@ -200,12 +196,12 @@ public class RowEntry {
 	private void checkMinMaxAmount() {
 		if (amountF.getValue().compareTo(serviceDto.getMinAmount()) < 0) {
 			amountF.setValue(serviceDto.getMinAmount());
-			amountF.markInvalid(Mes.get("minAmount") + ": " + serviceDto.getMinAmount());
+			amountF.markInvalid(Mes.get("minAmount") + ": " + NumberFormatUtils.format(serviceDto.getMinAmount()));
 			paymentListTable.updateAggregatePaymentAmount();
 		}
 		if (amountF.getValue().compareTo(serviceDto.getMaxAmount()) > 0) {
 			amountF.setValue(serviceDto.getMaxAmount());
-			amountF.markInvalid(Mes.get("maxAmount") + ": " + serviceDto.getMinAmount());
+			amountF.markInvalid(Mes.get("maxAmount") + ": " + NumberFormatUtils.format(serviceDto.getMinAmount()));
 			paymentListTable.updateAggregatePaymentAmount();
 		}
 	}
@@ -218,9 +214,9 @@ public class RowEntry {
 		}
 		if (clientCommissionsDto != null) {
 			if (amountF.getCurrentValue() == null || NumberFormatUtils.equalsWithFormat(amountF.getCurrentValue(), BigDecimal.ZERO)) {
-				setCommissionCell(new Label(NumberFormatUtils.format(BigDecimal.ZERO)), "table-cell-loaded", ALIGN_RIGHT, false);
+				setCommissionCell(new Label(NumberFormatUtils.format(BigDecimal.ZERO)), "payment-table-loaded", ALIGN_RIGHT, false);
 			} else {
-				setCommissionCell(new Label("?"), "table-cell-loading", ALIGN_CENTER, false);
+				setCommissionCell(new Label("?"), "payment-table-loading", ALIGN_CENTER, false);
 			}
 		}
 	}
@@ -238,6 +234,16 @@ public class RowEntry {
 						public void onServiceSuccess(Void result) {
 							table.removeRow(row);
 							paymentListTable.getTableRows().remove(getEntry());
+							if (paymentListTable.getTableRows().isEmpty()) {
+								paymentListTable.addEmptyRow();
+							}
+							else {
+								for (RowEntry entry: paymentListTable.getTableRows()) {
+									if (entry.getRow() > row) {
+										entry.decrementRow();
+									}
+								}
+							}
 						}
 					});
 				}
@@ -262,20 +268,26 @@ public class RowEntry {
 
 	public void updateCommissionValue() {
 		if (clientCommissionsDto !=  null){
-			setCommissionCell(new Label(calculateCommission()), "table-cell-loaded", ALIGN_RIGHT, false);
+			setCommissionCell(new Label(calculateCommission()), "payment-table-loaded", ALIGN_RIGHT, false);
 		}
 	}
 
 
 	private String calculateCommission() {
-		if (clientCommissionsDto.getRateType() == CommissionRateTypeDTO.FIXED) {
-			commissionVerified = true;
-			commission = clientCommissionsDto.getCommission();
-			return NumberFormatUtils.format(commission);
+		if (amountF.getValue().compareTo(BigDecimal.ZERO) > 0) {
+			if (clientCommissionsDto.getRateType() == CommissionRateTypeDTO.FIXED) {
+				commissionVerified = true;
+				commission = clientCommissionsDto.getCommission();
+				return NumberFormatUtils.format(commission);
+			} else {
+				commissionVerified = true;
+				commission = amountF.getValue().multiply(clientCommissionsDto.getCommission().divide(new BigDecimal(100), RoundingMode.UP));
+				return NumberFormatUtils.format(commission);
+			}
 		}
 		else {
-			commission = clientCommissionsDto.getCommission().divide(new BigDecimal(100), RoundingMode.UP);
-			return NumberFormatUtils.format(commission);
+			commissionVerified = false;
+			return String.valueOf(BigDecimal.ZERO);
 		}
 	}
 
@@ -310,5 +322,13 @@ public class RowEntry {
 	public void clearAmountF() {
 		amountF.setValue(BigDecimal.ZERO);
 		amountF.removeToolTip();
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public void decrementRow() {
+		this.row = row - 1;
 	}
 }

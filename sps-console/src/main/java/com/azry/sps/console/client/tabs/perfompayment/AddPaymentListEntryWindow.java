@@ -86,7 +86,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 					return dto.getName();
 				}
 			})
-			.emptyText(Mes.get("chooseServicesGroups"))
+			.emptyText(Mes.get("chooseServiceGroups"))
 			.enableSorting(true)
 			.comparator(new Comparator<ServiceGroupDTO>() {
 				@Override
@@ -241,7 +241,10 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 	public void verifyAbonentCode() {
 
-		ServicesFactory.getProviderIntegrationService().getAbonent(serviceCB.getValue().getServiceDebtCode(), abonentCodeF.getValue(), new ServiceCallback<AbonentInfoDTO>(this) {
+		abonenCodeInfo.setStyleName("abonent-info-loading");
+		abonenCodeInfo.setValue(" ");
+
+		ServicesFactory.getProviderIntegrationService().getAbonent(serviceCB.getValue().getServiceDebtCode(), abonentCodeF.getValue(), new ServiceCallback<AbonentInfoDTO>(false) {
 			@Override
 			public void onServiceSuccess(AbonentInfoDTO result) {
 				if (result.getStatus().equals(GetInfoStatusDTO.SUCCESS)) {
@@ -249,14 +252,16 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 					abonenCodeInfo.setText(result.getAbonentInfo());
 					saveButton.enable();
 				}
-				else if (result.getStatus().equals(GetInfoStatusDTO.ABONENT_NOT_FOUND)) {
-					abonenCodeInfo.setStyleName("abonent-info-failure");
-					abonenCodeInfo.setText(Mes.get(GetInfoStatusDTO.ABONENT_NOT_FOUND.name()));
-				}
 				else {
 					abonenCodeInfo.setStyleName("abonent-info-failure");
-					abonenCodeInfo.setText(Mes.get(GetInfoStatusDTO.BAD_REQUEST.name()));
+					abonenCodeInfo.setText(Mes.get("abonentNotFound"));
 				}
+			}
+
+			@Override
+			public void onFailure(Throwable th) {
+				abonenCodeInfo.setStyleName("abonent-info-connection-error");
+				abonenCodeInfo.setText(Mes.get("noProviderConnection"));
 			}
 		});
 

@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.paymentlist;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.client.Client;
 import com.azry.sps.common.model.paymentlist.PaymentList;
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
@@ -18,7 +19,7 @@ public class PaymentListManagerBean implements PaymentListManager {
 	@Override
 	public PaymentList getPaymentList(String personalNumber) {
 		try {
-			return em.createQuery("SELECT p FROM PaymentList p JOIN FETCH p.entries e WHERE p.client.personalNumber = :personalNumber",
+			return em.createQuery("SELECT p FROM PaymentList p LEFT JOIN FETCH p.entries e WHERE p.client.personalNumber = :personalNumber",
 				PaymentList.class)
 				.setParameter("personalNumber", personalNumber)
 				.getSingleResult();
@@ -30,16 +31,23 @@ public class PaymentListManagerBean implements PaymentListManager {
 	}
 
 	@Override
-	public PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) {
+	public PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) throws SPSException {
 		PaymentList paymentList = getPaymentList(client.getPersonalNumber());
 		if (paymentList == null) {
 			paymentList = new PaymentList();
 			paymentList.setClient(client);
 		}
+		else {
+			for (PaymentListEntry entry : paymentList.getEntries()) {
+				if (entry.getServiceId() == paymentList.getId()) {
+					throw new SPSException("clientPaymentListEntryAlreadyExists");
+				}
+			}
+		}
 		paymentListEntry.setPaymentList(paymentList);
 		paymentList.getEntries().add(paymentListEntry);
-		em.merge(paymentList);
-		return paymentListEntry;
+		paymentList = em.merge(paymentList);
+		return paymentList.getEntries().get(paymentList.getEntries().size() - 1);
 	}
 
 	@Override

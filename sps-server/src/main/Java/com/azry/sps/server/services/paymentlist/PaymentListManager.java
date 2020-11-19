@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.paymentlist;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.client.Client;
 import com.azry.sps.common.model.paymentlist.PaymentList;
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
@@ -11,7 +12,7 @@ public interface PaymentListManager {
 
 	PaymentList getPaymentList(String personalNumber);
 
-	PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry);
+	PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) throws SPSException;
 
 	void deletePaymentListEntry(long id);
 
