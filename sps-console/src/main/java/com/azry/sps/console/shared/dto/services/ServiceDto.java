@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
@@ -37,6 +37,14 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 	private String providerAccountIBAN;
 
 	private boolean active;
+
+	public ServiceDto(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public ServiceDto() {
+	}
 
 	public long getId() {
 		return id;

@@ -69,7 +69,9 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		purposeField.setValue(dto.getPurpose());
+		if (dto.getPurpose() != null) {
+			purposeField.setValue(dto.getPurpose());
+		}
 		return purposeField;
 	}
 
@@ -78,7 +80,9 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		statusField.setValue(paymentDto.getStatus().name());
+		if (paymentDto.getStatus() != null) {
+			statusField.setValue(Mes.get("PAYMENT_" + paymentDto.getStatus().name()));
+		}
 		return statusField;
 	}
 
@@ -87,7 +91,9 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		firstNameField.setValue(dto.getSourceAccountBAN());
+		if (dto.getSourceAccountBAN() != null) {
+			firstNameField.setValue(dto.getSourceAccountBAN());
+		}
 		return firstNameField;
 	}
 
@@ -96,7 +102,9 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		statusChangeTime.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getStatusChangeTime()));
+		if (paymentDto.getStatusChangeTime() != null) {
+			statusChangeTime.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getStatusChangeTime()));
+		}
 		return statusChangeTime;
 	}
 
@@ -105,7 +113,10 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		createTimeField.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getCreateTime()));
+
+		if (paymentDto.getCreateTime() != null) {
+			createTimeField.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getCreateTime()));
+		}
 		return createTimeField;
 	}
 
@@ -114,7 +125,10 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		senderField.setValue(dto.getSourceAccountBAN());
+
+		if (dto.getSourceAccountBAN() != null) {
+			senderField.setValue(dto.getSourceAccountBAN());
+		}
 		return senderField;
 	}
 
@@ -123,7 +137,9 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		recipientField.setValue(dto.getDestinationAccountBAN());
+		if (dto.getDestinationAccountBAN() != null) {
+			recipientField.setValue(dto.getDestinationAccountBAN());
+		}
 		return recipientField;
 	}
 

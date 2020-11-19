@@ -6,7 +6,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
@@ -83,7 +82,7 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		statusField.setValue(dto.getStatus().name());
+		statusField.setValue(Mes.get("PAYMENT_" + dto.getStatus().name()));
 		return statusField;
 	}
 

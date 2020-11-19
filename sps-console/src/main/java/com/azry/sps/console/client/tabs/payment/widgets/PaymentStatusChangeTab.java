@@ -1,20 +1,13 @@
 package com.azry.sps.console.client.tabs.payment.widgets;
 
-import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZColumnConfig;
 import com.azry.gxt.client.zcomp.ZGrid;
-import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
-import com.azry.gxt.client.zcomp.helper.GridClickHandler;
-import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.google.gwt.cell.client.Cell;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
@@ -53,7 +46,7 @@ public class PaymentStatusChangeTab extends VerticalLayoutContainer {
 				@Override
 				public String getProperty(PaymentDto paymentDto) {
 					return paymentDto.getSvcCommission() == null ?
-						"" : paymentDto.getStatus().name();
+						"" : Mes.get("PAYMENT_" + paymentDto.getStatus().name());
 				}
 			})
 			.build());

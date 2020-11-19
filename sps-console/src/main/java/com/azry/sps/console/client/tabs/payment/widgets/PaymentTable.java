@@ -1,5 +1,6 @@
 package com.azry.sps.console.client.tabs.payment.widgets;
 
+import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZColumnConfig;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
@@ -7,8 +8,10 @@ import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.payment.PaymentInfoDto;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.cell.client.Cell;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -40,8 +43,7 @@ public class PaymentTable {
 		return store;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static ColumnModel<PaymentDto> getMyColumnModel() {
+	public static ColumnModel<PaymentDto> getMyColumnModel(final List<ServiceDto> services, final List<ChannelDTO> channels) {
 
 		List<ColumnConfig<PaymentDto, ?>> columns = new ArrayList<>();
 
@@ -77,7 +79,13 @@ public class PaymentTable {
 			.valueProvider(new ZStringProvider<PaymentDto>() {
 				@Override
 				public String getProperty(PaymentDto paymentDto) {
-					return String.valueOf(paymentDto.getChannelId());
+					for (ChannelDTO channel : channels) {
+						if (channel.getId() == paymentDto.getChannelId()) {
+							return channel.getName();
+						}
+					}
+
+					return Mes.get("channelUnavailable");
 				}
 			})
 			.build());
@@ -88,7 +96,13 @@ public class PaymentTable {
 			.valueProvider(new ZStringProvider<PaymentDto>() {
 				@Override
 				public String getProperty(PaymentDto paymentDto) {
-					return String.valueOf(paymentDto.getServiceId());
+					for (ServiceDto service : services) {
+						if (service.getId() == paymentDto.getServiceId()) {
+							return service.getName();
+						}
+					}
+
+					return Mes.get("serviceUnavailable");
 				}
 			})
 			.build());
@@ -148,7 +162,7 @@ public class PaymentTable {
 				@Override
 				public String getProperty(PaymentDto paymentDto) {
 					return paymentDto.getStatus() == null ?
-						"" : paymentDto.getStatus().name();
+						"" : Mes.get("PAYMENT_" + paymentDto.getStatus().name());
 				}
 			})
 			.build());
@@ -160,7 +174,7 @@ public class PaymentTable {
 			.fixed()
 			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
 				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().play())
+				.icon(FAIconsProvider.getIcons().eye())
 				.clickHandler(new GridClickHandler<PaymentDto>() {
 					@Override
 					public void onClick(Cell.Context context, final PaymentDto paymentDto) {

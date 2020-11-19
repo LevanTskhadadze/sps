@@ -1,6 +1,5 @@
 package com.azry.sps.console.shared.dto.payment;
 
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDto;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.Data;

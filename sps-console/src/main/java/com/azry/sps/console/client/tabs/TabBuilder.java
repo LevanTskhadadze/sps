@@ -14,6 +14,9 @@ import com.azry.sps.console.client.tabs.usergroup.UserGroupTab;
 import com.azry.sps.console.client.tabs.users.UsersTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -389,16 +392,27 @@ public class TabBuilder {
 					}
 				}
 
-				paymentTab = new PaymentTab();
-				centerPanel.add(paymentTab, Mes.get("payments"));
+				ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
+					@Override
+					public void onServiceSuccess(final List<ServiceDto> sevices) {
+						ServicesFactory.getChannelService().getChannels(new ServiceCallback<List<ChannelDTO>>() {
+							@Override
+							public void onServiceSuccess(List<ChannelDTO> channels) {
+								paymentTab = new PaymentTab(sevices, channels);
+								centerPanel.add(paymentTab, Mes.get("payments"));
 
-				TabItemConfig config = centerPanel.getConfig(paymentTab);
-				config.setIcon(FAIconsProvider.getIcons().credit_card());
-				config.setClosable(true);
+								TabItemConfig config = centerPanel.getConfig(paymentTab);
+								config.setIcon(FAIconsProvider.getIcons().credit_card());
+								config.setClosable(true);
 
-				centerPanel.update(paymentTab, config);
-				centerPanel.setActiveWidget(paymentTab);
-				menu.hide();
+								centerPanel.update(paymentTab, config);
+								centerPanel.setActiveWidget(paymentTab);
+								menu.hide();
+							}
+						});
+					}
+				});
+
 			}
 		});
 		return menuItem;

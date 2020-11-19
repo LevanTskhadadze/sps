@@ -14,7 +14,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -75,7 +75,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private ZButton cancelButton;
 
-	public ServiceCommissionsWindow(ServiceCommissionsDto dto, List<ServiceEntityDto> serviceEntityDTOs, ActionMode actionMode) {
+	public ServiceCommissionsWindow(ServiceCommissionsDto dto, List<ServiceDto> serviceEntityDTOs, ActionMode actionMode) {
 		super(Mes.get("ofServiceCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
 
 		initWidgetLists(serviceEntityDTOs);
@@ -157,7 +157,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		BigDecimalSpinnerField field = new BigDecimalSpinnerField();
 		field.setAllowNegative(false);
 		field.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
-		field.setIncrement(new BigDecimal(0.01));
+		field.setIncrement(new BigDecimal("0.01"));
 		field.setAllowBlank(!required);
 		field.getPropertyEditor().getFormat().overrideFractionDigits(0, 10);
 		return field;
@@ -181,9 +181,9 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		maxCommission.setValue(serviceCommissionsDto.getMaxCommission());
 	}
 
-	private void initWidgetLists(List<ServiceEntityDto> serviceEntityDTOs) {
+	private void initWidgetLists(List<ServiceDto> serviceEntityDTOs) {
 
-		for (ServiceEntityDto service: serviceEntityDTOs) {
+		for (ServiceDto service: serviceEntityDTOs) {
 			allServicesWidgetList.add(new DualListWidgetItem(String.valueOf(service.getId()), service.getName()));
 		}
 
