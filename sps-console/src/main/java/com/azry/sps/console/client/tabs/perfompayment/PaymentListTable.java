@@ -218,12 +218,12 @@ public class PaymentListTable extends Composite {
 
 	protected void addEmptyRow() {
 		if (paymentListTable.getRowCount() == 1) {
-			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), "100%", "empty-table", ALIGN_LEFT, false);
+			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), null, "empty-table", ALIGN_LEFT, false);
 			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
 		}
 		else {
 			paymentListTable.insertRow(1);
-			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), "100%", "empty-table", ALIGN_LEFT, false);
+			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), null, "empty-table", ALIGN_LEFT, false);
 			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
 		}
 	}
