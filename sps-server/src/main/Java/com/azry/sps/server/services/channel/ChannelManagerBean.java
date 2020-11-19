@@ -30,8 +30,6 @@ public class ChannelManagerBean implements ChannelManager {
 
 		return cachingService.getChannels();
 
-//		return em.createQuery("select c FROM Channel c", Channel.class)
-//			.getResultList();
 	}
 
 	@Override

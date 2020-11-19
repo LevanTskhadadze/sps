@@ -9,8 +9,8 @@ import javax.interceptor.InvocationContext;
 import javax.xml.ws.WebServiceException;
 
 
-public class FIEXceptionInterceptor {
-	private static Logger log = LoggerFactory.getLogger(FIEXceptionInterceptor.class);
+public class FIExceptionInterceptor {
+	private static Logger log = LoggerFactory.getLogger(FIExceptionInterceptor.class);
 
 	@AroundInvoke
 	public Object handleException(InvocationContext context) throws Throwable {

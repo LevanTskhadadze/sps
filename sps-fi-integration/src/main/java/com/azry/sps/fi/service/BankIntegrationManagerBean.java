@@ -9,23 +9,18 @@ import com.azry.sps.fi.bankws.BankServiceImplService;
 import com.azry.sps.fi.bankws.Client;
 import com.azry.sps.fi.bankws.TransactionRequest;
 import com.azry.sps.fi.bankws.TransactionResponse;
-import com.azry.sps.fi.inteceptor.FIEXceptionInterceptor;
+import com.azry.sps.fi.inteceptor.FIExceptionInterceptor;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import java.util.List;
 
 @Stateless
-@Interceptors(FIEXceptionInterceptor.class)
+@Interceptors(FIExceptionInterceptor.class)
 public class BankIntegrationManagerBean implements BankIntegrationManager {
 
-	BankServiceImplService service;
-	BankService bankService;
-
-	public BankIntegrationManagerBean() {
-		service = new BankServiceImplService();
-		bankService = service.getBankServiceImplPort();
-	}
+	BankServiceImplService service = new BankServiceImplService();
+	BankService bankService = service.getBankServiceImplPort();
 
 
 	@Override
