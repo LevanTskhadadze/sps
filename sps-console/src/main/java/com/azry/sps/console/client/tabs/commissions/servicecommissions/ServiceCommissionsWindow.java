@@ -116,6 +116,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 		addButton(saveButton);
 		addButton(cancelButton);
+
+		toggleDualWidget();
 	}
 
 
@@ -344,9 +346,18 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		tabPanel.update(tabPanel.getWidget(index), config);
 	}
 
+	private void toggleDualWidget() {
+		if (allServices.getValue()) {
+			servicesDualListWidget.disable();
+		} else {
+			servicesDualListWidget.enable();
+		}
+	}
+
 
 	@Override
 	public void onListItemsChanged() {
+		toggleDualWidget();
 		setTabHeader(0, servicesDualListWidget, "services", allServices.getValue());
 	}
 

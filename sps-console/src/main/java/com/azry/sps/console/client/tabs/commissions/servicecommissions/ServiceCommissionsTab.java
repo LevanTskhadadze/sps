@@ -421,7 +421,8 @@ public class ServiceCommissionsTab extends Composite {
 	}
 
 	private void clearFilter() {
-		service.setValue(null);
-		loader.load();
+		if (service.getValue() != null) {
+			service.setValue(null);
+		}
 	}
 }

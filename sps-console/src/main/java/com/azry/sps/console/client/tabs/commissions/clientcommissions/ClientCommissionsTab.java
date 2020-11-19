@@ -498,7 +498,11 @@ public class ClientCommissionsTab extends Composite {
 	}
 
 	private void clearFilter() {
-		service.setValue(null);
-		channel.setValue(null);
+		if (service.getValue() != null) {
+			service.setValue(null);
+		}
+		if (channel.getValue() != null) {
+			channel.setValue(null);
+		}
 	}
 }
