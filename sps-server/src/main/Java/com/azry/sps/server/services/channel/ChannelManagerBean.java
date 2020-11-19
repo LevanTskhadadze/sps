@@ -3,7 +3,6 @@ package com.azry.sps.server.services.channel;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.channels.Channel;
-import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
@@ -63,6 +62,6 @@ public class ChannelManagerBean implements ChannelManager {
 	}
 
 	private void updateCache() {
-		updateCacheEvent.fire(new UpdateCacheEvent(ServiceEntity.class.getSimpleName()));
+		updateCacheEvent.fire(new UpdateCacheEvent(Channel.class.getSimpleName()));
 	}
 }

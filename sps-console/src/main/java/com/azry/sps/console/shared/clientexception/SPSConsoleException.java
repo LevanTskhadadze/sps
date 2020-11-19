@@ -22,7 +22,7 @@ public class SPSConsoleException extends Exception {
 
 	@GwtIncompatible
 	public SPSConsoleException(SPSException spsEx) {
-		super(spsEx.getCause());
+		super(spsEx.getMessage(), spsEx.getCause());
 	}
 
 }

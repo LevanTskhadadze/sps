@@ -4,7 +4,6 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.commission.ServiceCommissions;
-import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
@@ -56,6 +55,6 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 	}
 
 	private void updateCache() {
-		updateCacheEvent.fire(new UpdateCacheEvent(ServiceEntity.class.getSimpleName()));
+		updateCacheEvent.fire(new UpdateCacheEvent(ServiceCommissions.class.getSimpleName()));
 	}
 }

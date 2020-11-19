@@ -31,7 +31,7 @@ public class PaymentListServiceImpl extends RemoteServiceServlet implements Paym
 			return PaymentListEntryDTO.toDTO(paymentList);
 		}
 		catch (SPSException ex) {
-			throw new SPSConsoleException(ex.getMessage());
+			throw new SPSConsoleException(ex);
 		}
 	}
 
