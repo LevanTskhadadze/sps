@@ -4,6 +4,7 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
+import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -25,9 +26,13 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 	@Inject
 	Event<UpdateCacheEvent> updateCacheEvent;
 
+	@Inject
+	CachedConfigurationService cachedConfigurationService;
+
 	@Override
 	public ListResult<ClientCommissions> getFilteredClientCommissions(String serviceId, String channelId, int offset, int limit) {
-
+		return cachedConfigurationService.filterClientCommissions(serviceId, channelId, offset, limit);
+		/*
 		String sql = "FROM ClientCommissions c WHERE 1 = 1 ";
 		Map<String, String> params = new HashMap<>();
 
@@ -64,9 +69,10 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 		List<ClientCommissions> clientCommissions = query.getResultList();
 
 		return new ListResult<>(clientCommissions, (int)(long) count.getSingleResult());
-	}
+*/	}
 
 	public ClientCommissions getClientCommission(long serviceId){
+		//return cachedConfigurationService.getClientCommission(serviceId);
 		return em.createQuery("SELECT c FROM ClientCommissions c WHERE c.allServices = TRUE " +
 			"OR FUNCTION('dbo.checkWord', :service, c.servicesIds, ',') = 1 ORDER BY c.priority", ClientCommissions.class)
 			.setParameter("service",  serviceId)

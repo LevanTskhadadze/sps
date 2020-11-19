@@ -286,7 +286,7 @@ public class PaymentTab extends Composite {
 					creationEndTimeField.setText(null);
 					serviceComboBox.setValue(null);
 					channelComboBox.setValue(null);
-					paymentStatusComboBox.setValue(null);
+					paymentStatusComboBox.setValues(new ArrayList<PaymentStatusDto>());
 				}
 			} )
 			.build();

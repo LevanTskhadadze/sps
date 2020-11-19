@@ -22,12 +22,11 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	@Inject
 	ClientCommissionsManager clientCommissionsManager;
 
-	@Inject
-	CachedConfigurationService cache;
+
 
 	@Override
 	public PagingLoadResult<ClientCommissionsDto> getFilteredClientCommissions(String serviceId, String channelId, PagingLoadConfig config) {
-		ListResult<ClientCommissions> listResult =  cache.filterClientCommissions(serviceId, channelId, config.getOffset(), config.getLimit());
+		ListResult<ClientCommissions> listResult =  clientCommissionsManager.getFilteredClientCommissions(serviceId, channelId, config.getOffset(), config.getLimit());
 		return new  PagingLoadResultBean<>(ClientCommissionsDto.toDTOs(listResult.getResultList()), listResult.getResultCount(), config.getOffset());
 	}
 
