@@ -251,7 +251,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 		dto.setValue(getValueFieldValue());
 	}
 	private void doRedact() {
-
+		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().editParameter(dto,
 			new ServiceCallback<Void>() {
 

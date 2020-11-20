@@ -54,7 +54,7 @@ public class PaymentStatusChangeTab extends VerticalLayoutContainer {
 
 
 		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
-			.header(Mes.get("statusChangeTime"))
+			.header(Mes.get("time"))
 			.width(100)
 			.valueProvider(new ZStringProvider<PaymentDto>() {
 				@Override
@@ -66,7 +66,7 @@ public class PaymentStatusChangeTab extends VerticalLayoutContainer {
 			.build());
 
 		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
-			.header(Mes.get("statusMessage"))
+			.header(Mes.get("message"))
 			.width(200)
 			.valueProvider(new ZStringProvider<PaymentDto>() {
 				@Override

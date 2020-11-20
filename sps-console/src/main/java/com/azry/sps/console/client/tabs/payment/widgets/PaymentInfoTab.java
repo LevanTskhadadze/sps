@@ -34,48 +34,26 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 		final FlexTable formTable = new FlexTable();
 		formTable.getElement().getStyle().setMarginTop(15, com.google.gwt.dom.client.Style.Unit.PX);
 		formTable.getElement().getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
-		
-		formTable.setWidget(0, 0, new HTML(Mes.get("name") + ":"));
-		formTable.setWidget(1, 0, new HTML(Mes.get("lastName")  + ":"));
-		formTable.setWidget(2, 0, new HTML(Mes.get("status") + ":"));
-		formTable.setWidget(3, 0, new HTML(Mes.get("statusMessage") + ":"));
-		formTable.setWidget(4, 0, new HTML(Mes.get("amount") + ":"));
-		formTable.setWidget(5, 0, new HTML(Mes.get("clientCommission") + ":"));
-		formTable.setWidget(6, 0, new HTML(Mes.get("createTime") + ":"));
-		formTable.setWidget(7, 0, new HTML(Mes.get("lastUpdateTime") + ":"));
+
+		formTable.setWidget(0, 0, new HTML(Mes.get("status") + ":"));
+		formTable.setWidget(1, 0, new HTML(Mes.get("statusMessage") + ":"));
+		formTable.setWidget(2, 0, new HTML(Mes.get("amount") + ":"));
+		formTable.setWidget(3, 0, new HTML(Mes.get("clientCommission") + ":"));
+		formTable.setWidget(4, 0, new HTML(Mes.get("createTime") + ":"));
+		formTable.setWidget(5, 0, new HTML(Mes.get("lastUpdateTime") + ":"));
 		formTable.getWidget(1, 0).setWidth("220px");
 
-		formTable.setWidget(0, 1, getNameField());
-		formTable.setWidget(1, 1, getLastNameField());
-		formTable.setWidget(2, 1, getStatusField());
-		formTable.setWidget(3, 1, getStatusMessageField());
-		formTable.setWidget(4, 1, getAmountField());
-		formTable.setWidget(5, 1, getClientCommissionField());
-		formTable.setWidget(6, 1, getCreateTimeField());
-		formTable.setWidget(7, 1, getLastChangeTimeField());
+		formTable.setWidget(0, 1, getStatusField());
+		formTable.setWidget(1, 1, getStatusMessageField());
+		formTable.setWidget(2, 1, getAmountField());
+		formTable.setWidget(3, 1, getClientCommissionField());
+		formTable.setWidget(4, 1, getCreateTimeField());
+		formTable.setWidget(5, 1, getLastChangeTimeField());
 		formTable.setCellSpacing(4);
 
 		return formTable;
 	}
 
-
-	private ZTextField getNameField() {
-		ZTextField firstNameField = new ZTextField.Builder()
-			.width(FIELD_WIDTH)
-			.enable(false)
-			.build();
-		firstNameField.setValue(dto.getClient().getFirstName());
-		return firstNameField;
-	}
-
-	private ZTextField getLastNameField() {
-		ZTextField lastNameField = new ZTextField.Builder()
-			.width(FIELD_WIDTH)
-			.enable(false)
-			.build();
-		lastNameField.setValue(dto.getClient().getLastName());
-		return lastNameField;
-	}
 
 	private ZTextField getStatusField() {
 		statusField = new ZTextField.Builder()

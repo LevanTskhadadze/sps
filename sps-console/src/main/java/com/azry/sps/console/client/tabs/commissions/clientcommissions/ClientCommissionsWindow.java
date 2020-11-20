@@ -16,7 +16,6 @@ import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.NumberFormat;

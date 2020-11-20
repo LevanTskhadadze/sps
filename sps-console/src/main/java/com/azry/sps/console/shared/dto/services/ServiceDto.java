@@ -5,7 +5,6 @@ import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

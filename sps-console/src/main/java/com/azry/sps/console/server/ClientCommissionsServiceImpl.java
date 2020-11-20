@@ -6,7 +6,6 @@ import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
-import com.azry.sps.server.caching.CachedConfigurationService;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;

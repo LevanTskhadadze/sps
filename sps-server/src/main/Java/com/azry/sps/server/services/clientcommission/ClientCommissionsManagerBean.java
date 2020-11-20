@@ -12,10 +12,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Stateless
 public class ClientCommissionsManagerBean implements ClientCommissionsManager {

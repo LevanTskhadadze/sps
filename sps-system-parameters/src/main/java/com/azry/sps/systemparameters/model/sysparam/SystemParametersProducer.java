@@ -22,7 +22,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Singleton(name = "sysParamProducer")
+@Singleton(name = "SystemParametersProducer")
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class SystemParametersProducer {

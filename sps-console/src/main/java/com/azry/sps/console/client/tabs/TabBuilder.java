@@ -16,7 +16,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
