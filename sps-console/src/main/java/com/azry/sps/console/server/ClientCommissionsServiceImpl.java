@@ -1,12 +1,11 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.console.shared.clientcommission.ClientCommissionsService;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
-import com.azry.sps.server.caching.CachedConfigurationService;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
@@ -31,8 +30,8 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	}
 
 	@Override
-	public ClientCommissionsDto getClientCommission(long serviceId) {
-		return ClientCommissionsDto.toDTO(clientCommissionsManager.getClientCommission(serviceId));
+	public ClientCommissionsDto getClientCommissionByServiceId(long serviceId) {
+		return ClientCommissionsDto.toDTO(clientCommissionsManager.getClientCommissionByServiceId(serviceId));
 	}
 
 	@Override

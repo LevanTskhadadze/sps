@@ -8,7 +8,6 @@ import com.azry.sps.common.model.channels.Channel;
 import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.common.model.service.Service;
-import com.azry.sps.common.model.service.ServiceColumnNames;
 import com.azry.sps.server.caching.channel.ChannelCachingManger;
 import com.azry.sps.server.caching.clientcommissions.ClientCommissionsCachingManager;
 import com.azry.sps.server.caching.servicecommissions.ServiceCommissionsCachingManager;
@@ -110,14 +109,20 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 
 	@Override
 	public List<Service> getAllActiveServices() {
-		Map<String, String> mp = new HashMap<>();
-		mp.put(ServiceColumnNames.ACTIVE.getName(), ServiceColumnNames.ActivationStatus.ACTIVE.getStatus());
-		return ((ServicesCachingManager)cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).filterServices(mp, 0, 1000000).getResultList();
+//		Map<String, String> mp = new HashMap<>();
+//		mp.put(ServiceColumnNames.ACTIVE.getName(), ServiceColumnNames.ActivationStatus.ACTIVE.getStatus());
+//		return ((ServicesCachingManager)cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).filterServices(mp, 0, 1000000).getResultList();
+		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getAllActiveServices();
 	}
 
 	@Override
 	public ListResult<Service> filterServices(Map<String, String> filter, int offset, int limit) {
 		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).filterServices(filter, offset, limit);
+	}
+
+	@Override
+	public List<Service> getServicesByServiceGroup(Long groupId) {
+		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getServicesByServiceGroup(groupId);
 	}
 
 	@Override
@@ -133,7 +138,14 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 
 	@Override
 	public ListResult<ClientCommissions> filterClientCommissions(String serviceId, String channelId, int offset, int limit) {
-		return ((ClientCommissionsCachingManager) cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName())).filterClientCommissions(serviceId, channelId, offset, limit);
+		return ((ClientCommissionsCachingManager) cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName()))
+			.filterClientCommissions(serviceId, channelId, offset, limit);
+	}
+
+	@Override
+	public ClientCommissions getClientCommissionByServiceId(String serviceId) {
+		return ((ClientCommissionsCachingManager)cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName()))
+			.getClientCommissionByServiceId(serviceId);
 	}
 
 	@Override

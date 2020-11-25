@@ -1,6 +1,7 @@
 package com.azry.sps.console.client.tabs.perfompayment;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
+import com.azry.gxt.client.zcomp.EnterKeyBinder;
 import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZFieldLabel;
 import com.azry.gxt.client.zcomp.ZNumberField;
@@ -11,7 +12,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.bankclient.AccountDTO;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
-import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.google.gwt.user.client.ui.Label;
 import com.sencha.gxt.core.client.util.Margins;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -25,8 +25,6 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 
-import java.util.List;
-
 public class PerformPaymentsTab extends Composite {
 
 	private final VerticalLayoutContainer container;
@@ -39,8 +37,6 @@ public class PerformPaymentsTab extends Composite {
 	private ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
 
 	PaymentListTable paymentTable;
-
-
 
 	public PerformPaymentsTab() {
 		clientInfoLoaded = false;
@@ -56,7 +52,7 @@ public class PerformPaymentsTab extends Composite {
 
 		TabPanel customerTabPanel = new TabPanel();
 
-		ZFieldLabel idNLabel = new ZFieldLabel.Builder()
+		final ZFieldLabel idNLabel = new ZFieldLabel.Builder()
 			.labelWidth(100)
 			.label(Mes.get("idNumber"))
 			.field(idNField)
@@ -73,31 +69,19 @@ public class PerformPaymentsTab extends Composite {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
-						ServicesFactory.getBankIntegrationService().findClient(String.valueOf(idNField.getCurrentValue()), new ServiceCallback<ClientDTO>() {
-							@Override
-							public void onServiceSuccess(final ClientDTO dto) {
+						ServicesFactory.getBankIntegrationService().getBankClientWithPaymentList(String.valueOf(idNField.getCurrentValue()),
+							new ServiceCallback<ClientDTO>(PerformPaymentsTab.this) {
+								@Override
+								public void onServiceSuccess(ClientDTO result) {
+									initClientInfo(result);
 
-								initClientInfo(dto);
-
-								ServicesFactory.getPaymentListService().getPaymentList(dto.getPersonalNumber(), new ServiceCallback<PaymentListDTO>() {
-									@Override
-									public void onServiceSuccess(PaymentListDTO paymentListDTO) {
-										if (paymentTable == null) {
-											paymentTable = new PaymentListTable(dto, paymentListDTO, clientAccountsComboBox);
-											container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
-											container.forceLayout();
-										}
+									if (paymentTable == null) {
+										paymentTable = new PaymentListTable(result, result.getPaymentListDTO(), clientAccountsComboBox);
+										container.add(paymentTable, new VerticalLayoutContainer.VerticalLayoutData(1, -1, new Margins(10)));
+										container.forceLayout();
 									}
-								});
-
-								ServicesFactory.getBankIntegrationService().getClientAccounts(dto.getId(), new ServiceCallback<List<AccountDTO>>() {
-									@Override
-									public void onServiceSuccess(List<AccountDTO> result) {
-										clientAccountsComboBox.replaceAll(result);
-									}
-								});
-							}
-						});
+								}
+							});
 					}
 				}
 			})
@@ -116,6 +100,9 @@ public class PerformPaymentsTab extends Composite {
 			})
 			.build();
 
+		new EnterKeyBinder.Builder(searchButton)
+			.add(idNField)
+			.bind();
 
 		customerInfoBar.add(idNLabel);
 		customerInfoBar.add(idNField);
@@ -130,11 +117,11 @@ public class PerformPaymentsTab extends Composite {
 	}
 
 	private boolean isValid() {
-		if (idNField.getValue() == null) {
+		if (idNField.getCurrentValue() == null) {
 			idNField.markInvalid(Mes.get("inputIdNumber"));
 			return false;
 		}
-		else if (String.valueOf(idNField.getValue()).length() != 11) {
+		else if (String.valueOf(idNField.getCurrentValue()).length() != 11) {
 			idNField.markInvalid(Mes.get("idNumberInvalidLength"));
 			return false;
 		}
@@ -170,6 +157,7 @@ public class PerformPaymentsTab extends Composite {
 				}
 			})
 			.noSelectionLabel(Mes.get("clientIban"))
+			.values(dto.getAccountDTOs())
 			.enableSorting(false)
 			.editable(false)
 			.width(350)

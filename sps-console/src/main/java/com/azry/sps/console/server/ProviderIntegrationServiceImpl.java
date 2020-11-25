@@ -1,6 +1,6 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.providerintegration.ProviderIntegrationService;
@@ -16,7 +16,7 @@ public class ProviderIntegrationServiceImpl extends RemoteServiceServlet impleme
 	@Inject
 	ServiceProviderIntegrationService serviceProviderConnector;
 
-	public AbonentInfoDTO getAbonent(String serviceCode, Long abonentCode) throws SPSConsoleException{
+	public AbonentInfoDTO getAbonent(String serviceCode, String abonentCode) throws SPSConsoleException{
 		try {
 			return AbonentInfoDTO.toDTO(serviceProviderConnector.getInfo(serviceCode, abonentCode));
 		} catch (SPSException ex) {

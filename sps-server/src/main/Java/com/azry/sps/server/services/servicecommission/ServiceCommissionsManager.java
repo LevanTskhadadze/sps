@@ -1,7 +1,7 @@
 package com.azry.sps.server.services.servicecommission;
 
 import com.azry.sps.common.ListResult;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.commission.ServiceCommissions;
 
 import javax.ejb.Local;

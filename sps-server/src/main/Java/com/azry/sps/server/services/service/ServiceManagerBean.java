@@ -2,7 +2,7 @@ package com.azry.sps.server.services.service;
 
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,73 +43,22 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public List<Service> getAllServices() {
 		return cachedConfigurationService.getAllServices();
-//		List<Service> services = new ArrayList<>();
-//		for (ServiceEntity serviceEntity : getAllServiceEntities()) {
-//			services.add(serviceEntity.getService());
-//		}
-//		return services;
+	}
+
+	@Override
+	public List<Service> getAllActiveServices() {
+		return cachedConfigurationService.getAllActiveServices();
 	}
 
 	@Override
 	public ListResult<Service> getServices(Map<String, String> params, int offset, int limit) {
 		if (params == null) params = new HashMap<>();
 		return cachedConfigurationService.filterServices(params, offset, limit);
-		/*String queryPrefix = "SELECT se FROM ServiceEntity se ";
-		String countPrefix = "SELECT COUNT(se.id) FROM ServiceEntity se ";
-		StringBuilder str = new StringBuilder(" WHERE 1 = 1");
-		Map<String, Object> values = new HashMap<>();
-
-
-		if (params.containsKey(ServiceColumnNames.NAME.getName())
-					&& params.get(ServiceColumnNames.NAME.getName()) != null
-					&& !params.get(ServiceColumnNames.NAME.getName()).equals("")) {
-			values.put(ServiceColumnNames.NAME.getName(), params.get(ServiceColumnNames.NAME.getName()));
-			str.append(" AND se.name LIKE :name ");
-		}
-
-		if (params.containsKey(ServiceColumnNames.ACTIVE.getName())
-					&& params.get(ServiceColumnNames.ACTIVE.getName()) != null
-					&& !params.get(ServiceColumnNames.ACTIVE.getName()).equals("")) {
-			values.put(ServiceColumnNames.ACTIVE.getName(), params.get(ServiceColumnNames.ACTIVE.getName()));
-			str.append(" AND se.active = :active ");
-		}
-
-		TypedQuery<ServiceEntity> query = em.createQuery(queryPrefix + str.toString(), ServiceEntity.class);
-		Query count = em.createQuery(countPrefix + str.toString());
-		query.setFirstResult(offset);
-		query.setMaxResults(limit);
-
-		for (Map.Entry<String, Object> entry : values.entrySet()) {
-
-			if (entry.getKey().equals(ServiceColumnNames.ACTIVE.getName())) {
-				query.setParameter(entry.getKey(), entry.getValue().equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus()));
-				count.setParameter(entry.getKey(), entry.getValue().equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus()));
-				continue;
-			}
-			query.setParameter(entry.getKey(), "%" + entry.getValue() + "%");
-			count.setParameter(entry.getKey(), "%" + entry.getValue() + "%");
-		}
-
-
-		List<ServiceEntity> res = query.getResultList();
-		List<Service> services = new ArrayList<>();
-		for(ServiceEntity entity : res){
-			services.add(entity.getService());
-		}
-		return new ListResult<>(services, (int)((long)count.getSingleResult()));
-		*/
 	}
 
 	@Override
-	public List<Service> getServicesByServiceGroup(long groupId) {
-		List <Service> services = new ArrayList<>();
-		List<Service> serviceEntities = getAllServices();
-		for (Service service : serviceEntities) {
-			if (service.getGroupId() == groupId) {
-				services.add(service);
-			}
-		}
-		return services;
+	public List<Service> getServicesByServiceGroup(Long groupId) {
+		return cachedConfigurationService.getServicesByServiceGroup(groupId);
 	}
 
 	@Override

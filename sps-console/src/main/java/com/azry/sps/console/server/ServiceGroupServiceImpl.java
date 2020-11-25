@@ -1,6 +1,6 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;

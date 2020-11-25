@@ -1,6 +1,5 @@
 package com.azry.sps.server.services.paymentlist;
 
-import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.common.model.client.Client;
 import com.azry.sps.common.model.paymentlist.PaymentList;
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
@@ -31,18 +30,11 @@ public class PaymentListManagerBean implements PaymentListManager {
 	}
 
 	@Override
-	public PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) throws SPSException {
+	public PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry) {
 		PaymentList paymentList = getPaymentList(client.getPersonalNumber());
 		if (paymentList == null) {
 			paymentList = new PaymentList();
 			paymentList.setClient(client);
-		}
-		else {
-			for (PaymentListEntry entry : paymentList.getEntries()) {
-				if (entry.getServiceId() == paymentList.getId()) {
-					throw new SPSException("clientPaymentListEntryAlreadyExists");
-				}
-			}
 		}
 		paymentListEntry.setPaymentList(paymentList);
 		paymentList.getEntries().add(paymentListEntry);

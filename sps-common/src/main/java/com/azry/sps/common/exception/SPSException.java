@@ -1,4 +1,4 @@
-package com.azry.sps.common.exceptions;
+package com.azry.sps.common.exception;
 
 
 import javax.ejb.ApplicationException;

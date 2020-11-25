@@ -16,7 +16,6 @@ public class ClientInfoWindow extends ZWindow {
 
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
 
-
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	ClientDTO clientDTO;
@@ -27,7 +26,7 @@ public class ClientInfoWindow extends ZWindow {
 	private ZTextField birthDateF;
 	private ZTextField birtPlaceF;
 
-	ZButton cancelButton;
+	ZButton closeB;
 
 
 	public ClientInfoWindow(ClientDTO clientDTO) {
@@ -66,8 +65,8 @@ public class ClientInfoWindow extends ZWindow {
 			.maxLength(350)
 			.build();
 
-		cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+		closeB = new ZButton.Builder()
+			.text(Mes.get("close"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -83,7 +82,7 @@ public class ClientInfoWindow extends ZWindow {
 		container.add(getFieldLabel(birthDateF, "birthDate"));
 		container.add(getFieldLabel(birtPlaceF, "birthPlace"));
 
-		addButton(cancelButton);
+		addButton(closeB);
 	}
 
 	private void setFieldValues() {

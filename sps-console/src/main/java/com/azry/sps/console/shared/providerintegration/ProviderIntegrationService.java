@@ -9,5 +9,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("servlet/ProviderIntegration")
 public interface ProviderIntegrationService extends RemoteService {
 
-	AbonentInfoDTO getAbonent(String serviceCode, Long abonentInfo) throws SPSConsoleException;
+	AbonentInfoDTO getAbonent(String serviceCode, String abonentInfo) throws SPSConsoleException;
 }

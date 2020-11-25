@@ -45,7 +45,7 @@ public class PaymentListDTO implements IsSerializable {
 		if (entity != null) {
 			PaymentListDTO dto = new PaymentListDTO();
 			dto.setId(entity.getId());
-			dto.setClient(ClientDTO.toDTO(entity.getClient()));
+			dto.setClient(ClientDTO.EntityToDTO(entity.getClient()));
 			dto.setEntries(PaymentListEntryDTO.toDTOs(entity.getEntries()));
 
 			return dto;

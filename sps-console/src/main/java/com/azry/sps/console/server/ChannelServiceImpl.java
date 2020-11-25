@@ -1,6 +1,6 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.console.shared.channel.ChannelService;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;

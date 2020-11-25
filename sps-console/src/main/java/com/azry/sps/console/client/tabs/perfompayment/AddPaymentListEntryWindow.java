@@ -3,7 +3,6 @@ package com.azry.sps.console.client.tabs.perfompayment;
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZFieldLabel;
-import com.azry.gxt.client.zcomp.ZNumberField;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
@@ -15,6 +14,8 @@ import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.dto.providerintegration.GetInfoStatusDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,7 +24,6 @@ import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.container.HorizontalLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 import com.sencha.gxt.widget.core.client.form.error.ToolTipErrorHandler;
 
 import java.util.Comparator;
@@ -36,37 +36,37 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 	private final VerticalLayoutContainer container;
 
 	private ZSimpleComboBox<ServiceGroupDTO> serviceGroupsCB;
-
 	private ZSimpleComboBox<ServiceDto> serviceCB;
-
-	private ZNumberField<Long> abonentCodeF;
-
+	private ZTextField abonentCodeF;
 	private ZTextField abonenCodeInfo;
 
-	private ZButton saveButton;
+	private ZButton saveB;
+	ZButton closeB;
 
 
 	public AddPaymentListEntryWindow() {
 		super(Mes.get("addTemplate"), 500, 220, false);
 		container = new VerticalLayoutContainer();
 		initFields();
-		getServiceGroups();
+		getData();
 		initButtons();
 		addBottomHorizontalLine();
 		add(container);
-		serviceCB.disable();
-		saveButton.disable();
+		saveB.disable();
 	}
 
-	private void getServiceGroups() {
-		ServicesFactory.getServiceGroupService().getFilteredServiceGroups(null, new ServiceCallback<List<ServiceGroupDTO>>() {
+	private void getData() {
+		ServicesFactory.getServiceGroupService().getFilteredServiceGroups(null, new ServiceCallback<List<ServiceGroupDTO>>(this) {
 			@Override
 			public void onServiceSuccess(List<ServiceGroupDTO> result) {
-				ServiceGroupDTO allServiceGroups = new ServiceGroupDTO();
-				allServiceGroups.setId(-1);
-				allServiceGroups.setName(Mes.get("allServiceGroups"));
-				serviceGroupsCB.add(allServiceGroups);
 				serviceGroupsCB.addAll(result);
+			}
+		});
+
+		ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDto>>(this) {
+			@Override
+			public void onServiceSuccess(List<ServiceDto> result) {
+				serviceCB.replaceAll(result);
 			}
 		});
 	}
@@ -86,7 +86,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 					return dto.getName();
 				}
 			})
-			.emptyText(Mes.get("chooseServiceGroups"))
+			.noSelectionLabel(Mes.get("allServiceGroups"))
 			.enableSorting(true)
 			.comparator(new Comparator<ServiceGroupDTO>() {
 				@Override
@@ -96,32 +96,12 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			})
 			.editable(false)
 			.width(280)
-			.required(true)
 			.build();
 
 		serviceGroupsCB.addSelectionHandler(new ZSimpleComboBox.SelectionHandler<ServiceGroupDTO>() {
 			@Override
 			public void onSelection(ServiceGroupDTO dto) {
-				if (dto.getId() == -1) {
-					ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
-						@Override
-						public void onServiceSuccess(List<ServiceDto> result) {
-							serviceCB.replaceAll(result);
-						}
-					});
-				}
-				else {
-					ServicesFactory.getServiceTabService().getServicesByServiceGroup(dto.getId(), new ServiceCallback<List<ServiceDto>>() {
-						@Override
-						public void onServiceSuccess(List<ServiceDto> result) {
-
-							serviceCB.replaceAll(result);
-						}
-					});
-				}
-				if(!serviceCB.isEnabled()) {
-					serviceCB.enable();
-				}
+				onServiceGroupSelect();
 			}
 		});
 
@@ -146,7 +126,22 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 		serviceCB.getCombo().getLoader().setReuseLoadConfig(false);
 
 
-		abonentCodeF = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor()).width(255).required().build();
+		abonentCodeF = new ZTextField.Builder()
+			.width(255)
+			.required(true)
+			.keyPressHandler(new KeyPressHandler() {
+				@Override
+				public void onKeyPress(KeyPressEvent keyPressEvent) {
+					if (saveB.isEnabled()) {
+						saveB.disable();
+						abonenCodeInfo.setValue(null);
+						abonenCodeInfo.removeStyleName(abonenCodeInfo.getStyleName());
+					}
+				}
+			})
+			.build();
+
+		abonentCodeF.setErrorSupport(new ToolTipErrorHandler(abonentCodeF));
 
 		ZButton verifyAbonentCodeB = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
@@ -159,7 +154,6 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 				}
 			})
 			.build();
-		abonentCodeF.setErrorSupport(new ToolTipErrorHandler(abonentCodeF));
 
 		verifyAbonentCodeB.addStyleName("verify-abonent-code-button");
 
@@ -170,13 +164,31 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 		abonentCodeHorizontalWrapper.add(verifyAbonentCodeB);
 		vLayoutWrapper.add(getVerifyInfoField());
 
-		container.add(getFieldLabel(serviceGroupsCB, "serviceGroup", true));
+		container.add(getFieldLabel(serviceGroupsCB, "serviceGroup", false));
 		container.add(getFieldLabel(serviceCB, "service", true));
 		container.add(abonentCodeHorizontalWrapper);
 	}
 
+	private void onServiceGroupSelect() {
+		if (serviceGroupsCB.getCurrentValue() == null) {
+			ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDto>>(this) {
+				@Override
+				public void onServiceSuccess(List<ServiceDto> result) {
+					serviceCB.replaceAll(result);
+				}
+			});
+		} else {
+			ServicesFactory.getServiceTabService().getServicesByServiceGroup(serviceGroupsCB.getCurrentValue().getId(), new ServiceCallback<List<ServiceDto>>(this) {
+				@Override
+				public void onServiceSuccess(List<ServiceDto> result) {
+					serviceCB.replaceAll(result);
+				}
+			});
+		}
+	}
+
 	private void initButtons() {
-		saveButton = new ZButton.Builder()
+		saveB = new ZButton.Builder()
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -184,14 +196,14 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
 						hide();
-						onSave(getPaymentListEntryDTO());
+						onSave(getPaymentListEntryDTO(), serviceCB.getValue());
 					}
 				}
 			})
 			.build();
 
-		ZButton cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+		closeB = new ZButton.Builder()
+			.text(Mes.get("close"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -201,13 +213,12 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			})
 			.build();
 
-		addButton(saveButton);
-		addButton(cancelButton);
+		addButton(saveB);
+		addButton(closeB);
 	}
 
 	private boolean isValid() {
-		return serviceGroupsCB.isValid()
-			&& serviceCB.isValid()
+		return serviceCB.isValid()
 			&& abonentCodeF.isValid();
 	}
 
@@ -232,6 +243,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			.width(280)
 			.build();
 		abonenCodeInfo.disable();
+		abonenCodeInfo.addStyleName("abonent-info");
 		Label emptyLabel = new Label("");
 		emptyLabel.setWidth("175");
 		wrapper.add(emptyLabel);
@@ -249,19 +261,21 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			public void onServiceSuccess(AbonentInfoDTO result) {
 				if (result.getStatus().equals(GetInfoStatusDTO.SUCCESS)) {
 					abonenCodeInfo.setStyleName("abonent-info-success");
-					abonenCodeInfo.setText(result.getAbonentInfo());
-					saveButton.enable();
+					abonenCodeInfo.addStyleName("abonent-info");
+
+					abonenCodeInfo.setValue(result.getAbonentInfo());
+					saveB.enable();
 				}
 				else {
 					abonenCodeInfo.setStyleName("abonent-info-failure");
-					abonenCodeInfo.setText(Mes.get("abonentNotFound"));
+					abonenCodeInfo.setValue(Mes.get("abonentNotFound"));
 				}
 			}
 
 			@Override
 			public void onFailure(Throwable th) {
 				abonenCodeInfo.setStyleName("abonent-info-connection-error");
-				abonenCodeInfo.setText(Mes.get("noProviderConnection"));
+				abonenCodeInfo.setValue(Mes.get("noProviderConnection"));
 			}
 		});
 
@@ -274,5 +288,5 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 		return dto;
 	}
 
-	public abstract void onSave(PaymentListEntryDTO dto);
+	public abstract void onSave(PaymentListEntryDTO dto, ServiceDto serviceDto);
 }

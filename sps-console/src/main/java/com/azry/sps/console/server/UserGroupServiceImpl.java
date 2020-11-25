@@ -1,7 +1,7 @@
 package com.azry.sps.console.server;
 
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.users.Permissions;
 import com.azry.sps.common.model.users.UserGroup;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;

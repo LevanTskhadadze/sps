@@ -1,6 +1,6 @@
 package com.azry.sps.console.shared.dto.bankclient;
 
-import com.azry.sps.fi.bankws.Account;
+import com.azry.sps.fi.model.Account;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -89,5 +89,14 @@ public class AccountDTO implements IsSerializable {
 		account.setName(this.getName());
 
 		return account;
+	}
+
+	@GwtIncompatible
+	public static List<Account> fromDTOs(List<AccountDTO> accountDTOs) {
+		List<Account> accounts = new ArrayList<>();
+		for (AccountDTO accountDTO: accountDTOs) {
+			accounts.add(accountDTO.fromDTO());
+		}
+		return accounts;
 	}
 }

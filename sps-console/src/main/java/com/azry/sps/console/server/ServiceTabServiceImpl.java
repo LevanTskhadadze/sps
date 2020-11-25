@@ -1,12 +1,11 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.azry.sps.console.shared.service.ServiceTabService;
-import com.azry.sps.server.caching.CachedConfigurationService;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -25,9 +24,6 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	@Inject
 	ServiceManager serviceManager;
 
-	@Inject
-	CachedConfigurationService cache;
-
 
 	Comparator<Service> serviceComparator = new Comparator<Service>() {
 		@Override
@@ -42,8 +38,13 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
+	public List<ServiceDto> getAllActiveServices() {
+		return ServiceDto.toDtos(serviceManager.getAllActiveServices());
+	}
+
+	@Override
 	public PagingLoadResult<ServiceDto> getServices(Map<String, String> params, int offset, int limit) {
-		ListResult<Service> result = cache.filterServices(params, offset, limit);
+		ListResult<Service> result = serviceManager.getServices(params, offset, limit);
 		Collections.sort(result.getResultList(), serviceComparator);
 		List<ServiceDto> res = ServiceDto.toDtos(result.getResultList());
 		return new PagingLoadResultBean<>(
@@ -54,13 +55,13 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public List<ServiceDto> getServicesByServiceGroup(long groupId) {
+	public List<ServiceDto> getServicesByServiceGroup(Long groupId) {
 		return ServiceDto.toDtos(serviceManager.getServicesByServiceGroup(groupId));
 	}
 
 	@Override
 	public ServiceDto getService(long id){
-		return ServiceDto.toDto(cache.getService(id));
+		return ServiceDto.toDto(serviceManager.getService(id));
 	}
 
 	@Override

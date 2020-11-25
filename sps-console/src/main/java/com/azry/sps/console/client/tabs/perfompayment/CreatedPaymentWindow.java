@@ -49,10 +49,9 @@ public class CreatedPaymentWindow extends ZWindow {
 
 	private ListLoader<ListLoadConfig, ListLoadResult<PaymentDto>> loader;
 
-	ZButton cancelButton;
-
 	List<PaymentDto> payments;
 
+	ZButton closeB;
 	String serviceName;
 
 	public CreatedPaymentWindow(List<PaymentDto> payments) {
@@ -66,8 +65,8 @@ public class CreatedPaymentWindow extends ZWindow {
 	}
 
 	private void initButton() {
-		cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+		closeB = new ZButton.Builder()
+			.text(Mes.get("close"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -77,7 +76,7 @@ public class CreatedPaymentWindow extends ZWindow {
 			})
 			.build();
 
-		addButton(cancelButton);
+		addButton(closeB);
 		add(container);
 	}
 
@@ -181,7 +180,6 @@ public class CreatedPaymentWindow extends ZWindow {
 
 		return new ColumnModel<>(columns);
 	}
-
 
 	private void addBottomHorizontalLine() {
 		getButtonBar().getElement().getStyle().setProperty("borderTop", WINDOW_BOTTOM_BORDER_STYLE);

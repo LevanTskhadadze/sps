@@ -1,6 +1,6 @@
 package com.azry.sps.console.shared.clientexception;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.google.gwt.core.shared.GwtIncompatible;
 
 public class SPSConsoleException extends Exception {

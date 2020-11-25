@@ -29,11 +29,15 @@ public interface CachedConfigurationService {
 
 	List<Service> getAllActiveServices();
 
+	List<Service> getServicesByServiceGroup(Long groupId);
+
 	ListResult<Service> filterServices(Map<String, String> filter, int offset, int limit);
 
 	List<ClientCommissions> getAllClientCommissions();
 
 	ListResult<ClientCommissions> filterClientCommissions(String serviceId, String channelId, int offset, int limit);
+
+	ClientCommissions getClientCommissionByServiceId(String serviceId);
 
 	List<Channel> getChannels();
 

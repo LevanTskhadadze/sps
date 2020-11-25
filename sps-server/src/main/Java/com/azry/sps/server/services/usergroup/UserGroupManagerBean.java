@@ -1,6 +1,6 @@
 package com.azry.sps.server.services.usergroup;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.users.Permissions;
 import com.azry.sps.common.model.users.UserGroup;
 

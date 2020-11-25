@@ -5,9 +5,9 @@ public class AbonentRequest {
 	String serviceCode;
 	String abonentCode;
 
-	public AbonentRequest(String gate, String id) {
-		this.serviceCode = gate;
-		this.abonentCode = id;
+	public AbonentRequest(String serviceCode, String abonentCode) {
+		this.serviceCode = serviceCode;
+		this.abonentCode = abonentCode;
 	}
 
 	public String getServiceCode() {

@@ -184,7 +184,7 @@ public class PaymentDto implements IsSerializable {
 		dto.setStatusChangeTime(payment.getStatusChangeTime());
 		dto.setStatusMessage(payment.getStatusMessage());
 		dto.setCreateTime(payment.getCreateTime());
-		dto.setClient(ClientDTO.toDTO(payment.getClient()));
+		dto.setClient(ClientDTO.EntityToDTO(payment.getClient()));
 
 		return dto;
 	}

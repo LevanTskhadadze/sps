@@ -12,6 +12,8 @@ public interface PaymentListService extends RemoteService {
 
 	PaymentListDTO getPaymentList(String personalNumber);
 
+	PaymentListDTO getPaymentListWithServices(String personalNumber);
+
 	PaymentListEntryDTO addPaymentListEntry(ClientDTO client, PaymentListEntryDTO paymentListEntry) throws SPSConsoleException;
 
 	void deletePaymentListEntry(long id);

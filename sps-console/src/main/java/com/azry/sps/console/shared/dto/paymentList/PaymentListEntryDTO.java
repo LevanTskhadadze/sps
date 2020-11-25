@@ -1,6 +1,7 @@
 package com.azry.sps.console.shared.dto.paymentList;
 
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -14,6 +15,8 @@ public class PaymentListEntryDTO implements IsSerializable {
 	private PaymentListDTO paymentList;
 
 	private long serviceId;
+
+	private ServiceDto service;
 
 	private String abonentCode;
 
@@ -49,6 +52,13 @@ public class PaymentListEntryDTO implements IsSerializable {
 		this.abonentCode = abonentCode;
 	}
 
+	public ServiceDto getService() {
+		return service;
+	}
+
+	public void setService(ServiceDto service) {
+		this.service = service;
+	}
 
 	@GwtIncompatible
 	public static PaymentListEntryDTO toDTO(PaymentListEntry entity) {

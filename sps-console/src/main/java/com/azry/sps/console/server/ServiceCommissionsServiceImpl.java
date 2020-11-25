@@ -1,7 +1,7 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;

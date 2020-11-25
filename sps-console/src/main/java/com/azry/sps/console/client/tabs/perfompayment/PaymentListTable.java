@@ -6,6 +6,7 @@ import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
@@ -15,7 +16,7 @@ import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
-import com.google.gwt.core.client.GWT;
+import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
@@ -40,21 +41,26 @@ public class PaymentListTable extends Composite {
 	private ZToolBar toolBar;
 	private FlexTable paymentListTable;
 
-	ZButton add;
-	ZButton debtCommissionsB;
-	ZButton payB;
+	private ZButton add;
+	private ZButton debtCommissionsB;
+	private ZButton payB;
 
-	ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
+	private ZSimpleComboBox<AccountDTO> clientAccountsComboBox;
 
-	List<RowEntry> tableRows = new ArrayList<>();
+	private List<RowEntry> tableRows = new ArrayList<>();
 
-	ClientDTO clientDTO;
+	private ClientDTO clientDTO;
+
+	private PaymentListDTO paymentListDTO;
+
+	int readyPaymentEntryCount = 0;
 
 	public PaymentListTable(ClientDTO clientDTO, PaymentListDTO paymentListDTO, ZSimpleComboBox<AccountDTO> clientAccountsComboBox) {
 		this.clientAccountsComboBox = clientAccountsComboBox;
 		this.clientDTO = clientDTO;
+		this.paymentListDTO = paymentListDTO;
 		initToolBar();
-		initFlexTable(paymentListDTO);
+		initFlexTable();
 		buildDisplay();
 	}
 
@@ -84,17 +90,22 @@ public class PaymentListTable extends Composite {
 				public void onSelect(SelectEvent selectEvent) {
 					new AddPaymentListEntryWindow() {
 						@Override
-						public void onSave(PaymentListEntryDTO dto) {
-							ServicesFactory.getPaymentListService().addPaymentListEntry(clientDTO, dto, new ServiceCallback<PaymentListEntryDTO>() {
-								@Override
-								public void onServiceSuccess(PaymentListEntryDTO result) {
-									if (tableRows.isEmpty()) {
-										paymentListTable.removeRow(1);
+						public void onSave(PaymentListEntryDTO dto, final ServiceDto serviceDto) {
+							if (validPaymentListEntry(dto)) {
+								ServicesFactory.getPaymentListService().addPaymentListEntry(clientDTO, dto, new ServiceCallback<PaymentListEntryDTO>() {
+									@Override
+									public void onServiceSuccess(PaymentListEntryDTO result) {
+										result.setService(serviceDto);
+										if (tableRows.isEmpty()) {
+											paymentListTable.removeRow(1);
+										}
+										paymentListTable.insertRow(tableRows.size() + 1);
+										addPaymentListEntry(result);
 									}
-									paymentListTable.insertRow(tableRows.size()+1);
-									addPaymentListEntry(result);
-								}
-							});
+								});
+							} else {
+								DialogUtils.showWarning(Mes.get("clientPaymentListEntryAlreadyExists"));
+							}
 						}
 					}.showInCenter();
 				}
@@ -133,9 +144,17 @@ public class PaymentListTable extends Composite {
 		toolBar.add(payB);
 	}
 
+	private boolean validPaymentListEntry(PaymentListEntryDTO dto) {
+		for (PaymentListEntryDTO entry : paymentListDTO.getEntries()) {
+			if (dto.getServiceId() == entry.getServiceId() || dto.getAbonentCode().equals(entry.getAbonentCode())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private void onPayBClicked() {
 		if (isClientAccountsComboBoxValid()) {
-			GWT.log(String.valueOf(clientAccountsComboBox.getValue()));
 			new ZConfirmDialog(Mes.get("confirm"), Mes.get("createPaymentConfirmation")) {
 				@Override
 				public void onConfirm() {
@@ -160,7 +179,7 @@ public class PaymentListTable extends Composite {
 						}
 					}
 
-					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>() {
+					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>(this) {
 						@Override
 						public void onServiceSuccess(Void result) {
 							new CreatedPaymentWindow(paymentList).showInCenter();
@@ -180,17 +199,16 @@ public class PaymentListTable extends Composite {
 		for (RowEntry row: tableRows) {
 			if (!row.isLoaded()) {
 				row.loadCellData();
+			} else {
+				row.updateCommissionValue();
 			}
 			if (!NumberFormatUtils.equalsWithFormat(row.getPaymentAmount(), BigDecimal.ZERO)) {
-				row.updateCommissionValue();
 				payB.enable();
 			}
-			updateAggregateCommission();
-			updateAggregateTotalAmount();
 		}
 	}
 
-	private void initFlexTable(PaymentListDTO paymentListDTO) {
+	private void initFlexTable() {
 		paymentListTable = new FlexTable();
 		paymentListTable.addStyleName("payment-list-table");
 
@@ -292,7 +310,7 @@ public class PaymentListTable extends Composite {
 				total = total.add(entry.getPaymentAmount());
 			}
 		}
-		Label label = new Label(Mes.get("totalAmount: ") + NumberFormatUtils.format(total));
+		Label label = new Label(Mes.get("totalAmount")+ ": " + NumberFormatUtils.format(total));
 		label.setStyleName("payment-list-total-amount");
 		TableUtils.setCell(paymentListTable, row, 0, label, null, null, ALIGN_RIGHT, false);
 		paymentListTable.getRowFormatter().setStyleName(row, "payment-list-table-total-amount-row");
@@ -313,5 +331,17 @@ public class PaymentListTable extends Composite {
 			return false;
 		}
 		return true;
+	}
+
+	public int getReadyPaymentEntryCount() {
+		return readyPaymentEntryCount;
+	}
+
+	public void incrementReadyPaymentEntryCount() {
+		readyPaymentEntryCount++;
+	}
+
+	public void decrementReadyPaymentEntryCount() {
+		readyPaymentEntryCount--;
 	}
 }

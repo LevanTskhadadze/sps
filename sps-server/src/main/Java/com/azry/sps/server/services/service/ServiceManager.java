@@ -1,7 +1,7 @@
 package com.azry.sps.server.services.service;
 
 import com.azry.sps.common.ListResult;
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.service.Service;
 
 import javax.ejb.Local;
@@ -15,9 +15,11 @@ public interface ServiceManager {
 
 	List<Service> getAllServices();
 
+	public List<Service> getAllActiveServices();
+
 	ListResult<Service> getServices(Map<String, String> params, int offset, int limit);
 
-	List<Service> getServicesByServiceGroup(long groupId);
+	List<Service> getServicesByServiceGroup(Long groupId);
 
 	Service editService(Service service) throws SPSException;
 

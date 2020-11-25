@@ -55,6 +55,10 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		syncDeletedData();
 	}
 
+	public List<Service> getAllServices() {
+		return getList();
+	}
+
 	public ListResult<Service> filterServices(Map<String, String> filter, int offset, int limit) {
 		List<Service> filteredServices = getList();
 
@@ -82,6 +86,30 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		return new ListResult<>(new ArrayList<>(filteredServices.subList(offset, lastIndex)), filteredServices.size());
 	}
 
+	public List<Service> getAllActiveServices() {
+		List<Service> activeServices = getList();
+
+		for (Service service : new ArrayList<>(activeServices)) {
+			if (!service.isActive()) {
+				activeServices.remove(service);
+			}
+		}
+		return activeServices;
+	}
+
+	public List<Service> getServicesByServiceGroup(Long groupId) {
+		if (groupId == null) {
+			return null;
+		}
+		List<Service> filteredServices = getList();
+
+		for (Service service : new ArrayList<>(filteredServices)) {
+			if (!groupId.equals(service.getGroupId()) || !service.isActive()) {
+				filteredServices.remove(service);
+			}
+		}
+		return filteredServices;
+	}
 
 	private boolean channelIsActive(Service service, long channelId) {
 		for (ServiceChannelInfo channelInfo : service.getChannels()) {
@@ -93,11 +121,11 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 	}
 
 	private void loadCache() {
-		List<Service> services = getAllServices();
+		List<Service> services = loadAllServices();
 		updateCache(services);
 	}
 
-	private List<Service> getAllServices() {
+	private List<Service> loadAllServices() {
 		return getServices(em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
 			.getResultList());
 	}

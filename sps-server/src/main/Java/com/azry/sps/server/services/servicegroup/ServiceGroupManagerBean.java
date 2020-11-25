@@ -1,6 +1,6 @@
 package com.azry.sps.server.services.servicegroup;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
 
 import javax.ejb.Stateless;
