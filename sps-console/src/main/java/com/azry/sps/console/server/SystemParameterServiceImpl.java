@@ -1,36 +1,39 @@
 package com.azry.sps.console.server;
 
+import com.azry.sps.common.exceptions.SPSException;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
+import com.azry.sps.integration.sp.ServiceProviderIntegrationServiceImpl;
+import com.azry.sps.integration.sp.dto.PayResponse;
+import com.azry.sps.integration.sp.dto.SpResponseStatus;
 import com.azry.sps.systemparameters.model.services.SystemParameterManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.ejb.DependsOn;
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @WebServlet("/sps/servlet/sysPar")
-@DependsOn("sp-integration-service")
+@DependsOn("SpIntegrationService")
 public class SystemParameterServiceImpl extends RemoteServiceServlet implements SystemParameterService {
 
 	@Inject
 	SystemParameterManager systemParameterManager;
 
-//  	@Inject
-//	ServiceProviderIntegrationService serviceProviderIntegrationService;
+  	@Inject
+	ServiceProviderIntegrationServiceImpl serviceProviderIntegrationServiceImpl;
 
 	@Override
-	public List<SystemParameterDto> getSystemParameterTab(Map<String, String> params) {
-//		try {
-//			serviceProviderIntegrationService.getInfo("gateway1", 0);
-//			boolean bb = serviceProviderIntegrationService.pay("gateway1", 0, 0, new BigDecimal("5.5"));
-//			bb = true;
-//		} catch (SPSException ex) {
-//			ex.printStackTrace();
-//		}
+	public List<SystemParameterDto> getSystemParameterTab(Map<String, String> params) throws SPSConsoleException {
+		try {
+			PayResponse bb = serviceProviderIntegrationServiceImpl.pay("gateway1", 1, "1", new BigDecimal("5.5"));
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 		return SystemParameterDto.toDTOs(systemParameterManager.getSystemParameters(params));
 	}
 

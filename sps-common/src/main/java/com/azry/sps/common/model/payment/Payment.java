@@ -18,8 +18,6 @@ import java.util.Date;
 @Data
 public class Payment {
 
-	public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm";
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;

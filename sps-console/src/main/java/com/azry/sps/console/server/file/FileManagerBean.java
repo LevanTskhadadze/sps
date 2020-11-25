@@ -15,7 +15,7 @@ import java.util.Random;
 @Stateless
 public class FileManagerBean implements FileManager{
 	@Inject
-	@SysParam(type = SystemParameterType.STRING, code = "service-icon-path")
+	@SysParam(type = SystemParameterType.STRING, code = "serviceIconPath")
 	Parameter<String> directoryPath;
 
 	@Override

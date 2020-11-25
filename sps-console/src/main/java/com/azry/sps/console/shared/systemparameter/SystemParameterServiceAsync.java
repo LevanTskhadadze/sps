@@ -1,5 +1,6 @@
 package com.azry.sps.console.shared.systemparameter;
 
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

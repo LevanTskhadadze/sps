@@ -20,7 +20,7 @@ public interface ServicesInterface {
 	AbonentInfo getAbonent(AbonentRequest info);
 
 	@POST
-	@Path("/get-info")
+	@Path("/pay")
 	Response pay(PaymentDto dto);
 
 }

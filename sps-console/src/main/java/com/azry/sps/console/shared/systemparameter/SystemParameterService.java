@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RemoteServiceRelativePath("servlet/sysPar")
 public interface SystemParameterService extends RemoteService {
-	List<SystemParameterDto> getSystemParameterTab(Map<String, String> params);
+	List<SystemParameterDto> getSystemParameterTab(Map<String, String> params) throws SPSConsoleException;
 
 	void removeParameter(long id);
 

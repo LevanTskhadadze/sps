@@ -10,7 +10,6 @@ import com.azry.gxt.client.zcomp.ZPagingToolBar;
 import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
-import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.payment.widgets.PaymentTable;
 import com.azry.sps.console.client.utils.Mes;
@@ -19,7 +18,6 @@ import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.azry.sps.console.shared.dto.services.ServiceEntityDto;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -46,7 +44,7 @@ import java.util.Map;
 
 public class PaymentTab extends Composite {
 
-
+	private final static int TOOLBAR_FIELD_WIDTH = 150;
 
 	private final VerticalLayoutContainer content;
 
@@ -139,16 +137,21 @@ public class PaymentTab extends Composite {
 
 		agentPaymentIdField = new ZTextField.Builder()
 			.emptyText(Mes.get("agentPaymentId"))
+			.width(TOOLBAR_FIELD_WIDTH)
 			.build();
 
 		creationStartTimeField = new ZDateField.Builder()
 			.pattern(PaymentDto.DATE_PATTERN)
+			.width(TOOLBAR_FIELD_WIDTH)
 			.value(new Date())
+			.emptyText(Mes.get("leastTime"))
 			.build();
 
 		creationEndTimeField = new ZDateField.Builder()
 			.pattern(PaymentDto.DATE_PATTERN)
+			.width(TOOLBAR_FIELD_WIDTH)
 			.value(new Date())
+			.emptyText(Mes.get("atMostTime"))
 			.build();
 
 		serviceComboBox = new ZSimpleComboBox.Builder<ServiceDto>()
@@ -167,6 +170,7 @@ public class PaymentTab extends Composite {
 			.noSelectionLabel(Mes.get("chooseService"))
 			.editable(false)
 			.values(services)
+			.width(TOOLBAR_FIELD_WIDTH)
 			.build();
 
 		channelComboBox = new ZSimpleComboBox.Builder<ChannelDTO>()
@@ -185,6 +189,7 @@ public class PaymentTab extends Composite {
 			.noSelectionLabel(Mes.get("chooseChannel"))
 			.editable(false)
 			.values(channels)
+			.width(TOOLBAR_FIELD_WIDTH)
 			.build();
 
 		paymentStatusComboBox = new ZMultiSelectComboBox.Builder<PaymentStatusDto>()
@@ -200,9 +205,15 @@ public class PaymentTab extends Composite {
 					return item == null ? null : item.name();
 				}
 			})
-			.width(200)
+			.width(2 * TOOLBAR_FIELD_WIDTH + 6)
 			.noSelectionLabel(Mes.get("paymentStatus"))
 			.values(Arrays.asList(PaymentStatusDto.values()))
+			.labelProvider(new LabelProvider<PaymentStatusDto>() {
+				@Override
+				public String getLabel(PaymentStatusDto item) {
+					return Mes.get("PAYMENT_" + item.name());
+				}
+			})
 			.build();
 
 
@@ -227,17 +238,12 @@ public class PaymentTab extends Composite {
 
 		upperToolbar.add(idField);
 		upperToolbar.add(agentPaymentIdField);
-
-		upperToolbar.add(serviceComboBox);
-		upperToolbar.add(channelComboBox);
 		upperToolbar.add(paymentStatusComboBox);
-		upperToolbar.getWidget(2).getParent().getElement().getStyle().setTop(0, Style.Unit.PX);
 
-		lowerToolbar.add(new HTML(Mes.get("paymentCreationTime") + ": "));
+		lowerToolbar.add(serviceComboBox);
+		lowerToolbar.add(channelComboBox);
 		lowerToolbar.add(creationStartTimeField);
-		lowerToolbar.add(new HTML(Mes.get("from")));
 		lowerToolbar.add(creationEndTimeField);
-		lowerToolbar.add(new HTML(Mes.get("to")));
 
 		upperToolbar.add(getSearchButton());
 		upperToolbar.add(getClearButton());
@@ -250,7 +256,6 @@ public class PaymentTab extends Composite {
 		container.getElement().getStyle().setFontSize(13, Style.Unit.PX);
 		container.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
 		container.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
-//		container.getElement().getStyle().setHeight(2, Style.Unit.EM);
 		container.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
 
 		return container;
