@@ -12,7 +12,6 @@ import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
@@ -56,6 +55,7 @@ public class ServiceTable {
 
 
 	public static ListStore<ServiceDTO> getListStore() {
+		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 

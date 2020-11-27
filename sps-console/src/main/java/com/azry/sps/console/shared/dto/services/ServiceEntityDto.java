@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ServiceEntityDto extends ConfigurableDTO implements IsSerializable {
+public class ServiceEntityDTO extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
 
@@ -20,10 +20,10 @@ public class ServiceEntityDto extends ConfigurableDTO implements IsSerializable 
 
 	private String data;
 
-	public ServiceEntityDto() {
+	public ServiceEntityDTO() {
 	}
 
-	public ServiceEntityDto(long id, String name) {
+	public ServiceEntityDTO(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -61,8 +61,8 @@ public class ServiceEntityDto extends ConfigurableDTO implements IsSerializable 
 	}
 
 	@GwtIncompatible
-	public static ServiceEntityDto toDto(ServiceEntity service) {
-		ServiceEntityDto dto = new ServiceEntityDto();
+	public static ServiceEntityDTO toDto(ServiceEntity service) {
+		ServiceEntityDTO dto = new ServiceEntityDTO();
 
 		dto.setId(service.getId());
 		dto.setName(service.getName());
@@ -76,8 +76,8 @@ public class ServiceEntityDto extends ConfigurableDTO implements IsSerializable 
 	}
 
 	@GwtIncompatible
-	public static List<ServiceEntityDto> toDtos(List<ServiceEntity> services) {
-		List<ServiceEntityDto> dtos = new ArrayList<>();
+	public static List<ServiceEntityDTO> toDtos(List<ServiceEntity> services) {
+		List<ServiceEntityDTO> dtos = new ArrayList<>();
 
 		for(ServiceEntity service : services) {
 			dtos.add(toDto(service));
