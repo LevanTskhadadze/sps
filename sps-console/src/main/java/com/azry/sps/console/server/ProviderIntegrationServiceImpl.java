@@ -6,6 +6,7 @@ import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.providerintegration.ProviderIntegrationService;
 import com.azry.sps.integration.sp.ServiceProviderIntegrationService;
 import com.azry.sps.integration.sp.ServiceProviderIntegrationServiceBean;
+import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
@@ -20,8 +21,8 @@ public class ProviderIntegrationServiceImpl extends RemoteServiceServlet impleme
 	public AbonentInfoDTO getAbonent(String serviceCode, String abonentCode) throws SPSConsoleException{
 		try {
 			return AbonentInfoDTO.toDTO(serviceProviderConnector.getInfo(serviceCode, String.valueOf(abonentCode)));
-		} catch (SPSException ex) {
-			throw new SPSConsoleException(ex);
+		} catch (SpIntegrationException ex) {
+			throw new SPSConsoleException(new SPSException(ex.getType().getCode()));
 		}
 	}
 

@@ -56,7 +56,6 @@ public class ServiceTable {
 
 
 	public static ListStore<ServiceDTO> getListStore() {
-		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 
@@ -240,18 +239,12 @@ public class ServiceTable {
 				.icon(FAIconsProvider.getIcons().pencil())
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDTO serviceDTO) {
-						ServicesFactory.getChannelService().getFilteredChannels("", null,
-							new ServiceCallback<List<ChannelDTO>>() {
-							@Override
-							public void onServiceSuccess(List<ChannelDTO> result) {
-								new ServiceModifyWindow(serviceDTO, store, result);
-							}
-						});
-
+					public void onClick(Cell.Context context, final ServiceDTO ServiceDTO) {
+						new ServiceModifyWindow(ServiceDTO, store);
 					}
 				})
 				.build()
+
 			)
 			.fixed()
 			.build());
