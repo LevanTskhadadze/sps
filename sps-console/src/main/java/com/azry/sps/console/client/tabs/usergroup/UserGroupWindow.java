@@ -74,7 +74,8 @@ public abstract class UserGroupWindow extends ZWindow {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
-						ServicesFactory.getUserGroupService().updateUserGroup(getUserGroupForUpdate(), new ServiceCallback<UserGroupDTO>(UserGroupWindow.this) {
+						ServicesFactory.getUserGroupService().updateUserGroup(getUserGroupForUpdate(),
+							new ServiceCallback<UserGroupDTO>(UserGroupWindow.this) {
 							@Override
 							public void onServiceSuccess(UserGroupDTO result) {
 								hide();
@@ -110,8 +111,6 @@ public abstract class UserGroupWindow extends ZWindow {
 	private void addBottomHorizontalLine() {
 		getButtonBar().getElement().getStyle().setProperty("borderTop", WINDOW_BOTTOM_BORDER_STYLE);
 	}
-
-
 
 	private boolean isValid() {
 		return nameField.isValid();

@@ -44,36 +44,27 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
 
 	private static final VerticalLayoutContainer.VerticalLayoutData DUAL_LIST_LAYOUT_DATA = new VerticalLayoutContainer.VerticalLayoutData(1, 1, new Margins(8, 16, 16, 16));
-
 	private static final VerticalLayoutContainer.VerticalLayoutData CHECK_BOX_LAYOUT_DATA = new VerticalLayoutContainer.VerticalLayoutData(-1, -1, new Margins(8, 16, 0, 13));
-
 	private static final VerticalLayoutContainer.VerticalLayoutData FIELD_LAYOUT_DATA = new VerticalLayoutContainer.VerticalLayoutData(1, -1);
 
-	private final ServiceCommissionsDto serviceCommissionsDto;
+	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private final List<DualListWidgetItem> allServicesWidgetList = new ArrayList<>();
-
 	private DualListWidget servicesDualListWidget;
-
-	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private TabPanel tabPanel;
 
 	private BigDecimalSpinnerField commission;
-
 	private ZSimpleComboBox<CommissionRateTypeDTO> rateType;
-
 	private BigDecimalSpinnerField minCommission;
-
 	private ZNumberField<Long> priorityField;
-
 	private BigDecimalSpinnerField maxCommission;
 
 	private ToggleButton allServices;
-
 	private ZButton saveButton;
-
 	private ZButton cancelButton;
+
+	private final ServiceCommissionsDto serviceCommissionsDto;
 
 	public ServiceCommissionsWindow(ServiceCommissionsDto dto, List<ServiceDto> serviceEntityDTOs, ActionMode actionMode) {
 		super(Mes.get("ofServiceCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
@@ -199,7 +190,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
-						ServicesFactory.getServiceCommissionsService().updateServiceCommissions(getServiceCommissionsForUpdate(), new ServiceCallback<ServiceCommissionsDto>(ServiceCommissionsWindow.this) {
+						ServicesFactory.getServiceCommissionsService().updateServiceCommissions(getServiceCommissionsForUpdate(),
+							new ServiceCallback<ServiceCommissionsDto>(ServiceCommissionsWindow.this) {
 							@Override
 							public void onServiceSuccess(ServiceCommissionsDto result) {
 								hide();

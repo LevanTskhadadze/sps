@@ -38,7 +38,7 @@ public class ChannelCachingManger implements CachingService<Channel, Long> {
 	@Override
 	public List<Channel> getList() {
 		List<Channel> channels = new ArrayList<>(cachedChannels.values());
-		channels.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+		channels.sort((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
 		return channels;
 	}
 

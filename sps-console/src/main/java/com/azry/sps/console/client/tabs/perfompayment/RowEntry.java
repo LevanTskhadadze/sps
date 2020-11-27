@@ -99,7 +99,8 @@ public class RowEntry {
 				updateRow(abonentInfoDTO.getStatus());
 			}
 		});
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(), new ServiceCallback<ClientCommissionsDto>(false) {
+		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(),
+			new ServiceCallback<ClientCommissionsDto>(false) {
 			@Override
 			public void onServiceSuccess(ClientCommissionsDto dto) {
 				if (dto == null) {
@@ -169,12 +170,6 @@ public class RowEntry {
 			}
 		});
 
-//		amountF.addValueChangeHandler(new ValueChangeHandler<BigDecimal>() {
-//			@Override
-//			public void onValueChange(ValueChangeEvent<BigDecimal> valueChangeEvent) {
-//				onAmountFValueChange();
-//			}
-//		});
 		amountF.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
@@ -224,29 +219,35 @@ public class RowEntry {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					ServicesFactory.getPaymentListService().deletePaymentListEntry(paymentListEntryDTO.getId(), new ServiceCallback<Void>() {
-						@Override
-						public void onServiceSuccess(Void result) {
-							table.removeRow(row);
-							paymentListTable.getTableRows().remove(getEntry());
-							if (paymentListTable.getTableRows().isEmpty()) {
-								paymentListTable.addEmptyRow();
-								paymentListTable.setAggregatesValues();
-							}
-							else {
-								for (RowEntry entry: paymentListTable.getTableRows()) {
-									if (entry.getRow() > row) {
-										entry.decrementRow();
-									}
-								}
-							}
-						}
-					});
+					onDelete();
 				}
 			})
 			.build();
 
 		deleteB.addStyleName("x-toolbar-mark");
+	}
+
+	private void onDelete() {
+		ServicesFactory.getPaymentListService().deletePaymentListEntry(paymentListEntryDTO.getId(),
+			new ServiceCallback<Void>() {
+				@Override
+				public void onServiceSuccess(Void result) {
+					table.removeRow(row);
+					paymentListTable.getTableRows().remove(getEntry());
+					paymentListTable.getPaymentListDTO().getEntries().remove(paymentListEntryDTO);
+					if (paymentListTable.getTableRows().isEmpty()) {
+						paymentListTable.addEmptyRow();
+					}
+					else {
+						for (RowEntry entry: paymentListTable.getTableRows()) {
+							if (entry.getRow() > row) {
+								entry.decrementRow();
+							}
+						}
+					}
+					paymentListTable.setAggregatesValues();
+				}
+			});
 	}
 
 	private Widget getCommissionCellErrorWidget() {
@@ -263,7 +264,8 @@ public class RowEntry {
 	}
 
 	public void updateCommissionValue() {
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(), new ServiceCallback<ClientCommissionsDto>(false) {
+		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(),
+			new ServiceCallback<ClientCommissionsDto>(false) {
 			@Override
 			public void onServiceSuccess(ClientCommissionsDto dto) {
 				if (dto == null) {

@@ -45,7 +45,7 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 	@Override
 	public List<Service> getList() {
 		List<Service> services = new ArrayList<>(cachedServices.values());
-		services.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+		services.sort((o1, o2) -> (o1.getName().compareToIgnoreCase(o2.getName())));
 		return services;
 	}
 

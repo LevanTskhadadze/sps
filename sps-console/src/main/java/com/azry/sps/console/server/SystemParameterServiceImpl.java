@@ -1,12 +1,11 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
 import com.azry.sps.integration.sp.ServiceProviderIntegrationServiceImpl;
 import com.azry.sps.integration.sp.dto.PayResponse;
-import com.azry.sps.integration.sp.dto.SpResponseStatus;
 import com.azry.sps.systemparameters.model.services.SystemParameterManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

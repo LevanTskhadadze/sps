@@ -49,7 +49,6 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class ServiceCommissionsTab extends Composite {
@@ -80,8 +79,10 @@ public class ServiceCommissionsTab extends Composite {
 
 
 	public ServiceCommissionsTab() {
+		verticalLayoutContainer = new VerticalLayoutContainer();
+		initWidget(verticalLayoutContainer);
 		initToolbar();
-		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
+		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>(this) {
 			@Override
 			public void onServiceSuccess(List<ServiceDto> result) {
 				serviceDTOs = result;
@@ -94,9 +95,7 @@ public class ServiceCommissionsTab extends Composite {
 				initServiceComboboxData(serviceDTOs);
 			}
 		});
-		verticalLayoutContainer = new VerticalLayoutContainer();
 		initGrid();
-		initWidget(verticalLayoutContainer);
 		buildDisplay();
 	}
 
@@ -219,7 +218,7 @@ public class ServiceCommissionsTab extends Composite {
 				ServicesFactory.getServiceCommissionsService().getServiceCommissions(
 						getServiceIdForFilter(),
 						loadConfig,
-						new ServiceCallback<PagingLoadResult<ServiceCommissionsDto>>() {
+						new ServiceCallback<PagingLoadResult<ServiceCommissionsDto>>(ServiceCommissionsTab.this) {
 					@Override
 					public void onServiceSuccess(PagingLoadResult<ServiceCommissionsDto> result) {
 						callback.onSuccess(result);
@@ -231,20 +230,20 @@ public class ServiceCommissionsTab extends Composite {
 		loader = new PagingLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceCommissionsDto, PagingLoadResult<ServiceCommissionsDto>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceCommissionsDto, Date>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceCommissionsDto, Long>() {
 			@Override
-			public Date getValue(ServiceCommissionsDto dto) {
-				return dto.getLastUpdateTime();
+			public Long getValue(ServiceCommissionsDto dto) {
+				return dto.getPriority();
 			}
 
 			@Override
-			public void setValue(ServiceCommissionsDto o, Date o2) { }
+			public void setValue(ServiceCommissionsDto o, Long o2) { }
 
 			@Override
 			public String getPath() {
 				return null;
 			}
-		}, SortDir.DESC);
+		}, SortDir.ASC);
 
 		gridStore.addSortInfo(storeSortInfo);
 
@@ -279,8 +278,8 @@ public class ServiceCommissionsTab extends Composite {
 		List<ColumnConfig<ServiceCommissionsDto, ?>> columns = new ArrayList<>();
 
 		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
-			.width(50)
-//			.fixed()
+			.width(120)
+			.fixed()
 			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
 				@Override
 				public String getProperty(ServiceCommissionsDto dto) {
@@ -404,7 +403,7 @@ public class ServiceCommissionsTab extends Composite {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getServiceCommissionsService().deleteServiceCommissions(dto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getServiceCommissionsService().deleteServiceCommissions(dto.getId(), new ServiceCallback<Void>(this) {
 									@Override
 									public void onServiceSuccess(Void result) {
 										gridStore.remove(gridStore.indexOf(dto));

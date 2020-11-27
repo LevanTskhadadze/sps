@@ -66,7 +66,7 @@ public abstract class  IconEditWindow extends ZWindow {
 		formPanel.addSubmitCompleteHandler(new SubmitCompleteEvent.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(final SubmitCompleteEvent event) {
-				ServicesFactory.getServiceTabService().getService(id, new ServiceCallback<ServiceDto>() {
+				ServicesFactory.getServiceTabService().getService(id, new ServiceCallback<ServiceDto>(IconEditWindow.this) {
 					@Override
 					public void onServiceSuccess(ServiceDto result) {
 						store.update(result);

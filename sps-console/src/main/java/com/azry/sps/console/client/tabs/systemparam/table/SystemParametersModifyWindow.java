@@ -6,6 +6,7 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
@@ -19,7 +20,6 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
-import com.azry.sps.console.client.utils.Mes;
 import com.sencha.gxt.widget.core.client.form.IntegerField;
 import com.sencha.gxt.widget.core.client.form.TextArea;
 
@@ -253,11 +253,10 @@ public class SystemParametersModifyWindow extends ZWindow {
 	private void doRedact() {
 		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().editParameter(dto,
-			new ServiceCallback<Void>() {
+			new ServiceCallback<Void>(this) {
 
 				@Override
 				public void onServiceSuccess(Void unused) {
-					final int index = store.indexOf(dto);
 					store.update(dto);
 				}
 			});
@@ -266,7 +265,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 	private void doAdd() {
 		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().addParameter(dto,
-			new ServiceCallback<SystemParameterDto>() {
+			new ServiceCallback<SystemParameterDto>(this) {
 
 				@Override
 				public void onServiceSuccess(SystemParameterDto systemParameterDto) {
@@ -300,7 +299,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 					else{
 						doAdd();
 					}
-
 					hide();
 				}
 			})

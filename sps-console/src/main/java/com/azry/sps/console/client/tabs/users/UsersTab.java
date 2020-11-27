@@ -63,9 +63,6 @@ public class UsersTab extends Composite {
 		assembleContent();
 
 		initPaging();
-
-
-
 	}
 
 	private void initPaging() {
@@ -81,7 +78,8 @@ public class UsersTab extends Composite {
 					params.put("groups", groupComboBox.getCurrentValue().getName());
 				}
 
-				ServicesFactory.getUserTabService().getUsers(loadConfig.getOffset(), loadConfig.getLimit(), params, new ServiceCallback<PagingLoadResult<SystemUserDTO>>() {
+				ServicesFactory.getUserTabService().getUsers(loadConfig.getOffset(), loadConfig.getLimit(), params,
+					new ServiceCallback<PagingLoadResult<SystemUserDTO>>(UsersTab.this) {
 					@Override
 					public void onServiceSuccess(PagingLoadResult<SystemUserDTO> result) {
 						callback.onSuccess(result);
@@ -178,7 +176,7 @@ public class UsersTab extends Composite {
 	private void assembleContent(){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(UsersTable.setListStore(new ArrayList<SystemUserDTO>()), UsersTable.getMyColumnModel());
+		grid = new ZGrid<>(UsersTable.getListStore(), UsersTable.getMyColumnModel());
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);

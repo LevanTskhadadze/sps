@@ -16,7 +16,6 @@ import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -35,14 +34,6 @@ public class PaymentTable {
 			return String.valueOf(paymentDto.getId());
 		}
 	});
-
-
-	public static ListStore<PaymentDto> setListStore(List<PaymentDto> result) {
-		store.clear();
-		store.addAll(result);
-
-		return store;
-	}
 
 	public static ListStore<PaymentDto> getListStore() {
 		return store;

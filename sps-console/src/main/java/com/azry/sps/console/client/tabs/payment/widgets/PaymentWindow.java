@@ -33,8 +33,6 @@ public class PaymentWindow extends ZWindow {
 		setWidth("570px");
 		setHeadingText(Mes.get("paymentInfo"));
 		showInCenter();
-
-
 	}
 
 	ZButton getCancelButton() {
@@ -49,6 +47,4 @@ public class PaymentWindow extends ZWindow {
 			})
 			.build();
 	}
-
-
 }

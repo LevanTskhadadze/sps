@@ -15,8 +15,11 @@ import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
@@ -33,15 +36,23 @@ public class UsersTable {
 		}
 	});
 
+	static Store.StoreSortInfo<SystemUserDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<SystemUserDTO, String>() {
+		@Override
+		public String getValue(SystemUserDTO dto) {
+			return dto.getName().toLowerCase();
+		}
 
-	public static ListStore<SystemUserDTO> setListStore(List<SystemUserDTO> result) {
-		store.clear();
-		store.addAll(result);
+		@Override
+		public void setValue(SystemUserDTO o, String o2) { }
 
-		return store;
-	}
+		@Override
+		public String getPath() {
+			return null;
+		}
+	}, SortDir.ASC);
 
 	public static ListStore<SystemUserDTO> getListStore() {
+		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 
@@ -162,7 +173,8 @@ public class UsersTable {
 									@Override
 									public void onConfirm() {
 										dto.setActive(!dto.isActive());
-										ServicesFactory.getUserTabService().changeActivation(dto.getId(), dto.getVersion(), new ServiceCallback<Void>() {
+										ServicesFactory.getUserTabService().changeActivation(dto.getId(), dto.getVersion(),
+											new ServiceCallback<Void>(this) {
 											@Override
 											public void onServiceSuccess(Void ignored) {
 												dto.setVersion(dto.getVersion() + 1);
@@ -189,7 +201,6 @@ public class UsersTable {
 							@Override
 							public void onClick(Cell.Context context, final SystemUserDTO SystemUserDTO) {
 									new UsersModifyWindow(SystemUserDTO, store);
-
 							}
 						})
 						.build()
@@ -212,7 +223,7 @@ public class UsersTable {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getUserTabService().removeParameter(SystemUserDTO.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getUserTabService().removeParameter(SystemUserDTO.getId(), new ServiceCallback<Void>(this) {
 
 									@Override
 									public void onServiceSuccess(Void unused) {

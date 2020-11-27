@@ -12,7 +12,9 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.payment.PaymentDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
@@ -113,13 +115,14 @@ public class CreatedPaymentWindow extends ZWindow {
 	}
 
 	private ColumnModel<PaymentDto> getColumns() {
-		List<ColumnConfig<PaymentDto, ?>> columns = new ArrayList<>();
+		final List<ColumnConfig<PaymentDto, ?>> columns = new ArrayList<>();
 
 		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
 			.valueProvider(new ZStringProvider<PaymentDto>() {
 				@Override
 				public String getProperty(PaymentDto dto) {
-					ServicesFactory.getServiceTabService().getService(dto.getServiceId(), new ServiceCallback<ServiceDto>() {
+					ServicesFactory.getServiceTabService().getService(dto.getServiceId(),
+						new ServiceCallback<ServiceDto>(CreatedPaymentWindow.this) {
 						@Override
 						public void onServiceSuccess(ServiceDto result) {
 							serviceName = result.getName();
@@ -170,10 +173,13 @@ public class CreatedPaymentWindow extends ZWindow {
 			.width(250)
 			.fixed()
 			.header(Mes.get("paymentStatus"))
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.cell(new AbstractCell<String>() {
 				@Override
-				public String getProperty(PaymentDto dto) {
-					return Mes.get(dto.getStatus().name());
+				public void render(Context context, String s, SafeHtmlBuilder sb) {
+					PaymentDto dto = gridStore.get(context.getIndex());
+					String str = dto.getStatus() == null ?
+						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
+					sb.appendHtmlConstant("<div style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + "</div>");
 				}
 			})
 			.build());

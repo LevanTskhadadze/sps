@@ -178,7 +178,8 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 				}
 			});
 		} else {
-			ServicesFactory.getServiceTabService().getServicesByServiceGroup(serviceGroupsCB.getCurrentValue().getId(), new ServiceCallback<List<ServiceDto>>(this) {
+			ServicesFactory.getServiceTabService().getServicesByServiceGroup(serviceGroupsCB.getCurrentValue().getId(),
+				new ServiceCallback<List<ServiceDto>>(this) {
 				@Override
 				public void onServiceSuccess(List<ServiceDto> result) {
 					serviceCB.replaceAll(result);
@@ -256,7 +257,8 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 		abonenCodeInfo.setStyleName("abonent-info-loading");
 		abonenCodeInfo.setValue(" ");
 
-		ServicesFactory.getProviderIntegrationService().getAbonent(serviceCB.getValue().getServiceDebtCode(), abonentCodeF.getValue(), new ServiceCallback<AbonentInfoDTO>(false) {
+		ServicesFactory.getProviderIntegrationService().getAbonent(serviceCB.getValue().getServiceDebtCode(), abonentCodeF.getValue(),
+			new ServiceCallback<AbonentInfoDTO>(false) {
 			@Override
 			public void onServiceSuccess(AbonentInfoDTO result) {
 				if (result.getStatus().equals(GetInfoStatusDTO.SUCCESS)) {

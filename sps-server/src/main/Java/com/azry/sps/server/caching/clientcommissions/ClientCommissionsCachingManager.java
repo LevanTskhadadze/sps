@@ -42,7 +42,7 @@ public class ClientCommissionsCachingManager implements CachingService<ClientCom
 	@Override
 	public List<ClientCommissions> getList() {
 		List<ClientCommissions> clientCommissions = new ArrayList<>(cachedClientCommissions.values());
-		clientCommissions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+		clientCommissions.sort((o1, o2) -> (int) (o1.getPriority() - o2.getPriority()));
 		return clientCommissions;
 	}
 
@@ -87,6 +87,9 @@ public class ClientCommissionsCachingManager implements CachingService<ClientCom
 					clientCommissions = commissions;
 				} else {
 					if (commissions.getPriority() < clientCommissions.getPriority()) {
+						clientCommissions = commissions;
+					} else if (commissions.getPriority() == clientCommissions.getPriority() &&
+						commissions.getCreateTime().compareTo(clientCommissions.getCreateTime()) < 0) {
 						clientCommissions = commissions;
 					}
 				}

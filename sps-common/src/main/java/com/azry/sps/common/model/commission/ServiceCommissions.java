@@ -20,6 +20,8 @@ public class ServiceCommissions extends Configurable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	private long priority;
+
 	private boolean allServices;
 
 	@Column(length = 100)
@@ -32,7 +34,6 @@ public class ServiceCommissions extends Configurable {
 	@Column(precision = 10, scale = 2)
 	private BigDecimal minCommission;
 
-	private long priority;
 
 	@Column(precision = 10, scale = 2)
 	private BigDecimal maxCommission;

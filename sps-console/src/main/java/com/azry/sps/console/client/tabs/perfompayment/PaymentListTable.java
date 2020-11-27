@@ -92,7 +92,8 @@ public class PaymentListTable extends Composite {
 						@Override
 						public void onSave(PaymentListEntryDTO dto, final ServiceDto serviceDto) {
 							if (validPaymentListEntry(dto)) {
-								ServicesFactory.getPaymentListService().addPaymentListEntry(clientDTO, dto, new ServiceCallback<PaymentListEntryDTO>() {
+								ServicesFactory.getPaymentListService().addPaymentListEntry(clientDTO,
+									dto, new ServiceCallback<PaymentListEntryDTO>() {
 									@Override
 									public void onServiceSuccess(PaymentListEntryDTO result) {
 										result.setService(serviceDto);
@@ -343,5 +344,9 @@ public class PaymentListTable extends Composite {
 
 	public void decrementReadyPaymentEntryCount() {
 		readyPaymentEntryCount--;
+	}
+
+	public PaymentListDTO getPaymentListDTO() {
+		return paymentListDTO;
 	}
 }

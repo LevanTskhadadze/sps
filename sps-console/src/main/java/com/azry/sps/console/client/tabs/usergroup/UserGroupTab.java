@@ -25,7 +25,6 @@ import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.usergroup.PermissionsDTO;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
@@ -64,11 +63,9 @@ public class UserGroupTab extends Composite {
 
 	private ZToolBar toolBar;
 
-	private ZTextField name;
-
-	private ZDynamicComboBox<PermissionsDTO> permission;
-
-	private ZSimpleComboBox<Boolean> active;
+	private ZTextField nameField;
+	private ZDynamicComboBox<PermissionsDTO> permissionCombo;
+	private ZSimpleComboBox<Boolean> activeCombo;
 
 	private final List<PermissionsDTO> permissions;
 
@@ -86,16 +83,14 @@ public class UserGroupTab extends Composite {
 	private ListLoader<ListLoadConfig, ListLoadResult<UserGroupDTO>> loader;
 
 
-
-
 	public UserGroupTab() {
 		booleans.add(true);
 		booleans.add(false);
 		permissions = Arrays.asList(PermissionsDTO.values());
 		verticalLayoutContainer = new VerticalLayoutContainer();
+		initWidget(verticalLayoutContainer);
 		initToolbar();
 		initGrid();
-		initWidget(verticalLayoutContainer);
 		buildDisplay();
 	}
 
@@ -105,12 +100,12 @@ public class UserGroupTab extends Composite {
 	}
 
 	private void initToolbar() {
-		name = new ZTextField.Builder()
+		nameField = new ZTextField.Builder()
 			.width(200)
 			.emptyText(Mes.get("name"))
 			.build();
 
-		permission = new ZDynamicComboBox.Builder<PermissionsDTO>()
+		permissionCombo = new ZDynamicComboBox.Builder<PermissionsDTO>()
 			.emptyText(Mes.get("allPermissions"))
 			.listWidth(400)
 			.minChars(1)
@@ -142,9 +137,9 @@ public class UserGroupTab extends Composite {
 			})
 			.build();
 
-		permission.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
+		permissionCombo.setTriggerAction(ComboBoxCell.TriggerAction.ALL);
 
-		active = new ZSimpleComboBox.Builder<Boolean>()
+		activeCombo = new ZSimpleComboBox.Builder<Boolean>()
 			.keyProvider(new ModelKeyProvider<Boolean>() {
 				@Override
 				public String getKey(Boolean bool) {
@@ -208,18 +203,18 @@ public class UserGroupTab extends Composite {
 			.build();
 
 		new EnterKeyBinder.Builder(searchButton)
-			.add(name)
-			.add(permission)
-			.add(active)
+			.add(nameField)
+			.add(permissionCombo)
+			.add(activeCombo)
 			.bind();
 
 
 		toolBar = new ZToolBar(1, -1);
 		toolBar.setEnableOverflow(false);
 
-		toolBar.add(name);
-		toolBar.add(permission);
-		toolBar.add(active);
+		toolBar.add(nameField);
+		toolBar.add(permissionCombo);
+		toolBar.add(activeCombo);
 		toolBar.add(searchButton);
 		toolBar.add(clearFiltersButton);
 		toolBar.add(addButton);
@@ -230,7 +225,8 @@ public class UserGroupTab extends Composite {
 		RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<UserGroupDTO>>() {
 			@Override
 			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<UserGroupDTO>> callback) {
-				ServicesFactory.getUserGroupService().getFilteredUserGroups(name.getValue(), permission.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<UserGroupDTO>>() {
+				ServicesFactory.getUserGroupService().getFilteredUserGroups(nameField.getValue(), permissionCombo.getCurrentValue(), activeCombo.getCurrentValue(),
+					new ServiceCallback<List<UserGroupDTO>>(UserGroupTab.this) {
 					@Override
 					public void onServiceSuccess(List<UserGroupDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));
@@ -268,14 +264,7 @@ public class UserGroupTab extends Composite {
 
 		grid.setLoader(loader);
 		new QuickTip(grid);
-		grid.addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent attachEvent) {
-				if (attachEvent.isAttached()) {
-					loader.load();
-				}
-			}
-		});
+		loader.load();
 	}
 
 
@@ -377,11 +366,12 @@ public class UserGroupTab extends Composite {
 				.clickHandler(new GridClickHandler<UserGroupDTO>() {
 					@Override
 					public void onClick(Cell.Context context, final UserGroupDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
+						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ?
+							Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
 							@Override
 							public void onConfirm() {
 								dto.setActive(!dto.isActive());
-								ServicesFactory.getUserGroupService().updateUserGroup(dto, new ServiceCallback<UserGroupDTO>() {
+								ServicesFactory.getUserGroupService().updateUserGroup(dto, new ServiceCallback<UserGroupDTO>(this) {
 									@Override
 									public void onServiceSuccess(UserGroupDTO result) {
 										gridStore.update(result);
@@ -434,7 +424,7 @@ public class UserGroupTab extends Composite {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getUserGroupService().deleteUserGroup(dto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getUserGroupService().deleteUserGroup(dto.getId(), new ServiceCallback<Void>(this) {
 									@Override
 									public void onServiceSuccess(Void result) {
 										gridStore.remove(gridStore.indexOf(dto));
@@ -451,8 +441,8 @@ public class UserGroupTab extends Composite {
 	}
 
 	private void clearFilter() {
-		name.setValue(null);
-		permission.setValue(null);
-		active.setValue(null);
+		nameField.setValue(null);
+		permissionCombo.setValue(null);
+		activeCombo.setValue(null);
 	}
 }

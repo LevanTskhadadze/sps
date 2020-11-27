@@ -24,17 +24,16 @@ public abstract class ChannelWindow extends ZWindow {
 
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
 
-	private ChannelDTO channelDTO;
 
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private ZTextField nameField;
+	ZSimpleComboBox<FiServiceUnavailabilityActionDTO> fiServiceUnavailabilityActionCombo;
 
-	ZButton saveButton;
+	private ZButton saveButton;
+	private ZButton cancelButton;
 
-	ZButton cancelButton;
-
-	ZSimpleComboBox<FiServiceUnavailabilityActionDTO> fiServiceUnavailabilityAction;
+	private ChannelDTO channelDTO;
 
 	public ChannelWindow(ChannelDTO channelDTO, ActionMode actionMode) {
 		super(Mes.get("ofChannel") + " " + Mes.get("ActionMode_" + actionMode), 600, -1, false);
@@ -58,7 +57,7 @@ public abstract class ChannelWindow extends ZWindow {
 			.required(true)
 			.build();
 
-		fiServiceUnavailabilityAction = new ZSimpleComboBox.Builder<FiServiceUnavailabilityActionDTO>()
+		fiServiceUnavailabilityActionCombo = new ZSimpleComboBox.Builder<FiServiceUnavailabilityActionDTO>()
 			.keyProvider(new ModelKeyProvider<FiServiceUnavailabilityActionDTO>() {
 				@Override
 				public String getKey(FiServiceUnavailabilityActionDTO dto) {
@@ -81,14 +80,14 @@ public abstract class ChannelWindow extends ZWindow {
 		VerticalLayoutContainer.VerticalLayoutData layoutData = new VerticalLayoutContainer.VerticalLayoutData(1, -1);
 
 		container.add(getFieldLabel(nameField, "name", true), layoutData);
-		container.add(getFieldLabel(fiServiceUnavailabilityAction, "fiServiceUnavailabilityAction", false), layoutData);
+		container.add(getFieldLabel(fiServiceUnavailabilityActionCombo, "fiServiceUnavailabilityAction", false), layoutData);
 	}
 
 
 
 	private void setFieldValues() {
 		nameField.setValue(channelDTO.getName());
-		fiServiceUnavailabilityAction.setValue(channelDTO.getFiServiceUnavailabilityAction());
+		fiServiceUnavailabilityActionCombo.setValue(channelDTO.getFiServiceUnavailabilityAction());
 	}
 
 	protected  void initButtons(){
@@ -112,7 +111,7 @@ public abstract class ChannelWindow extends ZWindow {
 			.build();
 
 		cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+			.text(Mes.get("close"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -144,7 +143,7 @@ public abstract class ChannelWindow extends ZWindow {
 
 	private boolean isValid() {
 		boolean result = nameField.isValid();
-		result = fiServiceUnavailabilityAction.isValid() && result;
+		result = fiServiceUnavailabilityActionCombo.isValid() && result;
 		return result;
 	}
 
@@ -154,7 +153,7 @@ public abstract class ChannelWindow extends ZWindow {
 			channelDTO.setActive(true);
 		}
 		channelDTO.setName(nameField.getCurrentValue());
-		channelDTO.setFiServiceUnavailabilityAction(fiServiceUnavailabilityAction.getCurrentValue());
+		channelDTO.setFiServiceUnavailabilityAction(fiServiceUnavailabilityActionCombo.getCurrentValue());
 		return channelDTO;
 	}
 

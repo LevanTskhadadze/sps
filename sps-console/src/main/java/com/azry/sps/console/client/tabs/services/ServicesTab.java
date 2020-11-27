@@ -70,7 +70,7 @@ public class ServicesTab extends Composite {
 				ServicesFactory.getServiceTabService().getServices(params,
 											loadConfig.getOffset(),
 											loadConfig.getLimit(),
-											new ServiceCallback<PagingLoadResult<ServiceDto>>() {
+											new ServiceCallback<PagingLoadResult<ServiceDto>>(ServicesTab.this) {
 					@Override
 					public void onServiceSuccess(PagingLoadResult<ServiceDto> result) {
 						callback.onSuccess(result);
@@ -100,10 +100,11 @@ public class ServicesTab extends Composite {
 	private void assembleContent() {
 		content.add(constructToolbar());
 
-		grid = new ZGrid<>(ServiceTable.setListStore(new ArrayList<ServiceDto>()), ServiceTable.getMyColumnModel());
+		grid = new ZGrid<>(ServiceTable.getListStore(), ServiceTable.getMyColumnModel());
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
+		grid.getView().getHeader().setDisableSortIcon(true);
 		content.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
 
 	}
@@ -186,7 +187,8 @@ public class ServicesTab extends Composite {
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+					ServicesFactory.getChannelService().getFilteredChannels("", null,
+						new ServiceCallback<List<ChannelDTO>>(ServicesTab.this) {
 						@Override
 						public void onServiceSuccess(List<ChannelDTO> result) {
 							new ServiceModifyWindow(null, ServiceTable.getListStore(), result);

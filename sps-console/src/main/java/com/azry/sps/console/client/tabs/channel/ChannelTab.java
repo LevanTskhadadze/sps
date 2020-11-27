@@ -23,7 +23,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.core.client.ValueProvider;
@@ -47,26 +46,17 @@ import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChannelTab extends Composite {
 
-	private VerticalLayoutContainer verticalLayoutContainer;
+	private final VerticalLayoutContainer verticalLayoutContainer;
 
 	private ZGrid<ChannelDTO> grid;
-
 	private ZToolBar toolBar;
 
-	private ZTextField name;
-
-	private ZSimpleComboBox<Boolean> active;
-
-	private ZButton searchButton;
-
-	private ZButton clearFiltersButton;
-
-	private ZButton addButton;
+	private ZTextField nameField;
+	private ZSimpleComboBox<Boolean> activeCombo;
 
 	private final ListStore<ChannelDTO> gridStore = new ListStore<>(new ModelKeyProvider<ChannelDTO>() {
 		@Override
@@ -85,9 +75,9 @@ public class ChannelTab extends Composite {
 		booleans.add(true);
 		booleans.add(false);
 		verticalLayoutContainer = new VerticalLayoutContainer();
+		initWidget(verticalLayoutContainer);
 		initToolbar();
 		initGrid();
-		initWidget(verticalLayoutContainer);
 		buildDisplay();
 	}
 
@@ -97,13 +87,13 @@ public class ChannelTab extends Composite {
 	}
 
 	private void initToolbar() {
-		name = new ZTextField.Builder()
+		nameField = new ZTextField.Builder()
 			.width(200)
 			.emptyText(Mes.get("name"))
 			.build();
 
 
-		active = new ZSimpleComboBox.Builder<Boolean>()
+		activeCombo = new ZSimpleComboBox.Builder<Boolean>()
 			.keyProvider(new ModelKeyProvider<Boolean>() {
 				@Override
 				public String getKey(Boolean bool) {
@@ -124,7 +114,7 @@ public class ChannelTab extends Composite {
 			.build();
 
 
-		searchButton = new ZButton.Builder()
+		ZButton searchButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().search())
 			.text(Mes.get("search"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -136,7 +126,7 @@ public class ChannelTab extends Composite {
 			})
 			.build();
 
-		clearFiltersButton = new ZButton.Builder()
+		ZButton clearFiltersButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().eraser())
 			.tooltip(Mes.get("clearFilter"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -147,7 +137,8 @@ public class ChannelTab extends Composite {
 			})
 			.build();
 
-		addButton = new ZButton.Builder()
+		//			.visible(isManage)
+		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
@@ -155,7 +146,7 @@ public class ChannelTab extends Composite {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					new ChannelWindow(null, ActionMode.ADD){
+					new ChannelWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(ChannelDTO dto) {
 							gridStore.add(dto);
@@ -166,16 +157,16 @@ public class ChannelTab extends Composite {
 			.build();
 
 		new EnterKeyBinder.Builder(searchButton)
-			.add(name)
-			.add(active)
+			.add(nameField)
+			.add(activeCombo)
 			.bind();
 
 
 		toolBar = new ZToolBar(1, -1);
 		toolBar.setEnableOverflow(false);
 
-		toolBar.add(name);
-		toolBar.add(active);
+		toolBar.add(nameField);
+		toolBar.add(activeCombo);
 		toolBar.add(searchButton);
 		toolBar.add(clearFiltersButton);
 		toolBar.add(addButton);
@@ -186,7 +177,8 @@ public class ChannelTab extends Composite {
 		RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<ChannelDTO>>() {
 			@Override
 			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<ChannelDTO>> callback) {
-				ServicesFactory.getChannelService().getFilteredChannels(name.getCurrentValue(), active.getCurrentValue(), new ServiceCallback<List<ChannelDTO>>() {
+				ServicesFactory.getChannelService().getFilteredChannels(nameField.getCurrentValue(), activeCombo.getCurrentValue(),
+					new ServiceCallback<List<ChannelDTO>>(ChannelTab.this) {
 					@Override
 					public void onServiceSuccess(List<ChannelDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));
@@ -198,20 +190,20 @@ public class ChannelTab extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ChannelDTO, ListLoadResult<ChannelDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ChannelDTO, Date>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ChannelDTO, String>() {
 			@Override
-			public Date getValue(ChannelDTO dto) {
-				return dto.getLastUpdateTime();
+			public String getValue(ChannelDTO dto) {
+				return dto.getName().toLowerCase();
 			}
 
 			@Override
-			public void setValue(ChannelDTO o, Date o2) { }
+			public void setValue(ChannelDTO o, String o2) { }
 
 			@Override
 			public String getPath() {
 				return null;
 			}
-		}, SortDir.DESC);
+		}, SortDir.ASC);
 
 		gridStore.addSortInfo(storeSortInfo);
 
@@ -224,14 +216,7 @@ public class ChannelTab extends Composite {
 
 		grid.setLoader(loader);
 		new QuickTip(grid);
-		grid.addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent attachEvent) {
-				if (attachEvent.isAttached()) {
-					loader.load();
-				}
-			}
-		});
+		loader.load();
 	}
 
 
@@ -251,7 +236,7 @@ public class ChannelTab extends Composite {
 			.build());
 
 		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
-			.width(500)
+			.width(400)
 			.fixed()
 			.header(Mes.get("name"))
 			.valueProvider(new ZStringProvider<ChannelDTO>() {
@@ -337,7 +322,7 @@ public class ChannelTab extends Composite {
 							@Override
 							public void onConfirm() {
 								dto.setActive(!dto.isActive());
-								ServicesFactory.getChannelService().updateChannel(dto, new ServiceCallback<ChannelDTO>() {
+								ServicesFactory.getChannelService().updateChannel(dto, new ServiceCallback<ChannelDTO>(this) {
 									@Override
 									public void onServiceSuccess(ChannelDTO result) {
 										gridStore.update(result);
@@ -390,7 +375,7 @@ public class ChannelTab extends Composite {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getChannelService().deleteChannel(dto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getChannelService().deleteChannel(dto.getId(), new ServiceCallback<Void>(this) {
 									@Override
 									public void onServiceSuccess(Void result) {
 										gridStore.remove(gridStore.indexOf(dto));
@@ -407,7 +392,7 @@ public class ChannelTab extends Composite {
 	}
 
 	private void clearFilter() {
-		name.setValue(null);
-		active.setValue(null);
+		nameField.setValue(null);
+		activeCombo.setValue(null);
 	}
 }

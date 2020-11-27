@@ -18,8 +18,11 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeUri;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.SortDir;
+import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
@@ -36,15 +39,24 @@ public class ServiceTable {
 		}
 	});
 
+	static Store.StoreSortInfo<ServiceDto> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceDto, String>() {
+		@Override
+		public String getValue(ServiceDto dto) {
+			return dto.getName().toLowerCase();
+		}
 
-	public static ListStore<ServiceDto> setListStore(List<ServiceDto> result) {
-		store.clear();
-		store.addAll(result);
+		@Override
+		public void setValue(ServiceDto o, String o2) { }
 
-		return store;
-	}
+		@Override
+		public String getPath() {
+			return null;
+		}
+	}, SortDir.ASC);
+
 
 	public static ListStore<ServiceDto> getListStore() {
+		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 
@@ -72,8 +84,6 @@ public class ServiceTable {
 			})
 			.build());
 
-
-
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
 			.header(Mes.get("createTime"))
 			.width(100)
@@ -96,6 +106,7 @@ public class ServiceTable {
 			})
 			.sortable()
 			.build());
+
 		final ZIconButtonCell<ServiceDto, String> iconButtonCell;
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
 			.header("")
@@ -106,7 +117,6 @@ public class ServiceTable {
 				.gridStore(store)
 				.dynamicIcon(
 					new IconSelector<ServiceDto>() {
-
 						@Override
 						public ImageResource selectIcon(Cell.Context context, ServiceDto dto) {
 							final String url = ZURLBuilder.create(GWT.getHostPageBaseURL(), "sps/servlet/iconDownload")
@@ -204,7 +214,8 @@ public class ServiceTable {
 							@Override
 							public void onConfirm() {
 								dto.setActive(!dto.isActive());
-								ServicesFactory.getServiceTabService().changeActivation(dto.getId(), dto.getVersion(), new ServiceCallback<Void>() {
+								ServicesFactory.getServiceTabService().changeActivation(dto.getId(), dto.getVersion(),
+									new ServiceCallback<Void>(this) {
 									@Override
 									public void onServiceSuccess(Void ignored) {
 										dto.setVersion(dto.getVersion() + 1);
@@ -230,7 +241,8 @@ public class ServiceTable {
 				.clickHandler(new GridClickHandler<ServiceDto>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceDto ServiceDto) {
-						ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+						ServicesFactory.getChannelService().getFilteredChannels("", null,
+							new ServiceCallback<List<ChannelDTO>>() {
 							@Override
 							public void onServiceSuccess(List<ChannelDTO> result) {
 								new ServiceModifyWindow(ServiceDto, store, result);
@@ -240,7 +252,6 @@ public class ServiceTable {
 					}
 				})
 				.build()
-
 			)
 			.fixed()
 			.build());
@@ -255,11 +266,10 @@ public class ServiceTable {
 				.clickHandler(new GridClickHandler<ServiceDto>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceDto ServiceDto) {
-
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getServiceTabService().removeService(ServiceDto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getServiceTabService().removeService(ServiceDto.getId(), new ServiceCallback<Void>(this) {
 
 									@Override
 									public void onServiceSuccess(Void unused) {

@@ -19,7 +19,6 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
@@ -63,12 +62,11 @@ public class ServiceGroupTab extends Composite {
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> loader;
 
-
 	public ServiceGroupTab() {
 		verticalLayoutContainer = new VerticalLayoutContainer();
+		initWidget(verticalLayoutContainer);
 		initToolbar();
 		initGrid();
-		initWidget(verticalLayoutContainer);
 		buildDisplay();
 	}
 
@@ -145,7 +143,8 @@ public class ServiceGroupTab extends Composite {
 		RpcProxy<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<ServiceGroupDTO>>() {
 			@Override
 			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<ServiceGroupDTO>> callback) {
-				ServicesFactory.getServiceGroupService().getFilteredServiceGroups(name.getValue(), new ServiceCallback<List<ServiceGroupDTO>>() {
+				ServicesFactory.getServiceGroupService().getFilteredServiceGroups(name.getValue(),
+					new ServiceCallback<List<ServiceGroupDTO>>(ServiceGroupTab.this) {
 					@Override
 					public void onServiceSuccess(List<ServiceGroupDTO> result) {
 						callback.onSuccess(new ListLoadResultBean<>(result));
@@ -183,14 +182,7 @@ public class ServiceGroupTab extends Composite {
 		grid.getView().getHeader().setDisableSortIcon(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
-		grid.addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent attachEvent) {
-				if (attachEvent.isAttached()) {
-					loader.load();
-				}
-			}
-		});
+		loader.load();
 	}
 
 
@@ -294,7 +286,7 @@ public class ServiceGroupTab extends Composite {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getServiceGroupService().deleteServiceGroup(dto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getServiceGroupService().deleteServiceGroup(dto.getId(), new ServiceCallback<Void>(this) {
 									@Override
 									public void onServiceSuccess(Void result) {
 										gridStore.remove(gridStore.indexOf(dto));

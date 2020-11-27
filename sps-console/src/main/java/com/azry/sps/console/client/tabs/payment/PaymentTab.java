@@ -20,7 +20,6 @@ import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
 import com.azry.sps.console.shared.dto.services.ServiceDto;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -104,7 +103,8 @@ public class PaymentTab extends Composite {
 					params.put(PaymentDto.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
 				}
 
-				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDto>>() {
+				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(),
+					new ServiceCallback<PagingLoadResult<PaymentDto>>(PaymentTab.this) {
 					@Override
 					public void onServiceSuccess(PagingLoadResult<PaymentDto> result) {
 						callback.onSuccess(result);
@@ -222,7 +222,7 @@ public class PaymentTab extends Composite {
 	private void assembleContent(List<ServiceDto> services, List<ChannelDTO> channels){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDto>()), PaymentTable.getMyColumnModel(services, channels));
+		grid = new ZGrid<>(PaymentTable.getListStore(), PaymentTable.getMyColumnModel(services, channels));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);

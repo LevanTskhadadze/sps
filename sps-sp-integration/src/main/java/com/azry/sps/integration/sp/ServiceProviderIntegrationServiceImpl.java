@@ -1,6 +1,6 @@
 package com.azry.sps.integration.sp;
 
-import com.azry.sps.common.exceptions.SPSException;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PayResponse;
@@ -20,7 +20,6 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +59,7 @@ public class ServiceProviderIntegrationServiceImpl{
 		return target.proxy(ServicesInterface.class);
 	}
 
-	public AbonentInfo getInfo(String serviceCode, String id) throws SPSException{
+	public AbonentInfo getInfo(String serviceCode, String id) throws SPSException {
 
 
 		try {

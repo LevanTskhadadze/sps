@@ -75,9 +75,6 @@ public class ServiceModifyWindow extends ZWindow {
 		this.store = store;
 
 
-
-
-
 		ZButton confirmButton = getConfirmButton();
 		ZButton cancelButton = getCancelButton();
 		buttonBar.setMinButtonWidth(75);
@@ -108,8 +105,6 @@ public class ServiceModifyWindow extends ZWindow {
 
 		tabPanel.add(formContainer, Mes.get("serviceInfo"));
 		tabPanel.add(channelContainer, Mes.get("serviceInfo"));
-
-
 	}
 
 	private FlexTable constructForm() {
@@ -127,7 +122,7 @@ public class ServiceModifyWindow extends ZWindow {
 		formTable.getWidget(1, 0).setWidth("220px");
 
 		formTable.setWidget(0, 1, getNameField());
-		ServicesFactory.getServiceGroupService().getFilteredServiceGroups("", new ServiceCallback<List<ServiceGroupDTO>>() {
+		ServicesFactory.getServiceGroupService().getFilteredServiceGroups("", new ServiceCallback<List<ServiceGroupDTO>>(this) {
 			@Override
 			public void onServiceSuccess(List<ServiceGroupDTO> result) {
 				formTable.setWidget(1, 1, getServiceGroupField(result));
@@ -320,12 +315,13 @@ public class ServiceModifyWindow extends ZWindow {
 		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(dto,
-			new ServiceCallback<ServiceDto>() {
+			new ServiceCallback<ServiceDto>(this) {
 
 				@Override
 				public void onServiceSuccess(ServiceDto newDto) {
 					dto = newDto;
 					store.update(dto);
+					store.applySort(false);
 				}
 			});
 		return true;
@@ -342,7 +338,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 		ServicesFactory.getServiceTabService().editService(
 			dto,
-			new ServiceCallback<ServiceDto>() {
+			new ServiceCallback<ServiceDto>(this) {
 				@Override
 				public void onServiceSuccess(ServiceDto ServiceDto) {
 					store.add(ServiceDto);

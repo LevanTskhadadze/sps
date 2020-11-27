@@ -7,12 +7,11 @@ import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
+import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
-import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.google.gwt.dom.client.Style;
-
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
 import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -41,7 +40,8 @@ public class SystemParameterTab extends Composite {
 			.emptyText(Mes.get("valueEmptyText"))
 			.build();
 		initWidget(content);
-		ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(), new ServiceCallback<List<SystemParameterDto>>() {
+		ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(),
+			new ServiceCallback<List<SystemParameterDto>>(this) {
 			@Override
 			public void onServiceSuccess(List<SystemParameterDto> result) {
 				assembleContent(result);
@@ -53,8 +53,6 @@ public class SystemParameterTab extends Composite {
 	}
 
 	private void assembleContent(List<SystemParameterDto> data){
-
-
 		content.add(getToolbar());
 		ZGrid<SystemParameterDto> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel());
 		grid.setColumnResize(false);

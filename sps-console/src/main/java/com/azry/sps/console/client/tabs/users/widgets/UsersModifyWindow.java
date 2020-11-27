@@ -105,13 +105,11 @@ public class UsersModifyWindow extends ZWindow {
 		formContainer.add(constructForm());
 
 		tabPanel.add(formContainer, Mes.get("user"));
-
-
 	}
 
 	private void constructUserGroupTab(){
 		final List<UserGroupDTO> entries = new ArrayList<>();
-		ServicesFactory.getUserGroupService().getUserGroups( new ServiceCallback<List<UserGroupDTO>>() {
+		ServicesFactory.getUserGroupService().getUserGroups( new ServiceCallback<List<UserGroupDTO>>(this) {
 			@Override
 			public void onServiceSuccess(List<UserGroupDTO> result) {
 				entries.addAll(result);
@@ -120,7 +118,6 @@ public class UsersModifyWindow extends ZWindow {
 			}
 		});
 		tabPanel.add(userGroupTabContainer, Mes.get("userGroups"));
-
 	}
 
 	private FlexTable constructForm() {
@@ -253,12 +250,13 @@ public class UsersModifyWindow extends ZWindow {
 		dto.setLastUpdateTime(new Date());
 
 		ServicesFactory.getUserTabService().editParameter(dto,
-			new ServiceCallback<SystemUserDTO>() {
+			new ServiceCallback<SystemUserDTO>(this) {
 
 				@Override
 				public void onServiceSuccess(SystemUserDTO newDto) {
 					dto = newDto;
 					store.update(dto);
+					store.applySort(false);
 				}
 			});
 		return true;
@@ -279,7 +277,7 @@ public class UsersModifyWindow extends ZWindow {
 
 		ServicesFactory.getUserTabService().addParameter(
 			dto,
-			new ServiceCallback<SystemUserDTO>() {
+			new ServiceCallback<SystemUserDTO>(this) {
 
 				@Override
 				public void onServiceSuccess(SystemUserDTO SystemUserDTO) {

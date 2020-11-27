@@ -39,7 +39,7 @@ public class ServiceCommissionsCachingManager implements CachingService<ServiceC
 	@Override
 	public List<ServiceCommissions> getList() {
 		List<ServiceCommissions> serviceCommissions = new ArrayList<>(cachedServiceCommissions.values());
-		serviceCommissions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+		serviceCommissions.sort((o1, o2) -> (int) (o1.getPriority() - o2.getPriority()));
 		return serviceCommissions;
 	}
 

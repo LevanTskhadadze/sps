@@ -54,6 +54,7 @@ public class SystemParametersTable {
 					}
 				})
 				.build());
+
 		columns.add(new ZColumnConfig.Builder<SystemParameterDto, String>()
 			.header(Mes.get("code"))
 			.width(100)
@@ -64,7 +65,6 @@ public class SystemParametersTable {
 				}
 			})
 			.build());
-
 
 		columns.add(new ZColumnConfig.Builder<SystemParameterDto, String>()
 				.header(Mes.get("value"))
@@ -102,11 +102,9 @@ public class SystemParametersTable {
 							@Override
 							public void onClick(Cell.Context context, final SystemParameterDto systemParameterDto) {
 									new SystemParametersModifyWindow(systemParameterDto, store);
-
 							}
 						})
 						.build()
-
 				)
 				.fixed()
 				.build());
@@ -121,11 +119,11 @@ public class SystemParametersTable {
 				.clickHandler(new GridClickHandler<SystemParameterDto>() {
 					@Override
 					public void onClick(Cell.Context context, final SystemParameterDto systemParameterDto) {
-
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getSystemParameterService().removeParameter(systemParameterDto.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getSystemParameterService().removeParameter(systemParameterDto.getId(),
+									new ServiceCallback<Void>(this) {
 
 									@Override
 									public void onServiceSuccess(Void unused) {

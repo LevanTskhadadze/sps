@@ -20,17 +20,15 @@ public abstract class ServiceGroupWindow extends ZWindow {
 
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
 
-	private ServiceGroupDTO serviceGroupDTO;
-
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
 	private ZTextField nameField;
-
 	private ZNumberField<Long> priorityField;
 
 	ZButton saveButton;
-
 	ZButton cancelButton;
+
+	private ServiceGroupDTO serviceGroupDTO;
 
 	public ServiceGroupWindow(ServiceGroupDTO serviceGroupDTO, ActionMode actionMode) {
 		super(Mes.get("ofServiceGroup") + " " + Mes.get("ActionMode_" + actionMode), 500, -1, false);
@@ -79,7 +77,8 @@ public abstract class ServiceGroupWindow extends ZWindow {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
-						ServicesFactory.getServiceGroupService().updateServiceGroup(getServiceGroupForUpdate(), new ServiceCallback<ServiceGroupDTO>(ServiceGroupWindow.this) {
+						ServicesFactory.getServiceGroupService().updateServiceGroup(getServiceGroupForUpdate(),
+							new ServiceCallback<ServiceGroupDTO>(ServiceGroupWindow.this) {
 							@Override
 							public void onServiceSuccess(ServiceGroupDTO result) {
 								hide();
