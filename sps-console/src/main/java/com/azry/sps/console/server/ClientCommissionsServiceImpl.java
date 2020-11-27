@@ -21,8 +21,6 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	@Inject
 	ClientCommissionsManager clientCommissionsManager;
 
-
-
 	@Override
 	public PagingLoadResult<ClientCommissionsDTO> getFilteredClientCommissions(String serviceId, String channelId, PagingLoadConfig config) {
 		ListResult<ClientCommissions> listResult =  clientCommissionsManager.getFilteredClientCommissions(serviceId, channelId, config.getOffset(), config.getLimit());
@@ -30,7 +28,7 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 	}
 
 	@Override
-	public ClientCommissionsDTO getClientCommission(long serviceId) {
+	public ClientCommissionsDTO getClientCommissionByServiceId(long serviceId) {
 		return ClientCommissionsDTO.toDTO(clientCommissionsManager.getClientCommissionByServiceId(serviceId));
 	}
 

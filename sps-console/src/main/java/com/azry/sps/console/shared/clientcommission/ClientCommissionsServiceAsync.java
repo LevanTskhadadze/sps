@@ -9,7 +9,7 @@ public interface ClientCommissionsServiceAsync {
 
 	void getFilteredClientCommissions(String serviceId, String channelId, PagingLoadConfig config, AsyncCallback<PagingLoadResult<ClientCommissionsDTO>> async);
 
-	void getClientCommission(long serviceId, AsyncCallback<ClientCommissionsDTO> async);
+	void getClientCommissionByServiceId(long serviceId, AsyncCallback<ClientCommissionsDTO> async);
 
 	void updateClientCommissions(ClientCommissionsDTO clientCommissions, AsyncCallback<ClientCommissionsDTO> async);
 

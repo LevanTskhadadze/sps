@@ -12,7 +12,7 @@ public interface ClientCommissionsService extends RemoteService {
 
 	PagingLoadResult<ClientCommissionsDTO> getFilteredClientCommissions(String serviceID, String channelId, PagingLoadConfig config);
 
-	ClientCommissionsDTO getClientCommission(long serviceId);
+	ClientCommissionsDTO getClientCommissionByServiceId(long serviceId);
 
 	ClientCommissionsDTO updateClientCommissions(ClientCommissionsDTO clientCommissions) throws SPSConsoleException;
 

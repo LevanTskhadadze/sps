@@ -66,7 +66,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private final ServiceCommissionsDTO serviceCommissionsDTO;
 
-	public ServiceCommissionsWindow(serviceCommissionsDTO dto, List<ServiceDTO> serviceEntityDTOs, ActionMode actionMode) {
+	public ServiceCommissionsWindow(ServiceCommissionsDTO dto, List<ServiceDTO> serviceEntityDTOs, ActionMode actionMode) {
 		super(Mes.get("ofServiceCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
 
 		initWidgetLists(serviceEntityDTOs);

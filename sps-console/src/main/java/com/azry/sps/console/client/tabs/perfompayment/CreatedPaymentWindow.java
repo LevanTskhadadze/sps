@@ -12,6 +12,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;

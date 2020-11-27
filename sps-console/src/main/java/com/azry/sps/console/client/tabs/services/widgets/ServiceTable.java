@@ -39,14 +39,14 @@ public class ServiceTable {
 		}
 	});
 
-	static Store.StoreSortInfo<ServiceDto> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceDto, String>() {
+	static Store.StoreSortInfo<ServiceDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceDTO, String>() {
 		@Override
-		public String getValue(ServiceDto dto) {
+		public String getValue(ServiceDTO dto) {
 			return dto.getName().toLowerCase();
 		}
 
 		@Override
-		public void setValue(ServiceDto o, String o2) { }
+		public void setValue(ServiceDTO o, String o2) { }
 
 		@Override
 		public String getPath() {
@@ -55,7 +55,7 @@ public class ServiceTable {
 	}, SortDir.ASC);
 
 
-	public static ListStore<ServiceDto> getListStore() {
+	public static ListStore<ServiceDTO> getListStore() {
 		store.addSortInfo(storeSortInfo);
 		return store;
 	}
@@ -84,7 +84,7 @@ public class ServiceTable {
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header(Mes.get("createTime"))
 			.width(100)
 			.valueProvider(new ZStringProvider<ServiceDTO>() {
@@ -240,12 +240,12 @@ public class ServiceTable {
 				.icon(FAIconsProvider.getIcons().pencil())
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDTO ServiceDto) {
+					public void onClick(Cell.Context context, final ServiceDTO serviceDTO) {
 						ServicesFactory.getChannelService().getFilteredChannels("", null,
 							new ServiceCallback<List<ChannelDTO>>() {
 							@Override
 							public void onServiceSuccess(List<ChannelDTO> result) {
-								new ServiceModifyWindow(ServiceDTO, store, result);
+								new ServiceModifyWindow(serviceDTO, store, result);
 							}
 						});
 
@@ -265,15 +265,15 @@ public class ServiceTable {
 				.icon(FAIconsProvider.getIcons().trash())
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDTO ServiceDto) {
+					public void onClick(Cell.Context context, final ServiceDTO serviceDTO) {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getServiceTabService().removeService(ServiceDTO.getId(), new ServiceCallback<Void>() {
+								ServicesFactory.getServiceTabService().removeService(serviceDTO.getId(), new ServiceCallback<Void>() {
 
 									@Override
 									public void onServiceSuccess(Void unused) {
-										store.remove(ServiceDTO);
+										store.remove(serviceDTO);
 									}
 								});
 							}
