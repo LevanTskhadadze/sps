@@ -5,6 +5,7 @@ import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PayResponse;
 import com.azry.sps.integration.sp.dto.PaymentDTO;
+import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.model.sysparam.Parameter;
 import com.azry.sps.systemparameters.model.sysparam.SysParam;
@@ -59,17 +60,17 @@ public class ServiceProviderIntegrationServiceBean implements ServiceProviderInt
 		return target.proxy(ServicesInterface.class);
 	}
 
-	public AbonentInfo getInfo(String serviceCode, String id) throws SPSException{
+	public AbonentInfo getInfo(String serviceCode, String abonentCode) throws SpIntegrationException{
 
 
 		try {
-			return getProxy().getAbonent(new AbonentRequest("gateway-" + serviceCode, id));
+			return getProxy().getAbonent(new AbonentRequest("gateway-" + serviceCode, abonentCode));
 		} catch (Exception ex) {
-			throw new SPSException("SPConnectionFailed", ex);
+			throw new SpIntegrationException(SpIntegrationException.Type.CONNECTION_FAILED, ex);
 		}
 	}
 
-	public PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SPSException {
+	public PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException {
 		try {
 			PayResponse payment = getProxy().pay(new PaymentDTO(serviceCode,
 				String.valueOf(agentPaymentId),
@@ -78,9 +79,9 @@ public class ServiceProviderIntegrationServiceBean implements ServiceProviderInt
 			return payment;
 		} catch (Exception ex) {
 			if (ex instanceof ProcessingException) {
-				throw new SPSException("spBadRequest", ex);
+				throw new SpIntegrationException(SpIntegrationException.Type.BAD_REQUEST, ex);
 			}
-			throw new SPSException("spConnectionFailed", ex);
+			throw new SpIntegrationException(SpIntegrationException.Type.CONNECTION_FAILED, ex);
 		}
 	}
 }

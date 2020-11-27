@@ -57,7 +57,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 
 
-	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store, List<ChannelDTO> channels) {
+	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store) {
 		super();
 		if (dto != null) {
 			redactMode = true;
@@ -69,7 +69,7 @@ public class ServiceModifyWindow extends ZWindow {
 			this.dto.setActive(false);
 			this.dto.setId(0);
 		}
-		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), channels, this.dto.isAllChannels());
+		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), this.dto.isAllChannels());
 		tabPanel = new TabPanel();
 
 		this.store = store;

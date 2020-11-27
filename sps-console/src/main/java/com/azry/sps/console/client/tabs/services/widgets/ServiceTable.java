@@ -230,13 +230,7 @@ public class ServiceTable {
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceDTO ServiceDTO) {
-						ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
-							@Override
-							public void onServiceSuccess(List<ChannelDTO> result) {
-								new ServiceModifyWindow(ServiceDTO, store, result);
-							}
-						});
-
+						new ServiceModifyWindow(ServiceDTO, store);
 					}
 				})
 				.build()

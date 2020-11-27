@@ -6,14 +6,13 @@ import com.azry.sps.console.shared.systemparameter.SystemParameterService;
 import com.azry.sps.systemparameters.model.services.SystemParameterManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import javax.ejb.DependsOn;
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import java.util.List;
 import java.util.Map;
 
 @WebServlet("/sps/servlet/sysPar")
-@DependsOn("SpIntegrationService")
+//@DependsOn("SpIntegrationService")
 public class SystemParameterServiceImpl extends RemoteServiceServlet implements SystemParameterService {
 
 	@Inject
@@ -24,12 +23,13 @@ public class SystemParameterServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<SystemParameterDTO> getSystemParameterTab(Map<String, String> params) throws SPSConsoleException {
-/*		try {
-			PayResponse bb = serviceProviderIntegrationService.pay("gateway1", 1, "1", new BigDecimal("5.5"));
-		} catch (SPSException ex) {
-			throw new SPSConsoleException(ex);
-		}
-*/		return SystemParameterDTO.toDTOs(systemParameterManager.getSystemParameters(params));
+/*
+		try {
+			serviceProviderIntegrationService.pay("aa", 3, "1", new BigDecimal(2.2));
+		} catch (SpIntegrationException e) {
+			e.printStackTrace();
+		}*/
+		return SystemParameterDTO.toDTOs(systemParameterManager.getSystemParameters(params));
 	}
 
 	@Override

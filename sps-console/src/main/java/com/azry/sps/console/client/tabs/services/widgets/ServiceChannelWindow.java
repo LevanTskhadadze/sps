@@ -1,7 +1,9 @@
 package com.azry.sps.console.client.tabs.services.widgets;
 
 import com.azry.gxt.client.zcomp.ZToolBar;
+import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDTO;
 import com.google.gwt.dom.client.Style;
@@ -32,15 +34,12 @@ public class ServiceChannelWindow extends Composite {
 
 	VerticalLayoutContainer container;
 
-	public ServiceChannelWindow(List<ServiceChannelInfoDTO> entries, List<ChannelDTO> channels, boolean allSelected){
+	public ServiceChannelWindow(final List<ServiceChannelInfoDTO> entries, boolean allSelected){
 		super();
 		container = new VerticalLayoutContainer();
 		table = new FlexTable();
 		channelInfos = new ArrayList<>();
 		rows = new ArrayList<>();
-		if (entries == null) {
-			entries = new ArrayList<>();
-		}
 		ZToolBar toolbar = new ZToolBar();
 		toolbar.setEnableOverflow(false);
 		toolbar.setHeight(40);
@@ -63,8 +62,12 @@ public class ServiceChannelWindow extends Composite {
 		table.setWidget(0, 1, new HTML(Mes.get("channel")));
 		table.setWidget(0, 2, new HTML(Mes.get("minAmountShort")));
 		table.setWidget(0, 3, new HTML(Mes.get("maxAmountShort")));
-
-		addEntries(entries, channels);
+		ServicesFactory.getChannelService().getFilteredChannels("", null, new ServiceCallback<List<ChannelDTO>>() {
+				@Override
+				public void onServiceSuccess(List<ChannelDTO> result) {
+					addEntries(entries, result);
+				}
+			});
 		table.getColumnFormatter().setWidth(0, "32px");
 
 		table.getColumnFormatter().setWidth(1, "100%");
@@ -84,6 +87,10 @@ public class ServiceChannelWindow extends Composite {
 		if (infos == null) {
 			infos = new ArrayList<>();
 		}
+		if (channels == null) {
+			channels = new ArrayList<>();
+		}
+
 		for(ChannelDTO dto : channels) {
 			ServiceChannelInfoDTO newInfo = getNewInfo(dto.getId());
 			if (infos.contains(newInfo)) {
