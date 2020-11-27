@@ -9,7 +9,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class TransactionOrderDto implements IsSerializable {
+public class TransactionOrderDTO implements IsSerializable {
 
 		private long id;
 
@@ -25,7 +25,7 @@ public class TransactionOrderDto implements IsSerializable {
 
 		private BigDecimal amount;
 
-		private TransactionTypeDto type;
+		private TransactionTypeDTO type;
 
 	public long getId() {
 		return id;
@@ -83,27 +83,27 @@ public class TransactionOrderDto implements IsSerializable {
 		this.amount = amount;
 	}
 
-	public TransactionTypeDto getType() {
+	public TransactionTypeDTO getType() {
 		return type;
 	}
 
-	public void setType(TransactionTypeDto type) {
+	public void setType(TransactionTypeDTO type) {
 		this.type = type;
 	}
 
 	@GwtIncompatible
-		public static TransactionTypeDto TypeToDto(TransactionType type) {
-			return TransactionTypeDto.valueOf(type.name());
+		public static TransactionTypeDTO TypeToDTO(TransactionType type) {
+			return TransactionTypeDTO.valueOf(type.name());
 		}
 
 		@GwtIncompatible
-		public static TransactionType dtoToType(TransactionTypeDto dto) {
+		public static TransactionType dtoToType(TransactionTypeDTO dto) {
 			return TransactionType.valueOf(dto.name());
 		}
 
 		@GwtIncompatible
-		public static TransactionOrderDto toDto(TransactionOrder entity) {
-			TransactionOrderDto dto = new TransactionOrderDto();
+		public static TransactionOrderDTO toDTO(TransactionOrder entity) {
+			TransactionOrderDTO dto = new TransactionOrderDTO();
 			if (entity == null) {
 				return dto;
 			}
@@ -115,7 +115,7 @@ public class TransactionOrderDto implements IsSerializable {
 			dto.setDestinationAccountBAN(entity.getDestinationAccountBAN());
 			dto.setPurpose(entity.getPurpose());
 			dto.setAmount(entity.getAmount());
-			dto.setType(TypeToDto(entity.getType()));
+			dto.setType(TypeToDTO(entity.getType()));
 
 			return dto;
 		}

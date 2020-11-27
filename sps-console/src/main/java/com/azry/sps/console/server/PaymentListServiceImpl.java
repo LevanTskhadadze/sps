@@ -5,7 +5,7 @@ import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.azry.sps.console.shared.paymentlist.PaymentListService;
 import com.azry.sps.server.services.paymentlist.PaymentListManager;
 import com.azry.sps.server.services.service.ServiceManager;
@@ -37,7 +37,7 @@ public class PaymentListServiceImpl extends RemoteServiceServlet implements Paym
 		for (PaymentListEntryDTO entry : paymentList.getEntries()) {
 			Service service = serviceManager.getService(entry.getServiceId());
 			if (service.isActive()) {
-				entry.setService(ServiceDto.toDto(service));
+				entry.setService(ServiceDTO.toDTO(service));
 				paymentListEntries.add(entry);
 			}
 		}

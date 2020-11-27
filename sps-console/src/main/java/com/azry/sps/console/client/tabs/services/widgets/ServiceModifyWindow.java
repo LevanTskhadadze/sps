@@ -10,7 +10,7 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -45,7 +45,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 	private ZTextField IBANField;
 
-	private ServiceDto dto;
+	private ServiceDTO dto;
 
 	private final TabPanel tabPanel;
 
@@ -53,18 +53,18 @@ public class ServiceModifyWindow extends ZWindow {
 
 	private final ServiceChannelWindow channelContainer;
 
-	private final ListStore<ServiceDto> store;
+	private final ListStore<ServiceDTO> store;
 
 
 
-	public ServiceModifyWindow(ServiceDto dto, ListStore<ServiceDto> store, List<ChannelDTO> channels) {
+	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store, List<ChannelDTO> channels) {
 		super();
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
 		}
 		else {
-			this.dto = new ServiceDto();
+			this.dto = new ServiceDTO();
 			this.dto.setName("");
 			this.dto.setActive(false);
 			this.dto.setId(0);
@@ -294,7 +294,7 @@ public class ServiceModifyWindow extends ZWindow {
 		}
 		return good && channelContainer.isValid();
 	}
-	private void retrieveInfo(ServiceDto dto, ServiceChannelWindow.ChannelInfo info) {
+	private void retrieveInfo(ServiceDTO dto, ServiceChannelWindow.ChannelInfo info) {
 		dto.setName(nameField.getCurrentValue());
 		dto.setProviderAccountIBAN(IBANField.getCurrentValue());
 		dto.setServicePayCode(payCodeField.getCurrentValue());
@@ -315,13 +315,12 @@ public class ServiceModifyWindow extends ZWindow {
 		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(dto,
-			new ServiceCallback<ServiceDto>(this) {
+			new ServiceCallback<ServiceDTO>(this) {
 
 				@Override
-				public void onServiceSuccess(ServiceDto newDto) {
-					dto = newDto;
+				public void onServiceSuccess(ServiceDTO newDTO) {
+					dto = newDTO;
 					store.update(dto);
-					store.applySort(false);
 				}
 			});
 		return true;
@@ -333,15 +332,15 @@ public class ServiceModifyWindow extends ZWindow {
 		}
 
 		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
-		dto = new ServiceDto();
+		dto = new ServiceDTO();
 		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(
 			dto,
-			new ServiceCallback<ServiceDto>(this) {
+			new ServiceCallback<ServiceDTO>(this) {
 				@Override
-				public void onServiceSuccess(ServiceDto ServiceDto) {
-					store.add(ServiceDto);
+				public void onServiceSuccess(ServiceDTO ServiceDTO) {
+					store.add(ServiceDTO);
 				}
 			});
 
@@ -368,6 +367,4 @@ public class ServiceModifyWindow extends ZWindow {
 			})
 			.build();
 	}
-
-
 }

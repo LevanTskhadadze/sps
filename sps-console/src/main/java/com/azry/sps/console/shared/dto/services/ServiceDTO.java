@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ServiceDto extends ConfigurableDTO implements IsSerializable {
+public class ServiceDTO extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
 
@@ -23,7 +23,7 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 
 	private boolean allChannels;
 
-	private List<ServiceChannelInfoDto> channels;
+	private List<ServiceChannelInfoDTO> channels;
 
 	private BigDecimal minAmount;
 
@@ -37,12 +37,12 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 
 	private boolean active;
 
-	public ServiceDto(long id, String name) {
+	public ServiceDTO(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public ServiceDto() {
+	public ServiceDTO() {
 	}
 
 	public long getId() {
@@ -85,11 +85,11 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 		this.allChannels = allChannels;
 	}
 
-	public List<ServiceChannelInfoDto> getChannels() {
+	public List<ServiceChannelInfoDTO> getChannels() {
 		return channels;
 	}
 
-	public void setChannels(List<ServiceChannelInfoDto> channels) {
+	public void setChannels(List<ServiceChannelInfoDTO> channels) {
 		this.channels = channels;
 	}
 
@@ -142,15 +142,15 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static ServiceDto toDto(Service service) {
+	public static ServiceDTO toDTO(Service service) {
 		if (service != null) {
-			ServiceDto dto = new ServiceDto();
+			ServiceDTO dto = new ServiceDTO();
  			dto.setId(service.getId());
 			dto.setName(service.getName());
 			dto.setIcon(service.getIcon());
 			dto.setGroupId(service.getGroupId());
 			dto.setAllChannels(service.isAllChannels());
-			dto.setChannels(ServiceChannelInfoDto.toDtos(service.getChannels()));
+			dto.setChannels(ServiceChannelInfoDTO.toDtos(service.getChannels()));
 			dto.setMinAmount(service.getMinAmount());
 			dto.setMaxAmount(service.getMaxAmount());
 			dto.setServiceDebtCode(service.getServiceDebtCode());
@@ -167,46 +167,46 @@ public class ServiceDto extends ConfigurableDTO implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<ServiceDto> toDtos(List<Service> services) {
-		List<ServiceDto> dtos = new ArrayList<>();
+	public static List<ServiceDTO> toDTOs(List<Service> services) {
+		List<ServiceDTO> dtos = new ArrayList<>();
 
 		for(Service service : services) {
-			dtos.add(toDto(service));
+			dtos.add(toDTO(service));
 		}
 
 		return dtos;
 	}
 
 	@GwtIncompatible
-	public static Service toEntity(ServiceDto serviceDto) {
+	public static Service toEntity(ServiceDTO serviceDTO) {
 		Service entity = new Service();
-		if(serviceDto == null) return entity;
+		if(serviceDTO == null) return entity;
 
-		entity.setId(serviceDto.getId());
-		entity.setName(serviceDto.getName());
-		entity.setIcon(serviceDto.getIcon());
-		entity.setGroupId(serviceDto.getGroupId());
-		entity.setAllChannels(serviceDto.isAllChannels());
-		entity.setChannels(ServiceChannelInfoDto.toEntities(serviceDto.getChannels()));
-		entity.setProviderAccountIBAN(serviceDto.getProviderAccountIBAN());
-		entity.setMinAmount(serviceDto.getMinAmount());
-		entity.setMaxAmount(serviceDto.getMaxAmount());
-		entity.setServiceDebtCode(serviceDto.getServiceDebtCode());
-		entity.setServicePayCode(serviceDto.getServicePayCode());
-		entity.setActive(serviceDto.isActive());
-		entity.setVersion(serviceDto.getVersion());
-		entity.setCreateTime(serviceDto.getCreateTime());
-		entity.setLastUpdateTime(serviceDto.getLastUpdateTime());
+		entity.setId(serviceDTO.getId());
+		entity.setName(serviceDTO.getName());
+		entity.setIcon(serviceDTO.getIcon());
+		entity.setGroupId(serviceDTO.getGroupId());
+		entity.setAllChannels(serviceDTO.isAllChannels());
+		entity.setChannels(ServiceChannelInfoDTO.toEntities(serviceDTO.getChannels()));
+		entity.setProviderAccountIBAN(serviceDTO.getProviderAccountIBAN());
+		entity.setMinAmount(serviceDTO.getMinAmount());
+		entity.setMaxAmount(serviceDTO.getMaxAmount());
+		entity.setServiceDebtCode(serviceDTO.getServiceDebtCode());
+		entity.setServicePayCode(serviceDTO.getServicePayCode());
+		entity.setActive(serviceDTO.isActive());
+		entity.setVersion(serviceDTO.getVersion());
+		entity.setCreateTime(serviceDTO.getCreateTime());
+		entity.setLastUpdateTime(serviceDTO.getLastUpdateTime());
 
 		return entity;
 	}
 
 	@GwtIncompatible
-	public static List<Service> toEntities(List<ServiceDto> serviceDtos) {
+	public static List<Service> toEntities(List<ServiceDTO> serviceDTOs) {
 		List<Service> entities = new ArrayList<>();
-		if(serviceDtos == null) return entities;
+		if(serviceDTOs == null) return entities;
 
-		for(ServiceDto dto : serviceDtos) {
+		for(ServiceDTO dto : serviceDTOs) {
 			entities.add(toEntity(dto));
 		}
 

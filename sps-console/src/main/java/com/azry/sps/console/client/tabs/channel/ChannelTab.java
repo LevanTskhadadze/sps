@@ -305,7 +305,7 @@ public class ChannelTab extends Composite {
 				})
 //				.dynamicStyle(new StringStateSelector<channelDTO>() {
 //					@Override
-//					public String getStyle(Cell.Context context, channelDTO dto) {
+//					public String getStyle(Cell.Context context, channelDTO com.azry.sps.api.dto) {
 //						return OPACITY_STYLE;
 //					}
 //				})

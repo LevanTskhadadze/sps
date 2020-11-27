@@ -3,6 +3,7 @@ package com.azry.sps.server.services.payment;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.payment.PaymentStatus;
+import com.azry.sps.common.model.payment.PaymentStatusLog;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -57,8 +58,10 @@ public class PaymentManagerBean implements PaymentManager {
 			}
 			sql.append(") ");
 		}
-		TypedQuery<Payment> query = em.createQuery(queryPrefix + sql.toString(), Payment.class);
 		TypedQuery<Long> count = em.createQuery(countPrefix + sql.toString(), Long.class);
+		sql.append("ORDER BY p.createTime DESC");
+		TypedQuery<Payment> query = em.createQuery(queryPrefix + sql.toString(), Payment.class);
+
 
 		for(Map.Entry<String, Serializable> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
@@ -80,10 +83,22 @@ public class PaymentManagerBean implements PaymentManager {
 	}
 
 	@Override
-	public List<Payment> getChanges(String agentPaymentId) {
-		TypedQuery<Payment> query =
-			em.createQuery("SELECT p FROM Payment p WHERE p.agentPaymentId = :id ORDER BY p.statusChangeTime ASC ", Payment.class)
-				.setParameter("id", agentPaymentId);
+	public Payment getPayment(long id) {
+		return em.find(Payment.class, id);
+	}
+
+	@Override
+	public Payment getPaymentByAgentId(String agentPaymentId) {
+		return em.createQuery("SELECT p FROM Payment p WHERE p.agentPaymentId = :paymentId", Payment.class)
+			.setParameter("paymentId", agentPaymentId)
+			.getSingleResult();
+	}
+
+	@Override
+	public List<PaymentStatusLog> getChanges(long id) {
+		TypedQuery<PaymentStatusLog> query =
+			em.createQuery("SELECT p FROM PaymentStatusLog p WHERE p.paymentId = :id ORDER BY p.statusTime ASC ", PaymentStatusLog.class)
+				.setParameter("id", id);
 
 		return query.getResultList();
 	}

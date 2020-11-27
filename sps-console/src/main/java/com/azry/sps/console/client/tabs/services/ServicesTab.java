@@ -14,7 +14,7 @@ import com.azry.sps.console.client.tabs.services.widgets.ServiceTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
@@ -41,9 +41,9 @@ public class ServicesTab extends Composite {
 
 	private ZSimpleComboBox<String> activeComboBox;
 
-	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceDto>> pagingLoader;
+	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceDTO>> pagingLoader;
 
-	ZGrid<ServiceDto> grid;
+	ZGrid<ServiceDTO> grid;
 
 	public ServicesTab() {
 		super();
@@ -59,9 +59,9 @@ public class ServicesTab extends Composite {
 	}
 
 	private void initPaging() {
-		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDto>>() {
+		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceDTO>>() {
 			@Override
-			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceDto>> callback) {
+			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceDTO>> callback) {
 				Map<String, String> params = new HashMap<>();
 				params.put("name", nameField.getCurrentValue());
 				params.put("active", activeComboBox.getCurrentValue());
@@ -70,9 +70,9 @@ public class ServicesTab extends Composite {
 				ServicesFactory.getServiceTabService().getServices(params,
 											loadConfig.getOffset(),
 											loadConfig.getLimit(),
-											new ServiceCallback<PagingLoadResult<ServiceDto>>(ServicesTab.this) {
+											new ServiceCallback<PagingLoadResult<ServiceDTO>>(ServicesTab.this) {
 					@Override
-					public void onServiceSuccess(PagingLoadResult<ServiceDto> result) {
+					public void onServiceSuccess(PagingLoadResult<ServiceDTO> result) {
 						callback.onSuccess(result);
 					}
 				});
@@ -81,7 +81,7 @@ public class ServicesTab extends Composite {
 		};
 
 		pagingLoader = new PagingLoader<>(proxy);
-		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceDto, PagingLoadResult<ServiceDto>>(ServiceTable.getListStore()));
+		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceDTO, PagingLoadResult<ServiceDTO>>(ServiceTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
 		pagingPossibleValues.add(20);

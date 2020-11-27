@@ -11,6 +11,8 @@ public interface ChannelManager {
 
 	List<Channel> getChannels();
 
+	Channel getChannel(long id);
+
 	List<Channel> getFilteredChannels(String name, Boolean isActive);
 
 	Channel updateChannel(Channel channel) throws SPSException;

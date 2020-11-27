@@ -31,4 +31,29 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>api</id>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+<!--					<bindingFiles>-->
+<!--						<bindingFile>ws-type-binding.xml</bindingFile>-->
+<!--					</bindingFiles>-->
+					<wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
+					<wsdlLocation>/wsdl/api.wsdl</wsdlLocation>
+					<packageName>com.azry.sps.api</packageName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

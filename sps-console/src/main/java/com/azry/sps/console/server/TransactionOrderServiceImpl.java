@@ -1,7 +1,7 @@
 package com.azry.sps.console.server;
 
-import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDto;
-import com.azry.sps.console.shared.dto.transactionorder.TransactionTypeDto;
+import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDTO;
+import com.azry.sps.console.shared.dto.transactionorder.TransactionTypeDTO;
 import com.azry.sps.console.shared.transactionorder.TransactionOrderService;
 import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
 
@@ -13,7 +13,7 @@ public class TransactionOrderServiceImpl implements TransactionOrderService {
 	TransactionOrderManager transactionOrderManager;
 
 	@Override
-	public TransactionOrderDto getTransaction(long paymentId, TransactionTypeDto type) {
-		return TransactionOrderDto.toDto(transactionOrderManager.getTransaction(paymentId, TransactionOrderDto.dtoToType(type)));
+	public TransactionOrderDTO getTransaction(long paymentId, TransactionTypeDTO type) {
+		return TransactionOrderDTO.toDTO(transactionOrderManager.getTransaction(paymentId, TransactionOrderDTO.dtoToType(type)));
 	}
 }

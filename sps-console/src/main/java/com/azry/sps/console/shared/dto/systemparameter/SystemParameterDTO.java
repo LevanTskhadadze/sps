@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SystemParameterDto implements IsSerializable {
+public class SystemParameterDTO implements IsSerializable {
 	private long id;
 
 	private String code;
 
 	private String value;
 
-	private SystemParameterDtoType type;
+	private SystemParameterDTOType type;
 
 	private String description;
 
@@ -45,11 +45,11 @@ public class SystemParameterDto implements IsSerializable {
 		this.value = value;
 	}
 
-	public SystemParameterDtoType getType() {
+	public SystemParameterDTOType getType() {
 		return type;
 	}
 
-	public void setType(SystemParameterDtoType type) {
+	public void setType(SystemParameterDTOType type) {
 		this.type = type;
 	}
 
@@ -63,15 +63,15 @@ public class SystemParameterDto implements IsSerializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof SystemParameterDto)) {
+		if (!(obj instanceof SystemParameterDTO)) {
 			return false;
 		}
-		return id == ((SystemParameterDto)obj).id;
+		return id == ((SystemParameterDTO)obj).id;
 	}
 
 	@GwtIncompatible
-	public static List<SystemParameterDto> toDTOs(List<SystemParameter> parameters) {
-		List<SystemParameterDto> dtos = new ArrayList<>();
+	public static List<SystemParameterDTO> toDTOs(List<SystemParameter> parameters) {
+		List<SystemParameterDTO> dtos = new ArrayList<>();
 
 		for (SystemParameter parameter : parameters) {
 			dtos.add(toDTO(parameter));
@@ -81,19 +81,19 @@ public class SystemParameterDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	private static SystemParameterDtoType convertTypeToDto(SystemParameterType value) {
-		return SystemParameterDtoType.values()[value.ordinal()];
+	private static SystemParameterDTOType convertTypeToDto(SystemParameterType value) {
+		return SystemParameterDTOType.values()[value.ordinal()];
 	}
 
 	@GwtIncompatible
-	private static SystemParameterType convertTypeToEntity(SystemParameterDtoType value) {
+	private static SystemParameterType convertTypeToEntity(SystemParameterDTOType value) {
 		return SystemParameterType.values()[value.ordinal()];
 	}
 
 
 	@GwtIncompatible
-	public static SystemParameterDto toDTO(SystemParameter parameter) {
-		SystemParameterDto dto = new SystemParameterDto();
+	public static SystemParameterDTO toDTO(SystemParameter parameter) {
+		SystemParameterDTO dto = new SystemParameterDTO();
 		dto.setId(parameter.getId());
 		dto.setCode(parameter.getCode());
 		dto.setValue(parameter.getValue());
@@ -103,7 +103,7 @@ public class SystemParameterDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static SystemParameter toEntity(SystemParameterDto dto) {
+	public static SystemParameter toEntity(SystemParameterDTO dto) {
 		SystemParameter entity = new SystemParameter();
 		entity.setId(dto.getId());
 		entity.setCode(dto.getCode());

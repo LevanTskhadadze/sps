@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class PaymentDto implements IsSerializable {
+public class PaymentDTO implements IsSerializable {
 
 	public enum Columns {
 		id,
@@ -42,7 +42,7 @@ public class PaymentDto implements IsSerializable {
 
 	private BigDecimal svcCommission;
 
-	private PaymentStatusDto status;
+	private PaymentStatusDTO status;
 
 	private Date statusChangeTime;
 
@@ -116,11 +116,11 @@ public class PaymentDto implements IsSerializable {
 		this.svcCommission = svcCommission;
 	}
 
-	public PaymentStatusDto getStatus() {
+	public PaymentStatusDTO getStatus() {
 		return status;
 	}
 
-	public void setStatus(PaymentStatusDto status) {
+	public void setStatus(PaymentStatusDTO status) {
 		this.status = status;
 	}
 
@@ -157,18 +157,18 @@ public class PaymentDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static PaymentStatusDto convertStatusToDto(PaymentStatus status) {
-		return status == null ? null : PaymentStatusDto.values()[status.ordinal()];
+	public static PaymentStatusDTO convertStatusToDto(PaymentStatus status) {
+		return status == null ? null : PaymentStatusDTO.values()[status.ordinal()];
 	}
 
 	@GwtIncompatible
-	public static PaymentStatus convertDtoToStatus(PaymentStatusDto statusDto) {
+	public static PaymentStatus convertDtoToStatus(PaymentStatusDTO statusDto) {
 		return statusDto == null ? null : PaymentStatus.values()[statusDto.ordinal()];
 	}
 
 	@GwtIncompatible
-	public static PaymentDto toDto(Payment payment) {
-		PaymentDto dto = new PaymentDto();
+	public static PaymentDTO toDTO(Payment payment) {
+		PaymentDTO dto = new PaymentDTO();
 		if (payment == null) {
 			return dto;
 		}
@@ -190,18 +190,18 @@ public class PaymentDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<PaymentDto> toDtos(List<Payment> payments) {
-		List<PaymentDto> dtos = new ArrayList<>();
+	public static List<PaymentDTO> toDTOs(List<Payment> payments) {
+		List<PaymentDTO> dtos = new ArrayList<>();
 
 		for(Payment payment : payments) {
-			dtos.add(toDto(payment));
+			dtos.add(toDTO(payment));
 		}
 
 		return dtos;
 	}
 
 	@GwtIncompatible
-	public static Payment toEntity(PaymentDto paymentDto) {
+	public static Payment toEntity(PaymentDTO paymentDto) {
 		Payment entity = new Payment();
 		if (paymentDto == null) {
 			return entity;
@@ -225,11 +225,11 @@ public class PaymentDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<Payment> toEntities(List<PaymentDto> paymentDtos) {
+	public static List<Payment> toEntities(List<PaymentDTO> paymentDTOS) {
 		List<Payment> entities = new ArrayList<>();
-		if(paymentDtos == null) return entities;
+		if(paymentDTOS == null) return entities;
 
-		for(PaymentDto dto : paymentDtos) {
+		for(PaymentDTO dto : paymentDTOS) {
 			entities.add(toEntity(dto));
 		}
 
@@ -237,11 +237,11 @@ public class PaymentDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<PaymentStatus> convertDtoToStatuses(List<PaymentStatusDto> dtos) {
+	public static List<PaymentStatus> convertDTOToStatuses(List<PaymentStatusDTO> dtos) {
 		List<PaymentStatus> entities = new ArrayList<>();
 		if(dtos == null) return entities;
 
-		for(PaymentStatusDto dto : dtos) {
+		for(PaymentStatusDTO dto : dtos) {
 			entities.add(convertDtoToStatus(dto));
 		}
 

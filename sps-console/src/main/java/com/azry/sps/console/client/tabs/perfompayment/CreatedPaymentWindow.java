@@ -10,9 +10,8 @@ import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
-import com.google.gwt.cell.client.AbstractCell;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,23 +39,23 @@ public class CreatedPaymentWindow extends ZWindow {
 
 	VerticalLayoutContainer container = new VerticalLayoutContainer();
 
-	private ZGrid<PaymentDto> grid;
+	private ZGrid<PaymentDTO> grid;
 
-	private final ListStore<PaymentDto> gridStore = new ListStore<>(new ModelKeyProvider<PaymentDto>() {
+	private final ListStore<PaymentDTO> gridStore = new ListStore<>(new ModelKeyProvider<PaymentDTO>() {
 		@Override
-		public String getKey(PaymentDto dto) {
+		public String getKey(PaymentDTO dto) {
 			return String.valueOf(dto.getAbonentCode());
 		}
 	});
 
-	private ListLoader<ListLoadConfig, ListLoadResult<PaymentDto>> loader;
+	private ListLoader<ListLoadConfig, ListLoadResult<PaymentDTO>> loader;
 
-	List<PaymentDto> payments;
+	List<PaymentDTO> payments;
 
 	ZButton closeB;
 	String serviceName;
 
-	public CreatedPaymentWindow(List<PaymentDto> payments) {
+	public CreatedPaymentWindow(List<PaymentDTO> payments) {
 		super(Mes.get("paymentsInfo"), 800, 500, false);
 		this.payments = payments;
 		initGrid();
@@ -84,18 +83,18 @@ public class CreatedPaymentWindow extends ZWindow {
 
 	private void initGrid() {
 
-		RpcProxy<ListLoadConfig, ListLoadResult<PaymentDto>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<PaymentDto>>() {
+		RpcProxy<ListLoadConfig, ListLoadResult<PaymentDTO>> proxy = new RpcProxy<ListLoadConfig, ListLoadResult<PaymentDTO>>() {
 			@Override
-			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<PaymentDto>> callback) {
+			public void load(ListLoadConfig loadConfig, final AsyncCallback<ListLoadResult<PaymentDTO>> callback) {
 				callback.onSuccess(new ListLoadResultBean<>(payments));
 			}
 		};
 
 		loader = new ListLoader<>(proxy);
-		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, PaymentDto, ListLoadResult<PaymentDto>>(gridStore));
+		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, PaymentDTO, ListLoadResult<PaymentDTO>>(gridStore));
 
 
-		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<PaymentDto>());
+		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<PaymentDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
@@ -114,17 +113,17 @@ public class CreatedPaymentWindow extends ZWindow {
 		});
 	}
 
-	private ColumnModel<PaymentDto> getColumns() {
-		final List<ColumnConfig<PaymentDto, ?>> columns = new ArrayList<>();
+	private ColumnModel<PaymentDTO> getColumns() {
+		List<ColumnConfig<PaymentDTO, ?>> columns = new ArrayList<>();
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto dto) {
+				public String getProperty(PaymentDTO dto) {
 					ServicesFactory.getServiceTabService().getService(dto.getServiceId(),
-						new ServiceCallback<ServiceDto>(CreatedPaymentWindow.this) {
+						new ServiceCallback<ServiceDTO>(CreatedPaymentWindow.this) {
 						@Override
-						public void onServiceSuccess(ServiceDto result) {
+						public void onServiceSuccess(ServiceDTO result) {
 							serviceName = result.getName();
 						}
 					});
@@ -134,49 +133,49 @@ public class CreatedPaymentWindow extends ZWindow {
 			.header(Mes.get("service"))
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.fixed()
 			.width(140)
 			.header(Mes.get("abonentCode"))
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto dto) {
+				public String getProperty(PaymentDTO dto) {
 					return dto.getAbonentCode();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.fixed()
 			.header(Mes.get("amount"))
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto dto) {
+				public String getProperty(PaymentDTO dto) {
 					return String.valueOf(dto.getAmount());
 				}
 			})
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.fixed()
 			.header(Mes.get("commission"))
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto dto) {
+				public String getProperty(PaymentDTO dto) {
 					return String.valueOf(dto.getClCommission());
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.width(250)
 			.fixed()
 			.header(Mes.get("paymentStatus"))
 			.cell(new AbstractCell<String>() {
 				@Override
 				public void render(Context context, String s, SafeHtmlBuilder sb) {
-					PaymentDto dto = gridStore.get(context.getIndex());
+					PaymentDTO dto = gridStore.get(context.getIndex());
 					String str = dto.getStatus() == null ?
 						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
 					sb.appendHtmlConstant("<div style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + "</div>");

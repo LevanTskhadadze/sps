@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ServiceChannelInfoDto implements IsSerializable {
+public class ServiceChannelInfoDTO implements IsSerializable {
 
 	private long channelId;
 
@@ -54,8 +54,8 @@ public class ServiceChannelInfoDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static ServiceChannelInfoDto toDto(ServiceChannelInfo serviceChannelInfo) {
-		ServiceChannelInfoDto dto = new ServiceChannelInfoDto();
+	public static ServiceChannelInfoDTO toDto(ServiceChannelInfo serviceChannelInfo) {
+		ServiceChannelInfoDTO dto = new ServiceChannelInfoDTO();
 		if(serviceChannelInfo == null) return dto;
 		dto.setChannelId(serviceChannelInfo.getChannelId());
 		dto.setMinAmount(serviceChannelInfo.getMinAmount());
@@ -66,8 +66,8 @@ public class ServiceChannelInfoDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<ServiceChannelInfoDto> toDtos(List<ServiceChannelInfo> serviceChannelInfoList) {
-		List<ServiceChannelInfoDto> dtos = new ArrayList<>();
+	public static List<ServiceChannelInfoDTO> toDtos(List<ServiceChannelInfo> serviceChannelInfoList) {
+		List<ServiceChannelInfoDTO> dtos = new ArrayList<>();
 		if(serviceChannelInfoList == null) return dtos;
 		for(ServiceChannelInfo service : serviceChannelInfoList) {
 			dtos.add(toDto(service));
@@ -78,7 +78,7 @@ public class ServiceChannelInfoDto implements IsSerializable {
 
 
 	@GwtIncompatible
-	public static ServiceChannelInfo toEntity(ServiceChannelInfoDto dto) {
+	public static ServiceChannelInfo toEntity(ServiceChannelInfoDTO dto) {
 		ServiceChannelInfo entity = new ServiceChannelInfo();
 
 		entity.setChannelId(dto.getChannelId());
@@ -90,10 +90,10 @@ public class ServiceChannelInfoDto implements IsSerializable {
 	}
 
 	@GwtIncompatible
-	public static List<ServiceChannelInfo> toEntities(List<ServiceChannelInfoDto> serviceChannelInfoDtoList) {
+	public static List<ServiceChannelInfo> toEntities(List<ServiceChannelInfoDTO> serviceChannelInfoDtoList) {
 		List<ServiceChannelInfo> entities = new ArrayList<>();
 		if(serviceChannelInfoDtoList == null) return entities;
-		for(ServiceChannelInfoDto dto : serviceChannelInfoDtoList) {
+		for(ServiceChannelInfoDTO dto : serviceChannelInfoDtoList) {
 			entities.add(toEntity(dto));
 		}
 
@@ -102,7 +102,7 @@ public class ServiceChannelInfoDto implements IsSerializable {
 
 	@Override
 	public boolean equals(Object obj){
-		if(!(obj instanceof ServiceChannelInfoDto)) return false;
-		return ((ServiceChannelInfoDto) obj).getChannelId() == getChannelId();
+		if(!(obj instanceof ServiceChannelInfoDTO)) return false;
+		return ((ServiceChannelInfoDTO) obj).getChannelId() == getChannelId();
 	}
 }

@@ -33,6 +33,12 @@ public class ChannelManagerBean implements ChannelManager {
 	}
 
 	@Override
+	public Channel getChannel(long id) {
+		return cachingService.getChannel(id);
+
+	}
+
+	@Override
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 
 		return cachingService.getFilteredChannels(name, isActive);

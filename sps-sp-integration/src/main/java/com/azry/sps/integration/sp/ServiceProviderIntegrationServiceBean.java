@@ -4,7 +4,7 @@ import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PayResponse;
-import com.azry.sps.integration.sp.dto.PaymentDto;
+import com.azry.sps.integration.sp.dto.PaymentDTO;
 import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.model.sysparam.Parameter;
 import com.azry.sps.systemparameters.model.sysparam.SysParam;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 @DependsOn("SystemParametersProducer")
-public class ServiceProviderIntegrationServiceImpl{
+public class ServiceProviderIntegrationServiceBean implements ServiceProviderIntegrationService {
 
 	@Inject
 	@SysParam(type = SystemParameterType.STRING, code = "spIntegrationUrl", defaultValue = "http://localhost:9006")
@@ -71,7 +71,7 @@ public class ServiceProviderIntegrationServiceImpl{
 
 	public PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SPSException {
 		try {
-			PayResponse payment = getProxy().pay(new PaymentDto(serviceCode,
+			PayResponse payment = getProxy().pay(new PaymentDTO(serviceCode,
 				String.valueOf(agentPaymentId),
 				abonentCode,
 				amount)).readEntity(PayResponse.class);

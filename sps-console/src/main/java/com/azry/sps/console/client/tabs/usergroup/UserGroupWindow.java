@@ -88,7 +88,7 @@ public abstract class UserGroupWindow extends ZWindow {
 			.build();
 
 		ZButton closeButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+			.text(Mes.get("quit"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override

@@ -13,7 +13,7 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
@@ -32,10 +32,10 @@ import java.util.List;
 public class ServiceTable {
 
 
-	private static final ListStore<ServiceDto> store = new ListStore<>(new ModelKeyProvider<ServiceDto>() {
+	private static final ListStore<ServiceDTO> store = new ListStore<>(new ModelKeyProvider<ServiceDTO>() {
 		@Override
-		public String getKey(ServiceDto serviceDto) {
-			return String.valueOf(serviceDto.getId());
+		public String getKey(ServiceDTO serviceDTO) {
+			return String.valueOf(serviceDTO.getId());
 		}
 	});
 
@@ -61,25 +61,25 @@ public class ServiceTable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static ColumnModel<ServiceDto> getMyColumnModel() {
+	public static ColumnModel<ServiceDTO> getMyColumnModel() {
 
-		List<ColumnConfig<ServiceDto, ?>> columns = new ArrayList<>();
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		List<ColumnConfig<ServiceDTO, ?>> columns = new ArrayList<>();
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header(Mes.get("id"))
 			.width(20)
-			.valueProvider(new ZStringProvider<ServiceDto>() {
+			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override
-				public String getProperty(ServiceDto ServiceDto) {return String.valueOf(ServiceDto.getId());
+				public String getProperty(ServiceDTO ServiceDTO) {return String.valueOf(ServiceDTO.getId());
 				}
 			})
 			.build());
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header(Mes.get("name"))
 			.width(100)
-			.valueProvider(new ZStringProvider<ServiceDto>() {
+			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override
-				public String getProperty(ServiceDto ServiceDto) {
-					return ServiceDto.getName();
+				public String getProperty(ServiceDTO ServiceDTO) {
+					return ServiceDTO.getName();
 				}
 			})
 			.build());
@@ -87,38 +87,38 @@ public class ServiceTable {
 		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
 			.header(Mes.get("createTime"))
 			.width(100)
-			.valueProvider(new ZStringProvider<ServiceDto>() {
+			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override
-				public String getProperty(ServiceDto ServiceDto) {
-					return ServiceDto.getFormattedCreateTime();
+				public String getProperty(ServiceDTO ServiceDTO) {
+					return ServiceDTO.getFormattedCreateTime();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header(Mes.get("lastUpdateTime"))
 			.width(100)
-			.valueProvider(new ZStringProvider<ServiceDto>() {
+			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override
-				public String getProperty(ServiceDto ServiceDto) {
-					return ServiceDto.getFormattedLastUpdateTime();
+				public String getProperty(ServiceDTO ServiceDTO) {
+					return ServiceDTO.getFormattedLastUpdateTime();
 				}
 			})
 			.sortable()
 			.build());
 
-		final ZIconButtonCell<ServiceDto, String> iconButtonCell;
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		final ZIconButtonCell<ServiceDTO, String> iconButtonCell;
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header("")
 			.width(32)
 			.fixed()
 			.cellClassName("grid-icon-column")
-			.cell(new ZIconButtonCell.Builder<ServiceDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
 				.gridStore(store)
 				.dynamicIcon(
-					new IconSelector<ServiceDto>() {
+					new IconSelector<ServiceDTO>() {
 						@Override
-						public ImageResource selectIcon(Cell.Context context, ServiceDto dto) {
+						public ImageResource selectIcon(Cell.Context context, ServiceDTO dto) {
 							final String url = ZURLBuilder.create(GWT.getHostPageBaseURL(), "sps/servlet/iconDownload")
 								.param("id", dto.getId())
 								.param("t", 1)
@@ -172,9 +172,9 @@ public class ServiceTable {
 						}
 					}
 				)
-				.clickHandler(new GridClickHandler<ServiceDto>() {
+				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDto dto) {
+					public void onClick(Cell.Context context, final ServiceDTO dto) {
 						new IconEditWindow("service", dto.getId(), store) {
 							@Override
 							public void onSave() {
@@ -188,28 +188,28 @@ public class ServiceTable {
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header("")
 			.width(32)
-			.cell(new ZIconButtonCell.Builder<ServiceDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
 				.gridStore(store)
-				.dynamicIcon(new IconSelector<ServiceDto>() {
+				.dynamicIcon(new IconSelector<ServiceDTO>() {
 					@Override
-					public ImageResource selectIcon(Cell.Context context, ServiceDto ServiceDto) {
-						if(ServiceDto.isActive()) return FAIconsProvider.getIcons().green();
+					public ImageResource selectIcon(Cell.Context context, ServiceDTO ServiceDTO) {
+						if(ServiceDTO.isActive()) return FAIconsProvider.getIcons().green();
 						return FAIconsProvider.getIcons().red();
 					}
 				})
-				.dynamicTooltip(new TooltipSelector<ServiceDto>() {
+				.dynamicTooltip(new TooltipSelector<ServiceDTO>() {
 					@Override
-					public String selectTooltip(Cell.Context context, ServiceDto serviceDto) {
-						if(serviceDto.isActive()) return Mes.get("deactivation");
+					public String selectTooltip(Cell.Context context, ServiceDTO serviceDTO) {
+						if(serviceDTO.isActive()) return Mes.get("deactivation");
 						return Mes.get("activation");
 					}
 				})
-				.clickHandler(new GridClickHandler<ServiceDto>() {
+				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDto dto) {
+					public void onClick(Cell.Context context, final ServiceDTO dto) {
 						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
 							@Override
 							public void onConfirm() {
@@ -232,20 +232,20 @@ public class ServiceTable {
 			.fixed()
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header("")
 			.width(32)
-			.cell(new ZIconButtonCell.Builder<ServiceDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
 				.gridStore(store)
 				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ServiceDto>() {
+				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDto ServiceDto) {
+					public void onClick(Cell.Context context, final ServiceDTO ServiceDto) {
 						ServicesFactory.getChannelService().getFilteredChannels("", null,
 							new ServiceCallback<List<ChannelDTO>>() {
 							@Override
 							public void onServiceSuccess(List<ChannelDTO> result) {
-								new ServiceModifyWindow(ServiceDto, store, result);
+								new ServiceModifyWindow(ServiceDTO, store, result);
 							}
 						});
 
@@ -257,23 +257,23 @@ public class ServiceTable {
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<ServiceDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header("")
 			.width(32)
-			.cell(new ZIconButtonCell.Builder<ServiceDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
 				.gridStore(store)
 				.icon(FAIconsProvider.getIcons().trash())
-				.clickHandler(new GridClickHandler<ServiceDto>() {
+				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceDto ServiceDto) {
+					public void onClick(Cell.Context context, final ServiceDTO ServiceDto) {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
 							@Override
 							public void onConfirm() {
-								ServicesFactory.getServiceTabService().removeService(ServiceDto.getId(), new ServiceCallback<Void>(this) {
+								ServicesFactory.getServiceTabService().removeService(ServiceDTO.getId(), new ServiceCallback<Void>() {
 
 									@Override
 									public void onServiceSuccess(Void unused) {
-										store.remove(ServiceDto);
+										store.remove(ServiceDTO);
 									}
 								});
 							}
