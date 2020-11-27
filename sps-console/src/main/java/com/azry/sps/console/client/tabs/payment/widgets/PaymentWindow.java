@@ -4,7 +4,7 @@ import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.shared.dto.payment.PaymentInfoDto;
+import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
 import com.sencha.gxt.widget.core.client.TabPanel;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
@@ -15,12 +15,12 @@ public class PaymentWindow extends ZWindow {
 
 	private final TabPanel tabPanel = new TabPanel();
 
-	public PaymentWindow(PaymentInfoDto dto) {
+	public PaymentWindow(PaymentInfoDTO dto) {
 		super();
 
-		tabPanel.add(new PaymentInfoTab(dto.getPaymentDto()), Mes.get("payment"));
-		tabPanel.add(new PaymentClientInfoTab(dto.getPaymentDto()), Mes.get("client"));
-		tabPanel.add(new PaymentTransactionsTab(dto.getPaymentDto(), dto.getPrincipal(), dto.getCommission()), Mes.get("transactions"));
+		tabPanel.add(new PaymentInfoTab(dto.getPaymentDTO(), dto.getService(), dto.getChannel()), Mes.get("payment"));
+		tabPanel.add(new PaymentClientInfoTab(dto.getPaymentDTO()), Mes.get("client"));
+		tabPanel.add(new PaymentTransactionsTab(dto.getPaymentDTO(), dto.getPrincipal(), dto.getClientCommission()), Mes.get("transactions"));
 		tabPanel.add(new PaymentStatusChangeTab(dto.getChanges()), Mes.get("paymentStatuses"));
 
 		add(tabPanel, new MarginData(0));
@@ -29,7 +29,7 @@ public class PaymentWindow extends ZWindow {
 		buttonBar.setMinButtonWidth(75);
 		addButton(getCancelButton());
 
-		setHeight("590px");
+		setHeight("480px");
 		setWidth("570px");
 		setHeadingText(Mes.get("paymentInfo"));
 		showInCenter();

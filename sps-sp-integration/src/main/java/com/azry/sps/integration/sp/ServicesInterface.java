@@ -2,7 +2,7 @@ package com.azry.sps.integration.sp;
 
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.dto.AbonentRequest;
-import com.azry.sps.integration.sp.dto.PaymentDto;
+import com.azry.sps.integration.sp.dto.PaymentDTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -21,6 +21,6 @@ public interface ServicesInterface {
 
 	@POST
 	@Path("/pay")
-	Response pay(PaymentDto dto);
+	Response pay(PaymentDTO dto);
 
 }

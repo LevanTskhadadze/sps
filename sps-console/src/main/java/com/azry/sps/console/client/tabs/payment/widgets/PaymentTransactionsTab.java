@@ -2,8 +2,8 @@ package com.azry.sps.console.client.tabs.payment.widgets;
 
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDto;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDTO;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -15,11 +15,11 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 
 	private static final int FIELD_WIDTH = 290;
 
-	private PaymentDto paymentDto;
+	private PaymentDTO paymentDTO;
 
-	public PaymentTransactionsTab(PaymentDto paymentDto, TransactionOrderDto principal, TransactionOrderDto commission) {
+	public PaymentTransactionsTab(PaymentDTO paymentDTO, TransactionOrderDTO principal, TransactionOrderDTO commission) {
 		super();
-		this.paymentDto = paymentDto;
+		this.paymentDTO = paymentDTO;
 		FieldSet principalFieldSet = new FieldSet();
 		principalFieldSet.setHeadingText(Mes.get("principalAmount"));
 		principalFieldSet.add(getForm(principal), new MarginData(0));
@@ -36,7 +36,7 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 
 	}
 
-	private FlexTable getForm(TransactionOrderDto dto) {
+	private FlexTable getForm(TransactionOrderDTO dto) {
 		final FlexTable formTable = new FlexTable();
 		formTable.getElement().getStyle().setMarginTop(15, com.google.gwt.dom.client.Style.Unit.PX);
 		formTable.getElement().getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
@@ -44,19 +44,15 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 		formTable.setWidget(0, 0, new HTML(Mes.get("fromAccount") + ":"));
 		formTable.setWidget(1, 0, new HTML(Mes.get("recipient")  + ":"));
 		formTable.setWidget(2, 0, new HTML(Mes.get("purpose") + ":"));
-		formTable.setWidget(3, 0, new HTML(Mes.get("status") + ":"));
-		formTable.setWidget(4, 0, new HTML(Mes.get("statusMessage") + ":"));
-		formTable.setWidget(5, 0, new HTML(Mes.get("statusChangeTime") + ":"));
-		formTable.setWidget(6, 0, new HTML(Mes.get("createTime") + ":"));
+		formTable.setWidget(3, 0, new HTML(Mes.get("statusChangeTime") + ":"));
+		formTable.setWidget(4, 0, new HTML(Mes.get("createTime") + ":"));
 		formTable.getWidget(1, 0).setWidth("220px");
 
 		formTable.setWidget(0, 1, getSenderAccountField(dto));
 		formTable.setWidget(1, 1, getRecipientField(dto));
 		formTable.setWidget(2, 1, getPurposeField(dto));
-		formTable.setWidget(3, 1, getStatusField());
-		formTable.setWidget(4, 1, getStatusMessageField(dto));
-		formTable.setWidget(5, 1, getStatusChangeTime());
-		formTable.setWidget(6, 1, getCreateTime());
+		formTable.setWidget(3, 1, getStatusChangeTime());
+		formTable.setWidget(4, 1, getCreateTime());
 		formTable.setCellSpacing(4);
 		formTable.setStyleName("editForm");
 
@@ -64,7 +60,7 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 
 	}
 
-	private ZTextField getPurposeField(TransactionOrderDto dto) {
+	private ZTextField getPurposeField(TransactionOrderDTO dto) {
 		ZTextField purposeField = new ZTextField.Builder()
 			.width(FIELD_WIDTH)
 			.enable(false)
@@ -75,35 +71,13 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 		return purposeField;
 	}
 
-	private ZTextField getStatusField() {
-		ZTextField statusField = new ZTextField.Builder()
-			.width(FIELD_WIDTH)
-			.enable(false)
-			.build();
-		if (paymentDto.getStatus() != null) {
-			statusField.setValue(Mes.get("PAYMENT_" + paymentDto.getStatus().name()));
-		}
-		return statusField;
-	}
-
-	private ZTextField getStatusMessageField(TransactionOrderDto dto) {
-		ZTextField firstNameField = new ZTextField.Builder()
-			.width(FIELD_WIDTH)
-			.enable(false)
-			.build();
-		if (dto.getSourceAccountBAN() != null) {
-			firstNameField.setValue(dto.getSourceAccountBAN());
-		}
-		return firstNameField;
-	}
-
 	private ZTextField getStatusChangeTime() {
 		ZTextField statusChangeTime = new ZTextField.Builder()
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		if (paymentDto.getStatusChangeTime() != null) {
-			statusChangeTime.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getStatusChangeTime()));
+		if (paymentDTO.getStatusChangeTime() != null) {
+			statusChangeTime.setValue(DateTimeFormat.getFormat(PaymentDTO.DATE_PATTERN).format(paymentDTO.getStatusChangeTime()));
 		}
 		return statusChangeTime;
 	}
@@ -114,13 +88,13 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.enable(false)
 			.build();
 
-		if (paymentDto.getCreateTime() != null) {
-			createTimeField.setValue(DateTimeFormat.getFormat(PaymentDto.DATE_PATTERN).format(paymentDto.getCreateTime()));
+		if (paymentDTO.getCreateTime() != null) {
+			createTimeField.setValue(DateTimeFormat.getFormat(PaymentDTO.DATE_PATTERN).format(paymentDTO.getCreateTime()));
 		}
 		return createTimeField;
 	}
 
-	private ZTextField getSenderAccountField(TransactionOrderDto dto) {
+	private ZTextField getSenderAccountField(TransactionOrderDTO dto) {
 		ZTextField senderField = new ZTextField.Builder()
 			.width(FIELD_WIDTH)
 			.enable(false)
@@ -132,7 +106,7 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 		return senderField;
 	}
 
-	private ZTextField getRecipientField(TransactionOrderDto dto) {
+	private ZTextField getRecipientField(TransactionOrderDTO dto) {
 		ZTextField recipientField = new ZTextField.Builder()
 			.width(FIELD_WIDTH)
 			.enable(false)

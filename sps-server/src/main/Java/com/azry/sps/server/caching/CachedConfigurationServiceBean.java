@@ -154,6 +154,11 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	}
 
 	@Override
+	public Channel getChannel(long channelId) {
+		return ((ChannelCachingManger) cacheMap.get(CachedDataType.CHANNEL.getClassSimpleName())).get(channelId);
+	}
+
+	@Override
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 		return ((ChannelCachingManger) cacheMap.get(CachedDataType.CHANNEL.getClassSimpleName())).getFilteredChannels(name, isActive);
 	}

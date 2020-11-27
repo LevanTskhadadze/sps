@@ -10,13 +10,12 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.azry.sps.console.shared.dto.payment.PaymentInfoDto;
-import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.safecss.shared.SafeStyles;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -29,63 +28,63 @@ import java.util.List;
 public class PaymentTable {
 
 
-	private static final ListStore<PaymentDto> store = new ListStore<>(new ModelKeyProvider<PaymentDto>() {
+	private static final ListStore<PaymentDTO> store = new ListStore<>(new ModelKeyProvider<PaymentDTO>() {
 		@Override
-		public String getKey(PaymentDto paymentDto) {
-			return String.valueOf(paymentDto.getId());
+		public String getKey(PaymentDTO paymentDTO) {
+			return String.valueOf(paymentDTO.getId());
 		}
 	});
 
 
-	public static ListStore<PaymentDto> setListStore(List<PaymentDto> result) {
+	public static ListStore<PaymentDTO> setListStore(List<PaymentDTO> result) {
 		store.clear();
 		store.addAll(result);
 
 		return store;
 	}
 
-	public static ListStore<PaymentDto> getListStore() {
+	public static ListStore<PaymentDTO> getListStore() {
 		return store;
 	}
 
-	public static ColumnModel<PaymentDto> getMyColumnModel(final List<ServiceDto> services, final List<ChannelDTO> channels) {
+	public static ColumnModel<PaymentDTO> getMyColumnModel(final List<ServiceDTO> services, final List<ChannelDTO> channels) {
 
-		List<ColumnConfig<PaymentDto, ?>> columns = new ArrayList<>();
+		List<ColumnConfig<PaymentDTO, ?>> columns = new ArrayList<>();
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("id"))
 			.width(80)
 			.fixed()
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return String.valueOf(paymentDto.getId());
+				public String getProperty(PaymentDTO paymentDTO) {
+					return String.valueOf(paymentDTO.getId());
 				}
 			})
 			.build());
 
 
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("agentPaymentId"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return paymentDto.getAgentPaymentId() == null ?
-						"" : paymentDto.getAgentPaymentId();
+				public String getProperty(PaymentDTO paymentDTO) {
+					return paymentDTO.getAgentPaymentId() == null ?
+						"" : paymentDTO.getAgentPaymentId();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("channel"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
+				public String getProperty(PaymentDTO paymentDTO) {
 					for (ChannelDTO channel : channels) {
-						if (channel.getId() == paymentDto.getChannelId()) {
+						if (channel.getId() == paymentDTO.getChannelId()) {
 							return channel.getName();
 						}
 					}
@@ -95,14 +94,14 @@ public class PaymentTable {
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("service"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					for (ServiceDto service : services) {
-						if (service.getId() == paymentDto.getServiceId()) {
+				public String getProperty(PaymentDTO paymentDTO) {
+					for (ServiceDTO service : services) {
+						if (service.getId() == paymentDTO.getServiceId()) {
 							return service.getName();
 						}
 					}
@@ -112,62 +111,62 @@ public class PaymentTable {
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("abonentCode"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return paymentDto.getAbonentCode() == null ?
-						"" : paymentDto.getAbonentCode();
+				public String getProperty(PaymentDTO paymentDTO) {
+					return paymentDTO.getAbonentCode() == null ?
+						"" : paymentDTO.getAbonentCode();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("amount"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return paymentDto.getAmount() == null ?
-						"" : paymentDto.getAmount().toString();
+				public String getProperty(PaymentDTO paymentDTO) {
+					return paymentDTO.getAmount() == null ?
+						"" : paymentDTO.getAmount().toString();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("clientCommission"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return paymentDto.getClCommission() == null ?
-						"" : paymentDto.getClCommission().toString();
+				public String getProperty(PaymentDTO paymentDTO) {
+					return paymentDTO.getClCommission() == null ?
+						"" : paymentDTO.getClCommission().toString();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("serviceCommission"))
 			.width(100)
-			.valueProvider(new ZStringProvider<PaymentDto>() {
+			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
-				public String getProperty(PaymentDto paymentDto) {
-					return paymentDto.getSvcCommission() == null ?
-						"" : paymentDto.getSvcCommission().toString();
+				public String getProperty(PaymentDTO paymentDTO) {
+					return paymentDTO.getSvcCommission() == null ?
+						"" : paymentDTO.getSvcCommission().toString();
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("status"))
 			.width(100)
 			.cell(new AbstractCell<String>() {
 				@Override
 				public void render(Context context, String value, SafeHtmlBuilder sb) {
 
-					PaymentDto dto = store.get(context.getIndex());
+					PaymentDTO dto = store.get(context.getIndex());
 					String str = dto.getStatus() == null ?
 						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
 					sb.appendHtmlConstant("<div style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + "</div>");
@@ -176,23 +175,23 @@ public class PaymentTable {
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header("")
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
+			.cell(new ZIconButtonCell.Builder<PaymentDTO, String>()
 				.gridStore(store)
 				.icon(FAIconsProvider.getIcons().play())
-				.dynamicVisibility(new BooleanStateSelector<PaymentDto>() {
+				.dynamicVisibility(new BooleanStateSelector<PaymentDTO>() {
 					@Override
-					public boolean check(Cell.Context context, PaymentDto paymentDto) {
-						return paymentDto.getStatus() == PaymentStatusDto.REJECTED;
+					public boolean check(Cell.Context context, PaymentDTO paymentDTO) {
+						return paymentDTO.getStatus() == PaymentStatusDTO.REJECTED;
 					}
 				})
 
-				.clickHandler(new GridClickHandler<PaymentDto>() {
+				.clickHandler(new GridClickHandler<PaymentDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final PaymentDto paymentDto) {
+					public void onClick(Cell.Context context, final PaymentDTO paymentDTO) {
 					}
 				})
 				.build()
@@ -200,20 +199,20 @@ public class PaymentTable {
 
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<PaymentDto, String>()
+		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header("")
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<PaymentDto, String>()
+			.cell(new ZIconButtonCell.Builder<PaymentDTO, String>()
 				.gridStore(store)
 				.icon(FAIconsProvider.getIcons().eye())
-				.clickHandler(new GridClickHandler<PaymentDto>() {
+				.clickHandler(new GridClickHandler<PaymentDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final PaymentDto paymentDto) {
-						ServicesFactory.getPaymentService().getPaymentInfo(paymentDto.getAgentPaymentId(), paymentDto.getId(), new ServiceCallback<PaymentInfoDto>() {
+					public void onClick(Cell.Context context, final PaymentDTO paymentDTO) {
+						ServicesFactory.getPaymentService().getPaymentInfo(paymentDTO, new ServiceCallback<PaymentInfoDTO>() {
 							@Override
-							public void onServiceSuccess(PaymentInfoDto result) {
-								result.setPaymentDto(paymentDto);
+							public void onServiceSuccess(PaymentInfoDTO result) {
+								result.setPaymentDTO(paymentDTO);
 								new PaymentWindow(result);
 							}
 						});

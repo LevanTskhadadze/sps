@@ -3,7 +3,7 @@ package com.azry.sps.console.client.tabs.services.widgets;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDto;
+import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDTO;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -26,13 +26,13 @@ public class ServiceChannelWindow extends Composite {
 
 	private final FlexTable table;
 
-	List<ServiceChannelInfoDto> channelInfos;
+	List<ServiceChannelInfoDTO> channelInfos;
 
 	List<ChannelInfoRow> rows;
 
 	VerticalLayoutContainer container;
 
-	public ServiceChannelWindow(List<ServiceChannelInfoDto> entries, List<ChannelDTO> channels, boolean allSelected){
+	public ServiceChannelWindow(List<ServiceChannelInfoDTO> entries, List<ChannelDTO> channels, boolean allSelected){
 		super();
 		container = new VerticalLayoutContainer();
 		table = new FlexTable();
@@ -79,13 +79,13 @@ public class ServiceChannelWindow extends Composite {
 		}
 	}
 
-	private void addEntries(List<ServiceChannelInfoDto> infos, List<ChannelDTO> channels) {
+	private void addEntries(List<ServiceChannelInfoDTO> infos, List<ChannelDTO> channels) {
 		int i = 1;
 		if (infos == null) {
 			infos = new ArrayList<>();
 		}
 		for(ChannelDTO dto : channels) {
-			ServiceChannelInfoDto newInfo = getNewInfo(dto.getId());
+			ServiceChannelInfoDTO newInfo = getNewInfo(dto.getId());
 			if (infos.contains(newInfo)) {
 				newInfo = infos.get(infos.indexOf(newInfo));
 			}
@@ -119,8 +119,8 @@ public class ServiceChannelWindow extends Composite {
 		}
 	}
 
-	private ServiceChannelInfoDto getNewInfo(long id) {
-		ServiceChannelInfoDto info = new ServiceChannelInfoDto();
+	private ServiceChannelInfoDTO getNewInfo(long id) {
+		ServiceChannelInfoDTO info = new ServiceChannelInfoDTO();
 		info.setChannelId(id);
 		return info;
 	}
@@ -183,16 +183,16 @@ public class ServiceChannelWindow extends Composite {
 
 	static class ChannelInfo {
 
-		List<ServiceChannelInfoDto> channels;
+		List<ServiceChannelInfoDTO> channels;
 
 		boolean allChannels;
 
-		ChannelInfo(List<ServiceChannelInfoDto> ch, boolean allChannels) {
+		ChannelInfo(List<ServiceChannelInfoDTO> ch, boolean allChannels) {
 			this.channels = ch;
 			this.allChannels = allChannels;
 		}
 
-		public List<ServiceChannelInfoDto> getChannels() {
+		public List<ServiceChannelInfoDTO> getChannels() {
 			return channels;
 		}
 

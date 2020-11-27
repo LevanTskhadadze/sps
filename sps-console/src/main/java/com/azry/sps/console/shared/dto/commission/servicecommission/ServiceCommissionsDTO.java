@@ -1,7 +1,7 @@
-package com.azry.sps.console.shared.dto.commission.clientcommission;
+package com.azry.sps.console.shared.dto.commission.servicecommission;
 
-import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.common.model.commission.CommissionRateType;
+import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.console.client.utils.StringUtil;
 import com.azry.sps.console.shared.dto.ConfigurableDTO;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
@@ -13,21 +13,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializable {
+public class ServiceCommissionsDTO extends ConfigurableDTO implements IsSerializable {
 
 	private long id;
-
-	private long priority;
 
 	private boolean allServices;
 
 	private List<String> servicesIds = new ArrayList<>();
 
-	private boolean allChannels;
-
-	private List<String> channelsIds = new ArrayList<>();
-
 	private CommissionRateTypeDTO rateType;
+
+	private long priority;
 
 	private BigDecimal minCommission;
 
@@ -35,20 +31,20 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 
 	private BigDecimal Commission;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public long getPriority() {
 		return priority;
 	}
 
 	public void setPriority(long priority) {
 		this.priority = priority;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public boolean isAllServices() {
@@ -65,22 +61,6 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 
 	public void setServicesIds(List<String> servicesIds) {
 		this.servicesIds = servicesIds;
-	}
-
-	public boolean isAllChannels() {
-		return allChannels;
-	}
-
-	public void setAllChannels(boolean allChannels) {
-		this.allChannels = allChannels;
-	}
-
-	public List<String> getChannelsIds() {
-		return channelsIds;
-	}
-
-	public void setChannelsIds(List<String> channelsIds) {
-		this.channelsIds = channelsIds;
 	}
 
 	public CommissionRateTypeDTO getRateType() {
@@ -116,26 +96,22 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public static ClientCommissionsDto toDTO(ClientCommissions clientCommissions) {
-		if (clientCommissions != null) {
-			ClientCommissionsDto dto = new ClientCommissionsDto();
-			dto.setId(clientCommissions.getId());
-			dto.setPriority(clientCommissions.getPriority());
-			dto.setAllServices(clientCommissions.isAllServices());
-			if (!clientCommissions.getServicesIds().isEmpty())  {
-				dto.setServicesIds(Arrays.asList(clientCommissions.getServicesIds().split(",")));
+	public static ServiceCommissionsDTO toDTO(ServiceCommissions serviceCommissions) {
+		if (serviceCommissions != null) {
+			ServiceCommissionsDTO dto = new ServiceCommissionsDTO();
+			dto.setId(serviceCommissions.getId());
+			dto.setAllServices(serviceCommissions.isAllServices());
+			if (!serviceCommissions.getServicesIds().isEmpty())  {
+				dto.setServicesIds(Arrays.asList(serviceCommissions.getServicesIds().split(",")));
 			}
-			dto.setAllChannels(clientCommissions.isAllChannels());
-			if (!clientCommissions.getChannelsIds().isEmpty()) {
-				dto.setChannelsIds(Arrays.asList(clientCommissions.getChannelsIds().split(",")));
-			}
-			dto.setRateType(CommissionRateTypeDTO.valueOf(clientCommissions.getRateType().name()));
-			dto.setMinCommission(clientCommissions.getMinCommission());
-			dto.setMaxCommission(clientCommissions.getMaxCommission());
-			dto.setCommission(clientCommissions.getCommission());
-			dto.setCreateTime(clientCommissions.getCreateTime());
-			dto.setLastUpdateTime(clientCommissions.getLastUpdateTime());
-			dto.setVersion(clientCommissions.getVersion());
+			dto.setRateType(CommissionRateTypeDTO.valueOf(serviceCommissions.getRateType().name()));
+			dto.setMinCommission(serviceCommissions.getMinCommission());
+			dto.setMaxCommission(serviceCommissions.getMaxCommission());
+			dto.setCommission(serviceCommissions.getCommission());
+			dto.setCreateTime(serviceCommissions.getCreateTime());
+			dto.setLastUpdateTime(serviceCommissions.getLastUpdateTime());
+			dto.setVersion(serviceCommissions.getVersion());
+			dto.setPriority(serviceCommissions.getPriority());
 
 			return dto;
 		}
@@ -143,13 +119,11 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public static List<ClientCommissionsDto> toDTOs(List<ClientCommissions> clientCommissions) {
-		if (clientCommissions != null) {
-			List<ClientCommissionsDto> dtos = new ArrayList<>();
-
-			for (ClientCommissions cc : clientCommissions) {
-				dtos.add(toDTO(cc));
-
+	public static List<ServiceCommissionsDTO> toDTOs(List<ServiceCommissions> serviceCommissions) {
+		if (serviceCommissions != null) {
+			List<ServiceCommissionsDTO> dtos = new ArrayList<>();
+			for (ServiceCommissions entity : serviceCommissions) {
+				dtos.add(toDTO(entity));
 			}
 			return dtos;
 		}
@@ -157,14 +131,11 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 	}
 
 	@GwtIncompatible
-	public ClientCommissions fromDTO() {
-		ClientCommissions cc = new ClientCommissions();
+	public ServiceCommissions fromDTO() {
+		ServiceCommissions cc = new ServiceCommissions();
 		cc.setId(this.getId());
-		cc.setPriority(this.getPriority());
 		cc.setAllServices(this.isAllServices());
 		cc.setServicesIds(StringUtil.joinEndWithDel(this.getServicesIds(), ","));
-		cc.setAllChannels(this.isAllChannels());
-		cc.setChannelsIds(StringUtil.joinEndWithDel(this.getChannelsIds(), ","));
 		cc.setRateType(CommissionRateType.valueOf(this.getRateType().name()));
 		cc.setMinCommission(this.getMinCommission());
 		cc.setMaxCommission(this.getMaxCommission());
@@ -172,6 +143,7 @@ public class ClientCommissionsDto extends ConfigurableDTO implements IsSerializa
 		cc.setCreateTime(this.getCreateTime());
 		cc.setLastUpdateTime(this.getLastUpdateTime());
 		cc.setVersion(this.getVersion());
+		cc.setPriority(this.getPriority());
 
 		return cc;
 	}

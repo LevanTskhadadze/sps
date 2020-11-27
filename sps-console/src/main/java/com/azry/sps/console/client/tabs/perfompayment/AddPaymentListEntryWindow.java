@@ -13,7 +13,7 @@ import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.dto.providerintegration.GetInfoStatusDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -36,7 +36,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 	private final VerticalLayoutContainer container;
 
 	private ZSimpleComboBox<ServiceGroupDTO> serviceGroupsCB;
-	private ZSimpleComboBox<ServiceDto> serviceCB;
+	private ZSimpleComboBox<ServiceDTO> serviceCB;
 	private ZTextField abonentCodeF;
 	private ZTextField abonenCodeInfo;
 
@@ -63,9 +63,9 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			}
 		});
 
-		ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDto>>(this) {
+		ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDTO>>(this) {
 			@Override
-			public void onServiceSuccess(List<ServiceDto> result) {
+			public void onServiceSuccess(List<ServiceDTO> result) {
 				serviceCB.replaceAll(result);
 			}
 		});
@@ -105,16 +105,16 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			}
 		});
 
-		serviceCB = new ZSimpleComboBox.Builder<ServiceDto>()
-			.keyProvider(new ModelKeyProvider<ServiceDto>() {
+		serviceCB = new ZSimpleComboBox.Builder<ServiceDTO>()
+			.keyProvider(new ModelKeyProvider<ServiceDTO>() {
 				@Override
-				public String getKey(ServiceDto dto) {
+				public String getKey(ServiceDTO dto) {
 					return String.valueOf(dto.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<ServiceDto>() {
+			.labelProvider(new LabelProvider<ServiceDTO>() {
 				@Override
-				public String getLabel(ServiceDto dto) {
+				public String getLabel(ServiceDTO dto) {
 					return dto.getName();
 				}
 			})
@@ -171,16 +171,16 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 	private void onServiceGroupSelect() {
 		if (serviceGroupsCB.getCurrentValue() == null) {
-			ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDto>>(this) {
+			ServicesFactory.getServiceTabService().getAllActiveServices(new ServiceCallback<List<ServiceDTO>>(this) {
 				@Override
-				public void onServiceSuccess(List<ServiceDto> result) {
+				public void onServiceSuccess(List<ServiceDTO> result) {
 					serviceCB.replaceAll(result);
 				}
 			});
 		} else {
-			ServicesFactory.getServiceTabService().getServicesByServiceGroup(serviceGroupsCB.getCurrentValue().getId(), new ServiceCallback<List<ServiceDto>>(this) {
+			ServicesFactory.getServiceTabService().getServicesByServiceGroup(serviceGroupsCB.getCurrentValue().getId(), new ServiceCallback<List<ServiceDTO>>(this) {
 				@Override
-				public void onServiceSuccess(List<ServiceDto> result) {
+				public void onServiceSuccess(List<ServiceDTO> result) {
 					serviceCB.replaceAll(result);
 				}
 			});
@@ -288,5 +288,5 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 		return dto;
 	}
 
-	public abstract void onSave(PaymentListEntryDTO dto, ServiceDto serviceDto);
+	public abstract void onSave(PaymentListEntryDTO dto, ServiceDTO serviceDto);
 }

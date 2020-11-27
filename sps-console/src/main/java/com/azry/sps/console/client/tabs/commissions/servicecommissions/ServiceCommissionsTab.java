@@ -19,8 +19,8 @@ import com.azry.sps.console.client.utils.FormatDate;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
-import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -54,40 +54,40 @@ import java.util.List;
 
 public class ServiceCommissionsTab extends Composite {
 
-	private List<ServiceDto> serviceDTOs;
+	private List<ServiceDTO> serviceDTOs;
 
 	private final VerticalLayoutContainer verticalLayoutContainer;
 
-	private ZGrid<ServiceCommissionsDto> grid;
+	private ZGrid<ServiceCommissionsDTO> grid;
 
 	private ZToolBar toolBar;
 
 	private ZPagingToolBar pagingToolBar;
 
-	private ZSimpleComboBox<ServiceDto> service;
+	private ZSimpleComboBox<ServiceDTO> service;
 
 
-	private final ListStore<ServiceCommissionsDto> gridStore = new ListStore<>(new ModelKeyProvider<ServiceCommissionsDto>() {
+	private final ListStore<ServiceCommissionsDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceCommissionsDTO>() {
 		@Override
-		public String getKey(ServiceCommissionsDto dto) {
+		public String getKey(ServiceCommissionsDTO dto) {
 			return String.valueOf(dto.getId());
 		}
 	});
 
-	Store.StoreSortInfo<ServiceCommissionsDto> storeSortInfo;
+	Store.StoreSortInfo<ServiceCommissionsDTO> storeSortInfo;
 
-	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDto>> loader;
+	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>> loader;
 
 
 	public ServiceCommissionsTab() {
 		initToolbar();
-		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
+		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDTO>>() {
 			@Override
-			public void onServiceSuccess(List<ServiceDto> result) {
+			public void onServiceSuccess(List<ServiceDTO> result) {
 				serviceDTOs = result;
-				Collections.sort(serviceDTOs,new Comparator<ServiceDto>() {
+				Collections.sort(serviceDTOs,new Comparator<ServiceDTO>() {
 					@Override
-					public int compare(ServiceDto o1, ServiceDto o2) {
+					public int compare(ServiceDTO o1, ServiceDTO o2) {
 						return o1.getName().compareTo(o2.getName());
 					}
 				});
@@ -108,23 +108,23 @@ public class ServiceCommissionsTab extends Composite {
 
 	private void initToolbar() {
 
-		service = new ZSimpleComboBox.Builder<ServiceDto>()
-			.keyProvider(new ModelKeyProvider<ServiceDto>() {
+		service = new ZSimpleComboBox.Builder<ServiceDTO>()
+			.keyProvider(new ModelKeyProvider<ServiceDTO>() {
 				@Override
-				public String getKey(ServiceDto dto) {
+				public String getKey(ServiceDTO dto) {
 					return String.valueOf(dto.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<ServiceDto>() {
+			.labelProvider(new LabelProvider<ServiceDTO>() {
 				@Override
-				public String getLabel(ServiceDto dto) {
+				public String getLabel(ServiceDTO dto) {
 					return dto.getName();
 				}
 			})
 			.noSelectionLabel(Mes.get("allServices"))
-			.template(new AbstractSafeHtmlRenderer<ServiceDto>() {
+			.template(new AbstractSafeHtmlRenderer<ServiceDTO>() {
 				@Override
-				public SafeHtml render(ServiceDto object) {
+				public SafeHtml render(ServiceDTO object) {
 					String inlineStyle = "font-size: 13px;";
 					if (object.getId() == -1) {
 						inlineStyle += "color: grey; border-top: 1px dotted grey; border-bottom: 1px dotted grey;";
@@ -172,7 +172,7 @@ public class ServiceCommissionsTab extends Composite {
 				public void onSelect(SelectEvent selectEvent) {
 					new ServiceCommissionsWindow(null, serviceDTOs, ActionMode.ADD) {
 						@Override
-						public void onSave(ServiceCommissionsDto dto) {
+						public void onSave(ServiceCommissionsDTO dto) {
 							gridStore.add(dto);
 						}
 					}.showInCenter();
@@ -196,16 +196,16 @@ public class ServiceCommissionsTab extends Composite {
 	}
 
 
-	private void initServiceComboboxData(List<ServiceDto> dtos) {
+	private void initServiceComboboxData(List<ServiceDTO> dtos) {
 
-		service.add(new ServiceDto(-1, Mes.get("allServicesSelected")));
+		service.add(new ServiceDTO(-1, Mes.get("allServicesSelected")));
 		service.addAll(dtos);
 	}
 
 
 	private String getServiceIdForFilter() {
 		if (service != null) {
-			ServiceDto dto = service.getValue();
+			ServiceDTO dto = service.getValue();
 			return dto == null ? null : String.valueOf(dto.getId());
 		}
 		return null;
@@ -213,15 +213,15 @@ public class ServiceCommissionsTab extends Composite {
 
 	private void initGrid() {
 
-		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDto>>() {
+		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>>() {
 			@Override
-			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceCommissionsDto>> callback) {
+			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceCommissionsDTO>> callback) {
 				ServicesFactory.getServiceCommissionsService().getServiceCommissions(
 						getServiceIdForFilter(),
 						loadConfig,
-						new ServiceCallback<PagingLoadResult<ServiceCommissionsDto>>() {
+						new ServiceCallback<PagingLoadResult<ServiceCommissionsDTO>>() {
 					@Override
-					public void onServiceSuccess(PagingLoadResult<ServiceCommissionsDto> result) {
+					public void onServiceSuccess(PagingLoadResult<ServiceCommissionsDTO> result) {
 						callback.onSuccess(result);
 					}
 				});
@@ -229,16 +229,16 @@ public class ServiceCommissionsTab extends Composite {
 		};
 
 		loader = new PagingLoader<>(proxy);
-		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceCommissionsDto, PagingLoadResult<ServiceCommissionsDto>>(gridStore));
+		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceCommissionsDTO, PagingLoadResult<ServiceCommissionsDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceCommissionsDto, Date>() {
+		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceCommissionsDTO, Date>() {
 			@Override
-			public Date getValue(ServiceCommissionsDto dto) {
+			public Date getValue(ServiceCommissionsDTO dto) {
 				return dto.getLastUpdateTime();
 			}
 
 			@Override
-			public void setValue(ServiceCommissionsDto o, Date o2) { }
+			public void setValue(ServiceCommissionsDTO o, Date o2) { }
 
 			@Override
 			public String getPath() {
@@ -256,7 +256,7 @@ public class ServiceCommissionsTab extends Composite {
 			.possibleValue(pageSize)
 			.build();
 
-		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ServiceCommissionsDto>());
+		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ServiceCommissionsDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
@@ -275,27 +275,27 @@ public class ServiceCommissionsTab extends Composite {
 	}
 
 
-	private ColumnModel<ServiceCommissionsDto> getColumns() {
-		List<ColumnConfig<ServiceCommissionsDto, ?>> columns = new ArrayList<>();
+	private ColumnModel<ServiceCommissionsDTO> getColumns() {
+		List<ColumnConfig<ServiceCommissionsDTO, ?>> columns = new ArrayList<>();
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(50)
 //			.fixed()
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					return String.valueOf(dto.getPriority());
 				}
 			})
 			.header(Mes.get("priority"))
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(250)
 //			.fixed()
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					return dto.isAllServices() ? Mes.get("allServices") : Mes.get("services") + ":" + dto.getServicesIds().size();
 				}
 			})
@@ -303,83 +303,83 @@ public class ServiceCommissionsTab extends Composite {
 			.build());
 
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(200)
 			.fixed()
 			.header(Mes.get("minCommission"))
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					String pSign = dto.getRateType() == CommissionRateTypeDTO.PERCENT ? "%" : "";
 					return dto.getMinCommission() == null ? Mes.get("notDefined") : (dto.getMinCommission() + pSign);
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(200)
 			.fixed()
 			.header(Mes.get("maxCommission"))
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					String pSign = dto.getRateType() == CommissionRateTypeDTO.PERCENT ? "%" : "";
 					return dto.getMaxCommission() == null ? Mes.get("notDefined") : (dto.getMaxCommission() + pSign);
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(100)
 			.fixed()
 			.header(Mes.get("commission"))
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					String pSign = dto.getRateType() == CommissionRateTypeDTO.PERCENT ? "%" : "";
 					return dto.getCommission() + pSign;
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(200)
 			.fixed()
 			.header(Mes.get("createTime"))
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					return FormatDate.formatDateTime(dto.getCreateTime());
 				}
 			})
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(200)
 			.fixed()
 			.header(Mes.get("lastUpdateTime"))
-			.valueProvider(new ZStringProvider<ServiceCommissionsDto>() {
+			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
-				public String getProperty(ServiceCommissionsDto dto) {
+				public String getProperty(ServiceCommissionsDTO dto) {
 					return FormatDate.formatDateTime(dto.getLastUpdateTime());
 				}
 			})
 			.build());
 
 //		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
 				.gridStore(gridStore)
 				.tooltip(Mes.get("edit"))
 				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ServiceCommissionsDto>() {
+				.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceCommissionsDto dto) {
+					public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
 						new ServiceCommissionsWindow(dto, serviceDTOs, ActionMode.EDIT) {
 							@Override
-							public void onSave(ServiceCommissionsDto dto) {
+							public void onSave(ServiceCommissionsDTO dto) {
 								gridStore.update(dto);
 								gridStore.applySort(false);
 							}
@@ -391,16 +391,16 @@ public class ServiceCommissionsTab extends Composite {
 
 //		}
 
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDto, String>()
+		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(32)
 			.fixed()
-			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDto, String>()
+			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
 				.gridStore(gridStore)
 				.icon(FAIconsProvider.getIcons().trash())
 				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<ServiceCommissionsDto>() {
+				.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final ServiceCommissionsDto dto) {
+					public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
 						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
 							@Override
 							public void onConfirm() {

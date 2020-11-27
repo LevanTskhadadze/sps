@@ -7,8 +7,8 @@ import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDtoType;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTOType;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -34,19 +34,19 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private ZTextField codeField;
 
-	private ZSimpleComboBox<SystemParameterDtoType> typeField;
+	private ZSimpleComboBox<SystemParameterDTOType> typeField;
 
 	private Widget valueField;
 
 	private TextArea descField;
 
-	private final SystemParameterDto dto;
+	private final SystemParameterDTO dto;
 
 	private final FlexTable formContainer = new FlexTable();
 
-	private final ListStore<SystemParameterDto> store;
+	private final ListStore<SystemParameterDTO> store;
 
-	public SystemParametersModifyWindow(SystemParameterDto dto, ListStore<SystemParameterDto> store) {
+	public SystemParametersModifyWindow(SystemParameterDTO dto, ListStore<SystemParameterDTO> store) {
 		super();
 		this.store = store;
 
@@ -55,8 +55,8 @@ public class SystemParametersModifyWindow extends ZWindow {
 			this.dto = dto;
 		}
 		else {
-			this.dto = new SystemParameterDto();
-			this.dto.setType(SystemParameterDtoType.STRING);
+			this.dto = new SystemParameterDTO();
+			this.dto.setType(SystemParameterDTOType.STRING);
 			this.dto.setDescription("");
 			this.dto.setCode("");
 			this.dto.setValue("");
@@ -117,7 +117,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 		return codeField;
 	}
 
-	private ZSimpleComboBox<SystemParameterDtoType> getTypeField() {
+	private ZSimpleComboBox<SystemParameterDTOType> getTypeField() {
 		List<String> types = new ArrayList<>();
 		types.add("string");
 		types.add("integer");
@@ -127,28 +127,28 @@ public class SystemParametersModifyWindow extends ZWindow {
 		types.remove(cur);
 		types.add(0, cur);
 
-		typeField = new ZSimpleComboBox.Builder<SystemParameterDtoType>()
-			.labelProvider(new LabelProvider<SystemParameterDtoType>() {
+		typeField = new ZSimpleComboBox.Builder<SystemParameterDTOType>()
+			.labelProvider(new LabelProvider<SystemParameterDTOType>() {
 				@Override
-				public String getLabel(SystemParameterDtoType item) {
+				public String getLabel(SystemParameterDTOType item) {
 					return Mes.get(item.name());
 				}
 			})
-			.keyProvider(new ModelKeyProvider<SystemParameterDtoType>() {
+			.keyProvider(new ModelKeyProvider<SystemParameterDTOType>() {
 				@Override
-				public String getKey(SystemParameterDtoType item) {
+				public String getKey(SystemParameterDTOType item) {
 					return item.name();
 				}
 			})
 			.enableSorting(false)
-			.values(Arrays.asList(SystemParameterDtoType.values()))
+			.values(Arrays.asList(SystemParameterDTOType.values()))
 			.width(305)
 			.editable(false)
 			.build();
 
-		typeField.addSelectionHandler(new ZSimpleComboBox.SelectionHandler<SystemParameterDtoType>() {
+		typeField.addSelectionHandler(new ZSimpleComboBox.SelectionHandler<SystemParameterDTOType>() {
 			@Override
-			public void onSelection(SystemParameterDtoType s) {
+			public void onSelection(SystemParameterDTOType s) {
 				formContainer.setWidget(2, 1, getValueField());
 			}
 		});
@@ -169,7 +169,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private IsWidget getValueCheckBox() {
 		CheckBox checkBox = new CheckBox();
-		if (dto.getType().equals(SystemParameterDtoType.BOOLEAN)) {
+		if (dto.getType().equals(SystemParameterDTOType.BOOLEAN)) {
 			checkBox.setValue(Boolean.parseBoolean(dto.getValue()));
 		}
 
@@ -179,7 +179,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private IsWidget getValueTextField() {
 		TextArea textArea = new TextArea();
-		if (dto.getType().equals(SystemParameterDtoType.STRING)) {
+		if (dto.getType().equals(SystemParameterDTOType.STRING)) {
 			textArea.setValue(dto.getValue());
 		}
 
@@ -191,7 +191,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private IsWidget getValueNumberField() {
 		IntegerField integerField = new IntegerField();
-		if (dto.getType().equals(SystemParameterDtoType.INTEGER)) {
+		if (dto.getType().equals(SystemParameterDTOType.INTEGER)) {
 			integerField.setValue(Integer.parseInt(dto.getValue()));
 		}
 		integerField.setWidth("305px");
@@ -266,11 +266,11 @@ public class SystemParametersModifyWindow extends ZWindow {
 	private void doAdd() {
 		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().addParameter(dto,
-			new ServiceCallback<SystemParameterDto>() {
+			new ServiceCallback<SystemParameterDTO>() {
 
 				@Override
-				public void onServiceSuccess(SystemParameterDto systemParameterDto) {
-					store.add(systemParameterDto);
+				public void onServiceSuccess(SystemParameterDTO systemParameterDTO) {
+					store.add(systemParameterDTO);
 				}
 			});
 	}

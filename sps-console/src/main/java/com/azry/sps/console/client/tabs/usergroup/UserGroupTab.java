@@ -364,7 +364,7 @@ public class UserGroupTab extends Composite {
 				})
 //				.dynamicStyle(new StringStateSelector<UserGroupDTO>() {
 //					@Override
-//					public String getStyle(Cell.Context context, UserGroupDTO dto) {
+//					public String getStyle(Cell.Context context, UserGroupDTO com.azry.sps.api.dto) {
 //						return OPACITY_STYLE;
 //					}
 //				})

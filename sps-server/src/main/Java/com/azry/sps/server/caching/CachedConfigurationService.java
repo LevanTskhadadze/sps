@@ -41,6 +41,8 @@ public interface CachedConfigurationService {
 
 	List<Channel> getChannels();
 
+	Channel getChannel(long channelId);
+
 	List<Channel> getFilteredChannels(String name, Boolean isActive);
 
 	ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit);

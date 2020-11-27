@@ -15,7 +15,7 @@ import com.azry.sps.console.client.tabs.users.UsersTab;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -391,9 +391,9 @@ public class TabBuilder {
 					}
 				}
 
-				ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDto>>() {
+				ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDTO>>() {
 					@Override
-					public void onServiceSuccess(final List<ServiceDto> sevices) {
+					public void onServiceSuccess(final List<ServiceDTO> sevices) {
 						ServicesFactory.getChannelService().getChannels(new ServiceCallback<List<ChannelDTO>>() {
 							@Override
 							public void onServiceSuccess(List<ChannelDTO> channels) {

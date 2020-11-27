@@ -3,7 +3,7 @@ package com.azry.sps.integration.sp.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class PaymentDto implements Serializable {
+public class PaymentDTO implements Serializable {
 
 	private String serviceCode;
 
@@ -13,14 +13,14 @@ public class PaymentDto implements Serializable {
 
 	private BigDecimal amount;
 
-	public PaymentDto(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) {
+	public PaymentDTO(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) {
 		this.serviceCode = serviceCode;
 		this.agentPaymentId = agentPaymentId;
 		this.abonentCode = abonentCode;
 		this.amount = amount;
 	}
 
-	public PaymentDto() {
+	public PaymentDTO() {
 
 	}
 

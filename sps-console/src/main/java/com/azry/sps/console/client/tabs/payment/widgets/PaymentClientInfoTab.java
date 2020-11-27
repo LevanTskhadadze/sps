@@ -3,7 +3,7 @@ package com.azry.sps.console.client.tabs.payment.widgets;
 import com.azry.gxt.client.zcomp.ZDateField;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -13,9 +13,9 @@ public class PaymentClientInfoTab extends VerticalLayoutContainer {
 
 	private static final int FIELD_WIDTH = 290;
 
-	private final PaymentDto dto;
+	private final PaymentDTO dto;
 
-	public PaymentClientInfoTab(PaymentDto dto) {
+	public PaymentClientInfoTab(PaymentDTO dto) {
 		super();
 		this.dto = dto;
 
@@ -87,7 +87,7 @@ public class PaymentClientInfoTab extends VerticalLayoutContainer {
 	private ZDateField getBirthDateField() {
 		ZDateField birthDateField = new ZDateField.Builder()
 			.width(FIELD_WIDTH)
-			.pattern(PaymentDto.DATE_PATTERN)
+			.pattern(PaymentDTO.DATE_PATTERN)
 			.enabled(false)
 			.build();
 		birthDateField.setValue(dto.getClient().getBirthDate());

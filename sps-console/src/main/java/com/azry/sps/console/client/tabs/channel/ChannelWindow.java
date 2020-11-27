@@ -112,7 +112,7 @@ public abstract class ChannelWindow extends ZWindow {
 			.build();
 
 		cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+			.text(Mes.get("quit"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override

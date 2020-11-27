@@ -8,11 +8,11 @@ import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
-import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDto;
+import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.dto.providerintegration.GetInfoStatusDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -48,8 +48,8 @@ public class RowEntry {
 
 
 	private final PaymentListEntryDTO paymentListEntryDTO;
-	private ServiceDto serviceDto;
-	private ClientCommissionsDto clientCommissionsDto;
+	private ServiceDTO serviceDTO;
+	private ClientCommissionsDTO clientCommissionsDTO;
 	private final PaymentListTable paymentListTable;
 
 
@@ -62,7 +62,7 @@ public class RowEntry {
 		commissionVerified = false;
 		abonentInfo = "";
 		commission = new BigDecimal("0.00");
-		serviceDto = paymentListEntryDTO.getService();
+		serviceDTO = paymentListEntryDTO.getService();
 		this.paymentListTable = paymentListTable;
 		this.paymentListEntryDTO = paymentListEntryDTO;
 		this.table = table;
@@ -83,7 +83,7 @@ public class RowEntry {
 		setServiceCell();
 		setAbonentCells(abonentInfo, "","payment-table-loading", ALIGN_CENTER, true);
 
-		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDto.getServiceDebtCode(),paymentListEntryDTO.getAbonentCode(),
+		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDTO.getServiceDebtCode(),paymentListEntryDTO.getAbonentCode(),
 			new ServiceCallback<AbonentInfoDTO>(false) {
 			@Override
 			public void onFailure(Throwable throwable) {
@@ -99,14 +99,14 @@ public class RowEntry {
 				updateRow(abonentInfoDTO.getStatus());
 			}
 		});
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(), new ServiceCallback<ClientCommissionsDto>(false) {
+		ServicesFactory.getClientCommissionsService().getClientCommission(serviceDTO.getId(), new ServiceCallback<ClientCommissionsDTO>(false) {
 			@Override
-			public void onServiceSuccess(ClientCommissionsDto dto) {
+			public void onServiceSuccess(ClientCommissionsDTO dto) {
 				if (dto == null) {
 					setCommissionCell(getCommissionCellErrorWidget(), "payment-table-loaded-not-found", ALIGN_CENTER, false);
 					amountF.disable();
 				} else {
-					clientCommissionsDto = dto;
+					clientCommissionsDTO = dto;
 					setCommissionCell(new Label(NumberFormatUtils.format(commission)), "payment-table-loaded", ALIGN_RIGHT, false);
 				}
 			}
@@ -130,12 +130,12 @@ public class RowEntry {
 	}
 
 	private void setServiceCell() {
-		if (serviceDto.isActive()) {
-			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDto), null,  null, ALIGN_LEFT, false);
+		if (serviceDTO.isActive()) {
+			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDTO), null,  null, ALIGN_LEFT, false);
 			amountF.enable();
 		}
 		else {
-			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDto), null,  "payment-table-connection-error", ALIGN_LEFT, false);
+			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDTO), null,  "payment-table-connection-error", ALIGN_LEFT, false);
 			amountF.disable();
 		}
 	}
@@ -187,14 +187,14 @@ public class RowEntry {
 	}
 
 	private void checkMinMaxAmount() {
-		if (amountF.getValue().compareTo(serviceDto.getMinAmount()) < 0) {
-			amountF.setValue(serviceDto.getMinAmount());
-			amountF.markInvalid(Mes.get("minAmount") + ": " + NumberFormatUtils.format(serviceDto.getMinAmount()));
+		if (amountF.getValue().compareTo(serviceDTO.getMinAmount()) < 0) {
+			amountF.setValue(serviceDTO.getMinAmount());
+			amountF.markInvalid(Mes.get("minAmount") + ": " + NumberFormatUtils.format(serviceDTO.getMinAmount()));
 			paymentListTable.updateAggregatePaymentAmount();
 		}
-		if (amountF.getValue().compareTo(serviceDto.getMaxAmount()) > 0) {
-			amountF.setValue(serviceDto.getMaxAmount());
-			amountF.markInvalid(Mes.get("maxAmount") + ": " + NumberFormatUtils.format(serviceDto.getMaxAmount()));
+		if (amountF.getValue().compareTo(serviceDTO.getMaxAmount()) > 0) {
+			amountF.setValue(serviceDTO.getMaxAmount());
+			amountF.markInvalid(Mes.get("maxAmount") + ": " + NumberFormatUtils.format(serviceDTO.getMaxAmount()));
 			paymentListTable.updateAggregatePaymentAmount();
 		}
 	}
@@ -263,9 +263,9 @@ public class RowEntry {
 	}
 
 	public void updateCommissionValue() {
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDto.getId(), new ServiceCallback<ClientCommissionsDto>(false) {
+		ServicesFactory.getClientCommissionsService().getClientCommission(serviceDTO.getId(), new ServiceCallback<ClientCommissionsDTO>(false) {
 			@Override
-			public void onServiceSuccess(ClientCommissionsDto dto) {
+			public void onServiceSuccess(ClientCommissionsDTO dto) {
 				if (dto == null) {
 					if (isCommissionVerified()) {
 						commissionVerified = false;
@@ -281,7 +281,7 @@ public class RowEntry {
 					paymentListTable.updateAggregateCommission();
 					amountF.disable();
 				} else {
-					clientCommissionsDto = dto;
+					clientCommissionsDTO = dto;
 					amountF.enable();
 					setCommissionCell(new Label(calculateCommission()), "payment-table-loaded", ALIGN_RIGHT, false);
 					paymentListTable.updateAggregateCommission();
@@ -294,10 +294,10 @@ public class RowEntry {
 
 	private String calculateCommission() {
 		if (amountF.getValue().compareTo(BigDecimal.ZERO) > 0) {
-			if (clientCommissionsDto.getRateType() == CommissionRateTypeDTO.FIXED) {
-				commission = clientCommissionsDto.getCommission();
+			if (clientCommissionsDTO.getRateType() == CommissionRateTypeDTO.FIXED) {
+				commission = clientCommissionsDTO.getCommission();
 			} else {
-				commission = amountF.getValue().multiply(clientCommissionsDto.getCommission().divide(new BigDecimal(100), RoundingMode.UP));
+				commission = amountF.getValue().multiply(clientCommissionsDTO.getCommission().divide(new BigDecimal(100), RoundingMode.UP));
 			}
 			if (!isCommissionVerified()) {
 				paymentListTable.incrementReadyPaymentEntryCount();
@@ -335,8 +335,8 @@ public class RowEntry {
 		return paymentListEntryDTO;
 	}
 
-	public ServiceDto getServiceDto() {
-		return serviceDto;
+	public ServiceDTO getServiceDTO() {
+		return serviceDTO;
 	}
 
 	public void clearAmountF() {

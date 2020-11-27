@@ -1,51 +1,72 @@
 package com.azry.sps.console.shared.dto.payment;
 
-import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDto;
+import com.azry.sps.common.model.payment.PaymentStatusLog;
+import com.azry.sps.console.shared.dto.channel.ChannelDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
+import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDTO;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import lombok.Data;
 
 import java.util.List;
 
-@Data
-public class PaymentInfoDto implements IsSerializable {
+public class PaymentInfoDTO implements IsSerializable {
 
-	private PaymentDto paymentDto;
+	private PaymentDTO paymentDTO;
 
-	private List<PaymentDto> changes;
+	List<PaymentStatusLogDTO> changes;
 
-	private TransactionOrderDto principal;
+	TransactionOrderDTO principal;
 
-	private TransactionOrderDto commission;
+	TransactionOrderDTO clientCommission;
 
-	public PaymentDto getPaymentDto() {
-		return paymentDto;
+	ServiceDTO service;
+
+	ChannelDTO channel;
+
+	public ServiceDTO getService() {
+		return service;
 	}
 
-	public void setPaymentDto(PaymentDto paymentDto) {
-		this.paymentDto = paymentDto;
+	public void setService(ServiceDTO service) {
+		this.service = service;
 	}
 
-	public List<PaymentDto> getChanges() {
+	public ChannelDTO getChannel() {
+		return channel;
+	}
+
+	public void setChannel(ChannelDTO channel) {
+		this.channel = channel;
+	}
+
+	public PaymentDTO getPaymentDTO() {
+		return paymentDTO;
+	}
+
+	public void setPaymentDTO(PaymentDTO paymentDTO) {
+		this.paymentDTO = paymentDTO;
+	}
+
+	public List<PaymentStatusLogDTO> getChanges() {
 		return changes;
 	}
 
-	public void setChanges(List<PaymentDto> changes) {
+	public void setChanges(List<PaymentStatusLogDTO> changes) {
 		this.changes = changes;
 	}
 
-	public TransactionOrderDto getPrincipal() {
+	public TransactionOrderDTO getPrincipal() {
 		return principal;
 	}
 
-	public void setPrincipal(TransactionOrderDto principal) {
+	public void setPrincipal(TransactionOrderDTO principal) {
 		this.principal = principal;
 	}
 
-	public TransactionOrderDto getCommission() {
-		return commission;
+	public TransactionOrderDTO getClientCommission() {
+		return clientCommission;
 	}
 
-	public void setCommission(TransactionOrderDto commission) {
-		this.commission = commission;
+	public void setClientCommission(TransactionOrderDTO clientCommission) {
+		this.clientCommission = clientCommission;
 	}
 }

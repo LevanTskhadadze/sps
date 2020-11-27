@@ -15,12 +15,13 @@ import com.azry.sps.console.client.tabs.payment.widgets.PaymentTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
+import com.sencha.gxt.core.client.util.DateWrapper;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
@@ -33,14 +34,19 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
+import org.apache.james.mime4j.field.datetime.DateTime;
 
+import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class PaymentTab extends Composite {
 
@@ -56,17 +62,17 @@ public class PaymentTab extends Composite {
 
 	private ZDateField creationEndTimeField;
 
-	private ZSimpleComboBox<ServiceDto> serviceComboBox;
+	private ZSimpleComboBox<ServiceDTO> serviceComboBox;
 
 	private ZSimpleComboBox<ChannelDTO> channelComboBox;
 
-	private ZMultiSelectComboBox<PaymentStatusDto> paymentStatusComboBox;
+	private ZMultiSelectComboBox<PaymentStatusDTO> paymentStatusComboBox;
 
-	private PagingLoader<PagingLoadConfig, PagingLoadResult<PaymentDto>> pagingLoader;
+	private PagingLoader<PagingLoadConfig, PagingLoadResult<PaymentDTO>> pagingLoader;
 
-	ZGrid<PaymentDto> grid;
+	ZGrid<PaymentDTO> grid;
 
-	public PaymentTab(List<ServiceDto> services, List<ChannelDTO> channels){
+	public PaymentTab(List<ServiceDTO> services, List<ChannelDTO> channels){
 		super();
 		content = new VerticalLayoutContainer();
 
@@ -81,32 +87,32 @@ public class PaymentTab extends Composite {
 	}
 
 	private void initPaging() {
-		RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDto>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDto>>() {
+		RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDTO>>() {
 			@Override
-			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDto>> callback) {
+			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDTO>> callback) {
 				Map<String, Serializable> params = new HashMap<>();
 				if (idField.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.id.name(), idField.getCurrentValue());
+					params.put(PaymentDTO.Columns.id.name(), idField.getCurrentValue());
 				}
 				if (agentPaymentIdField.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.agentPaymentId.name(), agentPaymentIdField.getCurrentValue());
+					params.put(PaymentDTO.Columns.agentPaymentId.name(), agentPaymentIdField.getCurrentValue());
 				}
 				if (creationStartTimeField.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.startTime.name(), creationStartTimeField.getCurrentValue());
+					params.put(PaymentDTO.Columns.startTime.name(), creationStartTimeField.getCurrentValue());
 				}
 				if (creationEndTimeField.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.endTime.name(), creationEndTimeField.getCurrentValue());
+					params.put(PaymentDTO.Columns.endTime.name(), creationEndTimeField.getCurrentValue());
 				}
 				if (serviceComboBox.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.serviceId.name(), serviceComboBox.getCurrentValue().getId());
+					params.put(PaymentDTO.Columns.serviceId.name(), serviceComboBox.getCurrentValue().getId());
 				}
 				if (channelComboBox.getCurrentValue() != null) {
-					params.put(PaymentDto.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
+					params.put(PaymentDTO.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
 				}
 
-				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDto>>() {
+				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(), new ServiceCallback<PagingLoadResult<PaymentDTO>>() {
 					@Override
-					public void onServiceSuccess(PagingLoadResult<PaymentDto> result) {
+					public void onServiceSuccess(PagingLoadResult<PaymentDTO> result) {
 						callback.onSuccess(result);
 					}
 				});
@@ -115,7 +121,7 @@ public class PaymentTab extends Composite {
 		};
 		pagingLoader = new PagingLoader<>(proxy);
 
-		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, PaymentDto, PagingLoadResult<PaymentDto>>(PaymentTable.getListStore()));
+		pagingLoader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, PaymentDTO, PagingLoadResult<PaymentDTO>>(PaymentTable.getListStore()));
 		grid.setLoader(pagingLoader);
 		List<Integer> pagingPossibleValues = new ArrayList<>();
 		pagingPossibleValues.add(20);
@@ -130,7 +136,7 @@ public class PaymentTab extends Composite {
 		pagingLoader.load();
 	}
 
-	private void initToolbar(List<ServiceDto> services, List<ChannelDTO> channels) {
+	private void initToolbar(List<ServiceDTO> services, List<ChannelDTO> channels) {
 		idField = new ZNumberField.Builder<>(new NumberPropertyEditor.LongPropertyEditor())
 			.emptyText(Mes.get("id"))
 			.build();
@@ -141,29 +147,31 @@ public class PaymentTab extends Composite {
 			.build();
 
 		creationStartTimeField = new ZDateField.Builder()
-			.pattern(PaymentDto.DATE_PATTERN)
+			.pattern(PaymentDTO.DATE_PATTERN)
 			.width(TOOLBAR_FIELD_WIDTH)
-			.value(new Date())
 			.emptyText(Mes.get("leastTime"))
 			.build();
+		DateWrapper dateWrapper = new DateWrapper(new Date());
+		dateWrapper = dateWrapper.addHours(-dateWrapper.getHours());
+		dateWrapper = dateWrapper.addMinutes(-dateWrapper.getMinutes());
+		creationStartTimeField.setValue(dateWrapper.asDate());
 
 		creationEndTimeField = new ZDateField.Builder()
-			.pattern(PaymentDto.DATE_PATTERN)
+			.pattern(PaymentDTO.DATE_PATTERN)
 			.width(TOOLBAR_FIELD_WIDTH)
-			.value(new Date())
 			.emptyText(Mes.get("atMostTime"))
 			.build();
 
-		serviceComboBox = new ZSimpleComboBox.Builder<ServiceDto>()
-			.keyProvider(new ModelKeyProvider<ServiceDto>() {
+		serviceComboBox = new ZSimpleComboBox.Builder<ServiceDTO>()
+			.keyProvider(new ModelKeyProvider<ServiceDTO>() {
 				@Override
-				public String getKey(ServiceDto item) {
+				public String getKey(ServiceDTO item) {
 					return String.valueOf(item.getId());
 				}
 			})
-			.labelProvider(new LabelProvider<ServiceDto>() {
+			.labelProvider(new LabelProvider<ServiceDTO>() {
 				@Override
-				public String getLabel(ServiceDto item) {
+				public String getLabel(ServiceDTO item) {
 					return item.getName();
 				}
 			})
@@ -192,26 +200,20 @@ public class PaymentTab extends Composite {
 			.width(TOOLBAR_FIELD_WIDTH)
 			.build();
 
-		paymentStatusComboBox = new ZMultiSelectComboBox.Builder<PaymentStatusDto>()
-			.keyProvider(new ModelKeyProvider<PaymentStatusDto>() {
+		paymentStatusComboBox = new ZMultiSelectComboBox.Builder<PaymentStatusDTO>()
+			.keyProvider(new ModelKeyProvider<PaymentStatusDTO>() {
 				@Override
-				public String getKey(PaymentStatusDto item) {
-					return item == null ? null : item.name();
-				}
-			})
-			.labelProvider(new LabelProvider<PaymentStatusDto>() {
-				@Override
-				public String getLabel(PaymentStatusDto item) {
+				public String getKey(PaymentStatusDTO item) {
 					return item == null ? null : item.name();
 				}
 			})
 			.width(2 * TOOLBAR_FIELD_WIDTH + 6)
 			.noSelectionLabel(Mes.get("paymentStatus"))
-			.values(Arrays.asList(PaymentStatusDto.values()))
-			.labelProvider(new LabelProvider<PaymentStatusDto>() {
+			.values(Arrays.asList(PaymentStatusDTO.values()))
+			.labelProvider(new LabelProvider<PaymentStatusDTO>() {
 				@Override
-				public String getLabel(PaymentStatusDto item) {
-					return Mes.get("PAYMENT_" + item.name());
+				public String getLabel(PaymentStatusDTO item) {
+					return "<div style=\"color: " + item.getColor() + "\">" + Mes.get("PAYMENT_" + item.name()) + "</div>";
 				}
 			})
 			.build();
@@ -219,10 +221,10 @@ public class PaymentTab extends Composite {
 
 	}
 
-	private void assembleContent(List<ServiceDto> services, List<ChannelDTO> channels){
+	private void assembleContent(List<ServiceDTO> services, List<ChannelDTO> channels){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDto>()), PaymentTable.getMyColumnModel(services, channels));
+		grid = new ZGrid<>(PaymentTable.setListStore(new ArrayList<PaymentDTO>()), PaymentTable.getMyColumnModel(services, channels));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -291,7 +293,7 @@ public class PaymentTab extends Composite {
 					creationEndTimeField.setText(null);
 					serviceComboBox.setValue(null);
 					channelComboBox.setValue(null);
-					paymentStatusComboBox.setValues(new ArrayList<PaymentStatusDto>());
+					paymentStatusComboBox.setValues(new ArrayList<PaymentStatusDTO>());
 				}
 			} )
 			.build();

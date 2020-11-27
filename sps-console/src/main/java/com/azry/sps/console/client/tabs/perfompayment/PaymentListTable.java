@@ -12,11 +12,11 @@ import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.bankclient.AccountDTO;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
-import com.azry.sps.console.shared.dto.payment.PaymentDto;
-import com.azry.sps.console.shared.dto.payment.PaymentStatusDto;
+import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
@@ -90,7 +90,7 @@ public class PaymentListTable extends Composite {
 				public void onSelect(SelectEvent selectEvent) {
 					new AddPaymentListEntryWindow() {
 						@Override
-						public void onSave(PaymentListEntryDTO dto, final ServiceDto serviceDto) {
+						public void onSave(PaymentListEntryDTO dto, final ServiceDTO serviceDto) {
 							if (validPaymentListEntry(dto)) {
 								ServicesFactory.getPaymentListService().addPaymentListEntry(clientDTO, dto, new ServiceCallback<PaymentListEntryDTO>() {
 									@Override
@@ -158,9 +158,9 @@ public class PaymentListTable extends Composite {
 			new ZConfirmDialog(Mes.get("confirm"), Mes.get("createPaymentConfirmation")) {
 				@Override
 				public void onConfirm() {
-					final List<PaymentDto> paymentList = new ArrayList<>();
+					final List<PaymentDTO> paymentList = new ArrayList<>();
 					for (RowEntry entry : tableRows) {
-						PaymentDto payment = new PaymentDto();
+						PaymentDTO payment = new PaymentDTO();
 						if (entry.isCommissionVerified()) {
 //							payment.setAgentPaymentId();
 							payment.setServiceId(entry.getPaymentListEntryDTO().getServiceId());
@@ -169,7 +169,7 @@ public class PaymentListTable extends Composite {
 							payment.setAmount(entry.getPaymentAmount());
 							payment.setClCommission(entry.getCommission());
 //							payment.setSvcCommission();
-							payment.setStatus(PaymentStatusDto.CREATED);
+							payment.setStatus(PaymentStatusDTO.CREATED);
 							payment.setStatusChangeTime(new Date());
 //							payment.statusMessage;
 							payment.setCreateTime(new Date());

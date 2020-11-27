@@ -256,8 +256,8 @@ public class UsersModifyWindow extends ZWindow {
 			new ServiceCallback<SystemUserDTO>() {
 
 				@Override
-				public void onServiceSuccess(SystemUserDTO newDto) {
-					dto = newDto;
+				public void onServiceSuccess(SystemUserDTO newDTO) {
+					dto = newDTO;
 					store.update(dto);
 				}
 			});

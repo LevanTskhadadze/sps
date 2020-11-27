@@ -8,7 +8,7 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.core.client.GWT;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
@@ -28,9 +28,9 @@ public abstract class  IconEditWindow extends ZWindow {
 	private FileUploadField upload;
 	private FormPanel formPanel;
 	String type;
-	ListStore<ServiceDto> store;
+	ListStore<ServiceDTO> store;
 
-	public IconEditWindow(String type, long id, ListStore<ServiceDto> store) {
+	public IconEditWindow(String type, long id, ListStore<ServiceDTO> store) {
 		super(Mes.get("uploadIcon"), 300, 120, false);
 		this.type = type;
 		this.id = id;
@@ -66,9 +66,9 @@ public abstract class  IconEditWindow extends ZWindow {
 		formPanel.addSubmitCompleteHandler(new SubmitCompleteEvent.SubmitCompleteHandler() {
 			@Override
 			public void onSubmitComplete(final SubmitCompleteEvent event) {
-				ServicesFactory.getServiceTabService().getService(id, new ServiceCallback<ServiceDto>() {
+				ServicesFactory.getServiceTabService().getService(id, new ServiceCallback<ServiceDTO>() {
 					@Override
-					public void onServiceSuccess(ServiceDto result) {
+					public void onServiceSuccess(ServiceDTO result) {
 						store.update(result);
 						hide();
 

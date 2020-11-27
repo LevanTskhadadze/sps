@@ -9,7 +9,7 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDto;
+import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.google.gwt.dom.client.Style;
 
@@ -41,9 +41,9 @@ public class SystemParameterTab extends Composite {
 			.emptyText(Mes.get("valueEmptyText"))
 			.build();
 		initWidget(content);
-		ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(), new ServiceCallback<List<SystemParameterDto>>() {
+		ServicesFactory.getSystemParameterService().getSystemParameterTab(new HashMap<String, String>(), new ServiceCallback<List<SystemParameterDTO>>() {
 			@Override
-			public void onServiceSuccess(List<SystemParameterDto> result) {
+			public void onServiceSuccess(List<SystemParameterDTO> result) {
 				assembleContent(result);
 			}
 		});
@@ -52,11 +52,11 @@ public class SystemParameterTab extends Composite {
 
 	}
 
-	private void assembleContent(List<SystemParameterDto> data){
+	private void assembleContent(List<SystemParameterDTO> data){
 
 
 		content.add(getToolbar());
-		ZGrid<SystemParameterDto> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel());
+		ZGrid<SystemParameterDTO> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel());
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -107,10 +107,10 @@ public class SystemParameterTab extends Composite {
 					Map<String, String> params = new HashMap<>();
 					params.put("code", codeField.getValue());
 					params.put("value", valueField.getValue());
-					ServicesFactory.getSystemParameterService().getSystemParameterTab(params, new ServiceCallback<List<SystemParameterDto>>() {
+					ServicesFactory.getSystemParameterService().getSystemParameterTab(params, new ServiceCallback<List<SystemParameterDTO>>() {
 
 						@Override
-						public void onServiceSuccess(List<SystemParameterDto> result) {
+						public void onServiceSuccess(List<SystemParameterDTO> result) {
 							SystemParametersTable.setListStore(result);
 						}
 					});

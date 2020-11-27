@@ -13,8 +13,8 @@ import com.azry.sps.console.client.tabs.commissions.DualListWidgetItem;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
-import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDto;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -49,7 +49,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private static final VerticalLayoutContainer.VerticalLayoutData FIELD_LAYOUT_DATA = new VerticalLayoutContainer.VerticalLayoutData(1, -1);
 
-	private final ServiceCommissionsDto serviceCommissionsDto;
+	private final ServiceCommissionsDTO serviceCommissionsDTO;
 
 	private final List<DualListWidgetItem> allServicesWidgetList = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private ZButton cancelButton;
 
-	public ServiceCommissionsWindow(ServiceCommissionsDto dto, List<ServiceDto> serviceEntityDTOs, ActionMode actionMode) {
+	public ServiceCommissionsWindow(ServiceCommissionsDTO dto, List<ServiceDTO> serviceEntityDTOs, ActionMode actionMode) {
 		super(Mes.get("ofServiceCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
 
 		initWidgetLists(serviceEntityDTOs);
@@ -83,11 +83,11 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		initFields();
 
 		if (dto != null) {
-			serviceCommissionsDto = dto;
+			serviceCommissionsDTO = dto;
 			setFieldValues();
 		}
 		else {
-			serviceCommissionsDto = new ServiceCommissionsDto();
+			serviceCommissionsDTO = new ServiceCommissionsDTO();
 		}
 
 
@@ -104,8 +104,8 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private void buildDisplay() {
 		tabPanel.add(getServicesTab(),
 					new TabItemConfig(getHeaderValue("services",
-						serviceCommissionsDto.isAllServices(),
-						serviceCommissionsDto.getServicesIds().size()),
+						serviceCommissionsDTO.isAllServices(),
+						serviceCommissionsDTO.getServicesIds().size()),
 						false));
 
 
@@ -176,16 +176,16 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	}
 
 	private void setFieldValues() {
-		priorityField.setValue(serviceCommissionsDto.getPriority());
-		rateType.setValue(serviceCommissionsDto.getRateType());
-		commission.setValue(serviceCommissionsDto.getCommission());
-		minCommission.setValue(serviceCommissionsDto.getMinCommission());
-		maxCommission.setValue(serviceCommissionsDto.getMaxCommission());
+		priorityField.setValue(serviceCommissionsDTO.getPriority());
+		rateType.setValue(serviceCommissionsDTO.getRateType());
+		commission.setValue(serviceCommissionsDTO.getCommission());
+		minCommission.setValue(serviceCommissionsDTO.getMinCommission());
+		maxCommission.setValue(serviceCommissionsDTO.getMaxCommission());
 	}
 
-	private void initWidgetLists(List<ServiceDto> serviceEntityDTOs) {
+	private void initWidgetLists(List<ServiceDTO> serviceEntityDTOs) {
 
-		for (ServiceDto service: serviceEntityDTOs) {
+		for (ServiceDTO service: serviceEntityDTOs) {
 			allServicesWidgetList.add(new DualListWidgetItem(String.valueOf(service.getId()), service.getName()));
 		}
 
@@ -199,9 +199,9 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (isValid()) {
-						ServicesFactory.getServiceCommissionsService().updateServiceCommissions(getServiceCommissionsForUpdate(), new ServiceCallback<ServiceCommissionsDto>(ServiceCommissionsWindow.this) {
+						ServicesFactory.getServiceCommissionsService().updateServiceCommissions(getServiceCommissionsForUpdate(), new ServiceCallback<ServiceCommissionsDTO>(ServiceCommissionsWindow.this) {
 							@Override
-							public void onServiceSuccess(ServiceCommissionsDto result) {
+							public void onServiceSuccess(ServiceCommissionsDTO result) {
 								hide();
 								onSave(result);
 							}
@@ -212,7 +212,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 			.build();
 
 		cancelButton = new ZButton.Builder()
-			.text(Mes.get("cancel"))
+			.text(Mes.get("quit"))
 			.icon(FAIconsProvider.getIcons().ban_white())
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -233,7 +233,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private IsWidget getServicesTab() {
 		VerticalLayoutContainer container = new VerticalLayoutContainer();
 		container.add(getToggleButton(allServices), CHECK_BOX_LAYOUT_DATA);
-		servicesDualListWidget = getDualListWidget(serviceCommissionsDto.getServicesIds(), allServicesWidgetList);
+		servicesDualListWidget = getDualListWidget(serviceCommissionsDTO.getServicesIds(), allServicesWidgetList);
 		container.add(servicesDualListWidget, DUAL_LIST_LAYOUT_DATA);
 		return container;
 	}
@@ -281,7 +281,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private ToggleButton getToggleButtonWithListener(String text) {
 		ToggleButton toggleButton = new ToggleButton(Mes.get(text));
-		toggleButton.setValue(serviceCommissionsDto.isAllServices());
+		toggleButton.setValue(serviceCommissionsDTO.isAllServices());
 		toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -321,22 +321,22 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		return true;
 	}
 
-	private ServiceCommissionsDto getServiceCommissionsForUpdate() {
-		serviceCommissionsDto.setPriority(priorityField.getCurrentValue());
-		serviceCommissionsDto.setAllServices(allServices.getValue());
-		serviceCommissionsDto.setServicesIds(servicesDualListWidget.getSelectedItems());
-		serviceCommissionsDto.setRateType(rateType.getValue());
-		serviceCommissionsDto.setCommission(commission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
+	private ServiceCommissionsDTO getServiceCommissionsForUpdate() {
+		serviceCommissionsDTO.setPriority(priorityField.getCurrentValue());
+		serviceCommissionsDTO.setAllServices(allServices.getValue());
+		serviceCommissionsDTO.setServicesIds(servicesDualListWidget.getSelectedItems());
+		serviceCommissionsDTO.setRateType(rateType.getValue());
+		serviceCommissionsDTO.setCommission(commission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		if (minCommission.getValue() != null) {
-			serviceCommissionsDto.setMinCommission(minCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
+			serviceCommissionsDTO.setMinCommission(minCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
-		else serviceCommissionsDto.setMinCommission(null);
+		else serviceCommissionsDTO.setMinCommission(null);
 		if (maxCommission.getValue() != null) {
-			serviceCommissionsDto.setMaxCommission(maxCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
+			serviceCommissionsDTO.setMaxCommission(maxCommission.getValue().setScale(2, BigDecimal.ROUND_FLOOR));
 		}
-		else serviceCommissionsDto.setMaxCommission(null);
+		else serviceCommissionsDTO.setMaxCommission(null);
 
-		return serviceCommissionsDto;
+		return serviceCommissionsDTO;
 	}
 
 
@@ -362,5 +362,5 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	}
 
 
-	public abstract void onSave(ServiceCommissionsDto dto);
+	public abstract void onSave(ServiceCommissionsDTO dto);
 }

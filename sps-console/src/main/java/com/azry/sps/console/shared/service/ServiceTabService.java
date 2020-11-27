@@ -1,7 +1,7 @@
 package com.azry.sps.console.shared.service;
 
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -12,19 +12,19 @@ import java.util.Map;
 @RemoteServiceRelativePath("servlet/serviceTab")
 public interface ServiceTabService extends RemoteService {
 
-	List<ServiceDto> getAllServices();
+	List<ServiceDTO> getAllServices();
 
-	List<ServiceDto> getAllActiveServices();
+	List<ServiceDTO> getAllActiveServices();
 
-	PagingLoadResult<ServiceDto> getServices(Map<String, String> params, int offset, int limit);
+	PagingLoadResult<ServiceDTO> getServices(Map<String, String> params, int offset, int limit);
 
-	List<ServiceDto> getServicesByServiceGroup(Long groupId);
+	List<ServiceDTO> getServicesByServiceGroup(Long groupId);
 
-	ServiceDto editService(ServiceDto service) throws SPSConsoleException;
+	ServiceDTO editService(ServiceDTO service) throws SPSConsoleException;
 
 	void removeService(long id);
 
-	ServiceDto getService(long id);
+	ServiceDTO getService(long id);
 
 	void changeActivation(long id, long version) throws SPSConsoleException;
 }

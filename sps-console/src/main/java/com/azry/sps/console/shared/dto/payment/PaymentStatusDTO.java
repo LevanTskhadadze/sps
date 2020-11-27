@@ -1,9 +1,11 @@
 package com.azry.sps.console.shared.dto.payment;
 
-public enum PaymentStatusDto {
-	CREATED("blue"),
-	COLLECT_PENDING("yellow"),
-	COLLECTED("lightgreen"),
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public enum PaymentStatusDTO implements IsSerializable {
+	CREATED("orange"),
+	COLLECT_PENDING("#ffeb60"),
+	COLLECTED("#6cb96c"),
 	COLLECT_REJECTED("orangered"),
 	PENDING("orange"),
 	PERFORMED("green"),
@@ -11,7 +13,7 @@ public enum PaymentStatusDto {
 
 	String color;
 
-	PaymentStatusDto(String color) {
+	PaymentStatusDTO(String color) {
 		this.color = color;
 	}
 

@@ -4,7 +4,7 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
-import com.azry.sps.console.shared.dto.services.ServiceDto;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.azry.sps.console.shared.service.ServiceTabService;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -33,20 +33,20 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	};
 
 	@Override
-	public List<ServiceDto> getAllServices() {
-		return ServiceDto.toDtos(serviceManager.getAllServices());
+	public List<ServiceDTO> getAllServices() {
+		return ServiceDTO.toDTOs(serviceManager.getAllServices());
 	}
 
 	@Override
-	public List<ServiceDto> getAllActiveServices() {
-		return ServiceDto.toDtos(serviceManager.getAllActiveServices());
+	public List<ServiceDTO> getAllActiveServices() {
+		return ServiceDTO.toDTOs(serviceManager.getAllActiveServices());
 	}
 
 	@Override
-	public PagingLoadResult<ServiceDto> getServices(Map<String, String> params, int offset, int limit) {
+	public PagingLoadResult<ServiceDTO> getServices(Map<String, String> params, int offset, int limit) {
 		ListResult<Service> result = serviceManager.getServices(params, offset, limit);
 		Collections.sort(result.getResultList(), serviceComparator);
-		List<ServiceDto> res = ServiceDto.toDtos(result.getResultList());
+		List<ServiceDTO> res = ServiceDTO.toDTOs(result.getResultList());
 		return new PagingLoadResultBean<>(
 			res,
 			result.getResultCount(),
@@ -55,19 +55,19 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public List<ServiceDto> getServicesByServiceGroup(Long groupId) {
-		return ServiceDto.toDtos(serviceManager.getServicesByServiceGroup(groupId));
+	public List<ServiceDTO> getServicesByServiceGroup(Long groupId) {
+		return ServiceDTO.toDTOs(serviceManager.getServicesByServiceGroup(groupId));
 	}
 
 	@Override
-	public ServiceDto getService(long id){
-		return ServiceDto.toDto(serviceManager.getService(id));
+	public ServiceDTO getService(long id){
+		return ServiceDTO.toDTO(serviceManager.getService(id));
 	}
 
 	@Override
-	public ServiceDto editService(ServiceDto service) throws SPSConsoleException {
+	public ServiceDTO editService(ServiceDTO service) throws SPSConsoleException {
 		try {
-			return ServiceDto.toDto(serviceManager.editService(ServiceDto.toEntity(service)));
+			return ServiceDTO.toDTO(serviceManager.editService(ServiceDTO.toEntity(service)));
 		}
 		catch (SPSException ex) {
 			throw new SPSConsoleException(ex);
