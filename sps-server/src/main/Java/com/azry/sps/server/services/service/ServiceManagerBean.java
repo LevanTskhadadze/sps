@@ -3,6 +3,8 @@ package com.azry.sps.server.services.service;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exception.SPSException;
+import com.azry.sps.common.model.commission.ClientCommissions;
+import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.common.utils.XmlUtils;
@@ -15,6 +17,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +36,7 @@ public class ServiceManagerBean implements ServiceManager {
 	PaymentListManager paymentListManager;
 
 	@Inject
-	CachedConfigurationService cachedConfigurationService;
+	CachedConfigurationService cachingService;
 
 //	@Override
 //	public List<ServiceEntity> getAllServiceEntities() {
@@ -42,23 +46,23 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@Override
 	public List<Service> getAllServices() {
-		return cachedConfigurationService.getAllServices();
+		return cachingService.getAllServices();
 	}
 
 	@Override
 	public List<Service> getAllActiveServices() {
-		return cachedConfigurationService.getAllActiveServices();
+		return cachingService.getAllActiveServices();
 	}
 
 	@Override
 	public ListResult<Service> getServices(Map<String, String> params, int offset, int limit) {
 		if (params == null) params = new HashMap<>();
-		return cachedConfigurationService.filterServices(params, offset, limit);
+		return cachingService.filterServices(params, offset, limit);
 	}
 
 	@Override
 	public List<Service> getServicesByServiceGroup(Long groupId) {
-		return cachedConfigurationService.getServicesByServiceGroup(groupId);
+		return cachingService.getServicesByServiceGroup(groupId);
 	}
 
 	@Override
@@ -80,7 +84,30 @@ public class ServiceManagerBean implements ServiceManager {
 	}
 
 	@Override
-	public void removeService(long id) {
+	public void removeService(long id) throws SPSException {
+		long count = em.createQuery("SELECT COUNT(p) FROM Payment p WHERE p.serviceId = :id", Long.class)
+			.setParameter("id", id)
+			.getSingleResult();
+		if (count > 0) {
+			throw new SPSException("serviceAlreadyUsedInPayments");
+		}
+
+		for (ClientCommissions clientCommission : cachingService.getAllClientCommissions()) {
+			List<String> serviceIds = new ArrayList<>(Arrays.asList(clientCommission.getServicesIds().split(",")));
+			serviceIds.removeIf(serviceId -> serviceId.equals(String.valueOf(id)));
+			clientCommission.setServicesIds(String.join(",", serviceIds));
+			em.merge(clientCommission);
+		}
+		updateCacheEventEvent.fire(new UpdateCacheEvent(ClientCommissions.class.getSimpleName()));
+
+		for (ServiceCommissions serviceCommission: cachingService.getAllServiceCommissions()) {
+			List<String> serviceIds = new ArrayList<>(Arrays.asList(serviceCommission.getServicesIds().split(",")));
+			serviceIds.removeIf(serviceId -> serviceId.equals(String.valueOf(id)));
+			serviceCommission.setServicesIds(String.join(",", serviceIds));
+			em.merge(serviceCommission);
+		}
+		updateCacheEventEvent.fire(new UpdateCacheEvent(ServiceCommissions.class.getSimpleName()));
+
 		ServiceEntity entity = em.find(ServiceEntity.class, id);
 		if (entity != null) {
 			em.remove(entity);
@@ -113,7 +140,7 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public String getIcon(long id) {
 		//ServiceEntity entity = em.find(ServiceEntity.class, id);
-		Service srv = cachedConfigurationService.getService(id);
+		Service srv = cachingService.getService(id);
 
 //		if (entity == null) {
 //			srv = new Service();
@@ -124,7 +151,7 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@Override
 	public Service getService(long id) {
-		return cachedConfigurationService.getService(id);
+		return cachingService.getService(id);
 //		return em.find(ServiceEntity.class, id).getService();
 	}
 

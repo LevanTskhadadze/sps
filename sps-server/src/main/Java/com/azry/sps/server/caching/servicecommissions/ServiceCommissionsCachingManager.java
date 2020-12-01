@@ -101,7 +101,7 @@ public class ServiceCommissionsCachingManager implements CachingService<ServiceC
 
 
 	private void syncDeletedData() {
-		Set<Long> ids = new HashSet<>(em.createQuery("SELECT c.id FROM ClientCommissions c", Long.class)
+		Set<Long> ids = new HashSet<>(em.createQuery("SELECT c.id FROM ServiceCommissions c", Long.class)
 			.getResultList());
 		Set<Long> toBeDeletedIds = new HashSet<>(cachedServiceCommissions.keySet());
 		toBeDeletedIds.removeAll(ids);

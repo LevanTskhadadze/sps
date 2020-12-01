@@ -48,10 +48,6 @@ public class ChannelCachingManger implements CachingService<Channel, Long> {
 		syncDeletedData();
 	}
 
-	public List<Channel> getChannels() {
-		return getList();
-	}
-
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 		List<Channel> filteredChannels = getList();
 
@@ -68,7 +64,6 @@ public class ChannelCachingManger implements CachingService<Channel, Long> {
 
 		return filteredChannels;
 	}
-
 
 
 	private void loadCache() {

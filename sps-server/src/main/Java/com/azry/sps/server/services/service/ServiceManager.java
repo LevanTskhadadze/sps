@@ -15,7 +15,7 @@ public interface ServiceManager {
 
 	List<Service> getAllServices();
 
-	public List<Service> getAllActiveServices();
+	List<Service> getAllActiveServices();
 
 	ListResult<Service> getServices(Map<String, String> params, int offset, int limit);
 
@@ -23,7 +23,7 @@ public interface ServiceManager {
 
 	Service editService(Service service) throws SPSException;
 
-	void removeService(long id);
+	void removeService(long id) throws SPSException;
 
 	void changeActivation(long id, long version) throws SPSException;
 

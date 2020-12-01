@@ -2,8 +2,11 @@ package com.azry.sps.server.services.servicegroup;
 
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.groups.ServiceGroup;
+import com.azry.sps.common.model.service.Service;
+import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
@@ -17,6 +20,9 @@ public class ServiceGroupManagerBean implements ServiceGroupManager {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Inject
+	CachedConfigurationService cachingService;
 
 	@Override
 	public List<ServiceGroup> getFilteredServiceGroups(String name) {
@@ -48,7 +54,12 @@ public class ServiceGroupManagerBean implements ServiceGroupManager {
 	}
 
 	@Override
-	public void deleteServiceGroup(Long id) {
+	public void deleteServiceGroup(Long id) throws SPSException {
+		for (Service service: cachingService.getAllServices()) {
+			if (id.equals(service.getGroupId())) {
+				throw new SPSException("serviceGroupAlreadyUsedInServices");
+			}
+		}
 		ServiceGroup serviceGroup = em.find(ServiceGroup.class, id);
 		if (serviceGroup != null) {
 			em.remove(serviceGroup);

@@ -1,7 +1,7 @@
 package com.azry.sps.common.model.paymentlist;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,14 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class PaymentListEntry {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@ToString.Exclude
 	@ManyToOne
 	private PaymentList paymentList;
 

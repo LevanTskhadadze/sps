@@ -104,7 +104,7 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 
 	@Override
 	public List<Service> getAllServices() {
-		return ((ServicesCachingManager)cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getList();
+		return ((ServicesCachingManager)cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getAllServices();
 	}
 
 	@Override
@@ -149,8 +149,8 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	}
 
 	@Override
-	public List<Channel> getChannels() {
-		return ((ChannelCachingManger) cacheMap.get(CachedDataType.CHANNEL.getClassSimpleName())).getChannels();
+	public List<Channel> getAllChannels() {
+		return ((ChannelCachingManger) cacheMap.get(CachedDataType.CHANNEL.getClassSimpleName())).getList();
 	}
 
 	@Override
@@ -161,6 +161,12 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	@Override
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
 		return ((ChannelCachingManger) cacheMap.get(CachedDataType.CHANNEL.getClassSimpleName())).getFilteredChannels(name, isActive);
+	}
+
+	@Override
+	public List<ServiceCommissions> getAllServiceCommissions() {
+		return ((ServiceCommissionsCachingManager) cacheMap.get(CachedDataType.SERVICE_COMMISSIONS.getClassSimpleName()))
+			.getList();
 	}
 
 	@Override

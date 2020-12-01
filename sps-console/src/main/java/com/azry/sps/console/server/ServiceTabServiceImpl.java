@@ -75,8 +75,12 @@ public class ServiceTabServiceImpl extends RemoteServiceServlet implements Servi
 	}
 
 	@Override
-	public void removeService(long id) {
-		serviceManager.removeService(id);
+	public void removeService(long id) throws SPSConsoleException {
+		try {
+			serviceManager.removeService(id);
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 	@Override

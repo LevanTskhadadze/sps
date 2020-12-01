@@ -17,5 +17,5 @@ public interface ChannelManager {
 
 	Channel updateChannel(Channel channel) throws SPSException;
 
-	void deleteChannel(long id);
+	void deleteChannel(long id) throws SPSException;
 }

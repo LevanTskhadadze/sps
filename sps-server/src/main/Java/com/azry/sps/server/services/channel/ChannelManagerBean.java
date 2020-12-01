@@ -3,6 +3,8 @@ package com.azry.sps.server.services.channel;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.channels.Channel;
+import com.azry.sps.common.model.commission.ClientCommissions;
+import com.azry.sps.common.model.service.Service;
 import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
@@ -11,6 +13,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Stateless
@@ -27,20 +31,16 @@ public class ChannelManagerBean implements ChannelManager {
 
 	@Override
 	public List<Channel> getChannels() {
-
-		return cachingService.getChannels();
-
+		return cachingService.getAllChannels();
 	}
 
 	@Override
 	public Channel getChannel(long id) {
 		return cachingService.getChannel(id);
-
 	}
 
 	@Override
 	public List<Channel> getFilteredChannels(String name, Boolean isActive) {
-
 		return cachingService.getFilteredChannels(name, isActive);
 	}
 
@@ -57,7 +57,27 @@ public class ChannelManagerBean implements ChannelManager {
 	}
 
 	@Override
-	public void deleteChannel(long id) {
+	public void deleteChannel(long id) throws SPSException {
+		long count = em.createQuery("SELECT COUNT(p) FROM Payment p WHERE p.channelId = :id", Long.class)
+			.setParameter("id", id)
+			.getSingleResult();
+		if (count > 0) {
+			throw new SPSException("channelAlreadyUsedInPayments");
+		}
+
+		for (Service service : cachingService.getAllServices()) {
+			service.getChannels().removeIf(channelInfo -> channelInfo.getChannelId() == id);
+			}
+		updateCacheEvent.fire(new UpdateCacheEvent(Service.class.getSimpleName()));
+
+		for (ClientCommissions clientCommission : cachingService.getAllClientCommissions()) {
+			List<String> channelIds = new ArrayList<>(Arrays.asList(clientCommission.getChannelsIds().split(",")));
+			channelIds.removeIf(channelId -> channelId.equals(String.valueOf(id)));
+				clientCommission.setChannelsIds(String.join(",", channelIds));
+				em.merge(clientCommission);
+			}
+		updateCacheEvent.fire(new UpdateCacheEvent(ClientCommissions.class.getSimpleName()));
+
 		Channel channel = em.find(Channel.class, id);
 		if (channel != null) {
 			em.remove(channel);

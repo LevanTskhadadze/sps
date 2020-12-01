@@ -24,6 +24,7 @@ import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UsersTable {
@@ -36,20 +37,20 @@ public class UsersTable {
 		}
 	});
 
-	static Store.StoreSortInfo<SystemUserDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<SystemUserDTO, String>() {
+	static Store.StoreSortInfo<SystemUserDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<SystemUserDTO, Date>() {
 		@Override
-		public String getValue(SystemUserDTO dto) {
-			return dto.getName().toLowerCase();
+		public Date getValue(SystemUserDTO dto) {
+			return dto.getLastUpdateTime();
 		}
 
 		@Override
-		public void setValue(SystemUserDTO o, String o2) { }
+		public void setValue(SystemUserDTO o, Date o2) { }
 
 		@Override
 		public String getPath() {
 			return null;
 		}
-	}, SortDir.ASC);
+	}, SortDir.DESC);
 
 	public static ListStore<SystemUserDTO> getListStore() {
 		store.addSortInfo(storeSortInfo);
@@ -224,7 +225,6 @@ public class UsersTable {
 							@Override
 							public void onConfirm() {
 								ServicesFactory.getUserTabService().removeParameter(SystemUserDTO.getId(), new ServiceCallback<Void>(this) {
-
 									@Override
 									public void onServiceSuccess(Void unused) {
 										store.remove(SystemUserDTO);

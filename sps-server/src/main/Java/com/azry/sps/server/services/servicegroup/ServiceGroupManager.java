@@ -13,5 +13,5 @@ public interface ServiceGroupManager {
 
 	ServiceGroup updateServiceGroup(ServiceGroup serviceGroup) throws SPSException;
 
-	void deleteServiceGroup(Long id);
+	void deleteServiceGroup(Long id) throws SPSException;
 }

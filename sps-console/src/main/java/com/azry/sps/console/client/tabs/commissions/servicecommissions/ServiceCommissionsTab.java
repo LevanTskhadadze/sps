@@ -211,7 +211,6 @@ public class ServiceCommissionsTab extends Composite {
 	}
 
 	private void initGrid() {
-
 		RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>>() {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<ServiceCommissionsDTO>> callback) {

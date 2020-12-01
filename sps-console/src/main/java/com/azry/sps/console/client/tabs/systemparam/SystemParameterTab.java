@@ -11,7 +11,6 @@ import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
-import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.google.gwt.dom.client.Style;
 import com.sencha.gxt.theme.neptune.client.base.button.Css3ButtonCellAppearance;
 import com.sencha.gxt.widget.core.client.Composite;
@@ -56,6 +55,7 @@ public class SystemParameterTab extends Composite {
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
+		grid.getView().getHeader().setDisableSortIcon(true);
 		content.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
 
 	}

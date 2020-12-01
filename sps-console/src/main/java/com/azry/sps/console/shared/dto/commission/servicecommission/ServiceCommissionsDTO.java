@@ -135,7 +135,7 @@ public class ServiceCommissionsDTO extends ConfigurableDTO implements IsSerializ
 		ServiceCommissions cc = new ServiceCommissions();
 		cc.setId(this.getId());
 		cc.setAllServices(this.isAllServices());
-		cc.setServicesIds(StringUtil.joinEndWithDel(this.getServicesIds(), ","));
+		cc.setServicesIds(StringUtil.join(this.getServicesIds(), ","));
 		cc.setRateType(CommissionRateType.valueOf(this.getRateType().name()));
 		cc.setMinCommission(this.getMinCommission());
 		cc.setMaxCommission(this.getMaxCommission());

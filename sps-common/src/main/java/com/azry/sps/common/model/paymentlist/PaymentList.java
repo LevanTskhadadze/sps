@@ -1,8 +1,8 @@
 package com.azry.sps.common.model.paymentlist;
 
 import com.azry.sps.common.model.client.Client;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 public class PaymentList {
 
 	@Id
@@ -26,6 +25,7 @@ public class PaymentList {
 	@Embedded
 	private Client client;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "paymentList", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PaymentListEntry> entries = new ArrayList<>();
 

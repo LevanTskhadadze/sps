@@ -11,8 +11,8 @@ public enum Permissions {
 	CHANNELS_MANAGE("channels"),
 	SERVICE_GROUPS_VIEW("serviceGroups"),
 	SERVICE_GROUPS_MANAGE("serviceGroups"),
-	SERVICES_VIEW("com.azry.sps.server.services.services"),
-	SERVICES_MANAGE("com.azry.sps.server.services.services"),
+	SERVICES_VIEW("services"),
+	SERVICES_MANAGE("services"),
 	CLIENT_COMMISSIONS_VIEW("commissions"),
 	CLIENT_COMMISSIONS_MANAGE("commissions"),
 	SERVICE_COMMISSIONS_VIEW("commissions"),
@@ -23,7 +23,6 @@ public enum Permissions {
 	private final String permission;
 
 	Permissions(String permission) {
-
 		this.permission = permission;
 	}
 }

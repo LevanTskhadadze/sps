@@ -23,8 +23,6 @@ public interface CachedConfigurationService {
 
 	Service getService(long serviceId);
 
-    ClientCommissions getClientCommission(long clientCommission);
-
     List<Service> getAllServices();
 
 	List<Service> getAllActiveServices();
@@ -35,15 +33,19 @@ public interface CachedConfigurationService {
 
 	List<ClientCommissions> getAllClientCommissions();
 
+	ClientCommissions getClientCommission(long clientCommission);
+
 	ListResult<ClientCommissions> filterClientCommissions(String serviceId, String channelId, int offset, int limit);
 
 	ClientCommissions getClientCommissionByServiceId(String serviceId);
 
-	List<Channel> getChannels();
+	List<Channel> getAllChannels();
 
 	Channel getChannel(long channelId);
 
 	List<Channel> getFilteredChannels(String name, Boolean isActive);
+
+	List<ServiceCommissions> getAllServiceCommissions();
 
 	ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit);
 

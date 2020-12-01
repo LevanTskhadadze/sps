@@ -38,7 +38,6 @@ public class SystemUser extends Configurable {
 	private boolean active;
 
 	public void initialize(){
-
 		Hibernate.initialize(groups);
 	}
 

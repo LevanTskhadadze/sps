@@ -1,6 +1,5 @@
 package com.azry.sps.integration.sp;
 
-import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.dto.AbonentRequest;
 import com.azry.sps.integration.sp.dto.PayResponse;
@@ -52,7 +51,6 @@ public class ServiceProviderIntegrationServiceBean implements ServiceProviderInt
 			.readTimeout(readTimeout.getValue(), TimeUnit.SECONDS)
 			.connectTimeout(connectTimeout.getValue(), TimeUnit.SECONDS)
 			.build();
-
 	}
 
 	private ServicesInterface getProxy() {

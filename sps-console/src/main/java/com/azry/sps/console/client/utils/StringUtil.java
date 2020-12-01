@@ -21,19 +21,6 @@ public class StringUtil {
 		return sb.toString();
 	}
 
-	public static String joinEndWithDel(List<String> list, String del) {
-
-		StringBuilder sb = new StringBuilder();
-
-		for(String s : list) {
-
-			sb.append(s);
-			sb.append(del);
-		}
-
-		return sb.toString();
-	}
-
 	public static String joinMes(List<String> list, String del) {
 
 		StringBuilder sb = new StringBuilder();

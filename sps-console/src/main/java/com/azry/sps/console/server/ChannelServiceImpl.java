@@ -38,7 +38,11 @@ public class ChannelServiceImpl extends RemoteServiceServlet implements ChannelS
 	}
 
 	@Override
-	public void deleteChannel(long id) {
-		channelManager.deleteChannel(id);
+	public void deleteChannel(long id) throws SPSConsoleException {
+		try {
+			channelManager.deleteChannel(id);
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 }

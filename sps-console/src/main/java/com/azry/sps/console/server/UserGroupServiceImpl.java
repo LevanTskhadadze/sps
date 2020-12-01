@@ -47,8 +47,12 @@ public class UserGroupServiceImpl extends RemoteServiceServlet implements UserGr
 	}
 
 	@Override
-	public void deleteUserGroup(long id) {
-		userGroupManager.deleteUserGroup(id);
+	public void deleteUserGroup(long id) throws SPSConsoleException {
+		try {
+			userGroupManager.deleteUserGroup(id);
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 
 }

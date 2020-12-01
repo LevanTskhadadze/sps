@@ -74,7 +74,13 @@ public class UserGroupManagerBean implements UserGroupManager {
 	}
 
 	@Override
-	public void deleteUserGroup(Long id) {
+	public void deleteUserGroup(Long id) throws SPSException {
+		Long count = em.createQuery("SELECT COUNT(u) FROM SystemUser u JOIN u.groups g WHERE g.id = :id", Long.class)
+			.setParameter("id", id)
+		    .getSingleResult();
+		if (count > 0) {
+			throw new SPSException("userGroupHasUsersAssigned");
+		}
 		UserGroup userGroup = em.find(UserGroup.class, id);
 		if (userGroup != null) {
 			em.remove(userGroup);

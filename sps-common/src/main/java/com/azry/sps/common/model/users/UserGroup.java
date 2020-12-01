@@ -25,8 +25,4 @@ public class UserGroup extends Configurable {
 	private String permissions;
 
 	private boolean active;
-
-	public boolean isActive() {
-		return active;
-	}
 }

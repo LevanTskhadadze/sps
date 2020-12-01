@@ -83,7 +83,7 @@ public class RowEntry {
 		setServiceCell();
 		setAbonentCells(abonentInfo, "","payment-table-loading", ALIGN_CENTER, true);
 
-		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDTO.getServiceDebtCode(),paymentListEntryDTO.getAbonentCode(),
+		ServicesFactory.getProviderIntegrationService().getAbonent(serviceDTO.getServiceDebtCode(), paymentListEntryDTO.getAbonentCode(),
 			new ServiceCallback<AbonentInfoDTO>(false) {
 			@Override
 			public void onFailure(Throwable throwable) {

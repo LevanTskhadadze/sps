@@ -16,5 +16,5 @@ public interface UserGroupService extends RemoteService {
 
 	UserGroupDTO updateUserGroup(UserGroupDTO dto) throws SPSConsoleException;
 
-	void deleteUserGroup(long id);
+	void deleteUserGroup(long id) throws SPSConsoleException;
 }

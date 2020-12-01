@@ -16,5 +16,5 @@ public interface ChannelService extends RemoteService {
 
 	ChannelDTO updateChannel(ChannelDTO dto) throws SPSConsoleException;
 
-	void deleteChannel(long id);
+	void deleteChannel(long id) throws SPSConsoleException;
 }

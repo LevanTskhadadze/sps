@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 @Data
 public class ServiceChannelInfo {
 
-	@Column(length = 500)
 	private long channelId;
 
 	private boolean active;
@@ -18,13 +17,6 @@ public class ServiceChannelInfo {
 
 	@Column(precision = 10, scale = 2)
 	private BigDecimal maxAmount;
-
-	public ServiceChannelInfo(long id) {
-		this.channelId = id;
-	}
-
-	public ServiceChannelInfo() {
-	}
 
 	@Override
 	public boolean equals(Object obj) {

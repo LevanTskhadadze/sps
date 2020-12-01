@@ -22,7 +22,7 @@ public interface ServiceTabService extends RemoteService {
 
 	ServiceDTO editService(ServiceDTO service) throws SPSConsoleException;
 
-	void removeService(long id);
+	void removeService(long id) throws SPSConsoleException;
 
 	ServiceDTO getService(long id);
 

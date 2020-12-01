@@ -35,7 +35,11 @@ public class ServiceGroupServiceImpl extends RemoteServiceServlet implements Ser
 	}
 
 	@Override
-	public void deleteServiceGroup(long id) {
-		serviceGroupManager.deleteServiceGroup(id);
+	public void deleteServiceGroup(long id) throws SPSConsoleException {
+		try {
+			serviceGroupManager.deleteServiceGroup(id);
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex);
+		}
 	}
 }

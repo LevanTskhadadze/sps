@@ -126,7 +126,9 @@ public class SystemUserManagerBean implements SystemUserManager {
 	@Override
 	public void remove(long id) {
 		SystemUser user = em.find(SystemUser.class, id);
-		em.remove(user);
+		if (user != null) {
+			em.remove(user);
+		}
 	}
 
 	@Override

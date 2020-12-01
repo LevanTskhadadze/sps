@@ -16,5 +16,5 @@ public interface UserGroupManager {
 
 	UserGroup updateUserGroup(UserGroup userGroup) throws SPSException;
 
-	void deleteUserGroup(Long id);
+	void deleteUserGroup(Long id) throws SPSException;
 }
