@@ -18,8 +18,8 @@ import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
+import com.azry.sps.console.shared.payment.PaymentParamDTO;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.core.client.util.DateWrapper;
 import com.sencha.gxt.data.client.loader.RpcProxy;
@@ -34,19 +34,11 @@ import com.sencha.gxt.widget.core.client.Composite;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
-import org.apache.james.mime4j.field.datetime.DateTime;
 
-import javax.xml.crypto.Data;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class PaymentTab extends Composite {
 
@@ -90,25 +82,20 @@ public class PaymentTab extends Composite {
 		RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDTO>> proxy = new RpcProxy<PagingLoadConfig, PagingLoadResult<PaymentDTO>>() {
 			@Override
 			public void load(PagingLoadConfig loadConfig, final AsyncCallback<PagingLoadResult<PaymentDTO>> callback) {
-				Map<String, Serializable> params = new HashMap<>();
-				if (idField.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.id.name(), idField.getCurrentValue());
-				}
-				if (agentPaymentIdField.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.agentPaymentId.name(), agentPaymentIdField.getCurrentValue());
-				}
-				if (creationStartTimeField.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.startTime.name(), creationStartTimeField.getCurrentValue());
-				}
-				if (creationEndTimeField.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.endTime.name(), creationEndTimeField.getCurrentValue());
-				}
+
+				PaymentParamDTO params = new PaymentParamDTO();
+
+				params.setId( idField.getCurrentValue());
+				params.setAgentPaymentId(agentPaymentIdField.getCurrentValue());
+				params.setCreationEndTime(creationStartTimeField.getCurrentValue());
+				params.setCreationEndTime(creationEndTimeField.getCurrentValue());
 				if (serviceComboBox.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.serviceId.name(), serviceComboBox.getCurrentValue().getId());
+					params.setServiceId(serviceComboBox.getCurrentValue().getId());
 				}
 				if (channelComboBox.getCurrentValue() != null) {
-					params.put(PaymentDTO.Columns.channelId.name(), channelComboBox.getCurrentValue().getId());
+					params.setChannelId(channelComboBox.getCurrentValue().getId());
 				}
+
 
 				ServicesFactory.getPaymentService().getPayments(loadConfig.getOffset(), loadConfig.getLimit(), params, paymentStatusComboBox.getValues(),
 					new ServiceCallback<PagingLoadResult<PaymentDTO>>(PaymentTab.this) {

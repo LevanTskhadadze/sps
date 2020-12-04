@@ -64,9 +64,10 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 		formTable.setWidget(5, 0, new HTML(Mes.get("status") + ":"));
 		formTable.setWidget(6, 0, new HTML(Mes.get("statusMessage") + ":"));
 		formTable.setWidget(7, 0, new HTML(Mes.get("amount") + ":"));
-		formTable.setWidget(8, 0, new HTML(Mes.get("clientCommission") + ":"));
-		formTable.setWidget(9, 0, new HTML(Mes.get("createTime") + ":"));
-		formTable.setWidget(10, 0, new HTML(Mes.get("lastUpdateTime") + ":"));
+		formTable.setWidget(8, 0, new HTML(Mes.get("serviceCommission") + ":"));
+		formTable.setWidget(9, 0, new HTML(Mes.get("clientCommission") + ":"));
+		formTable.setWidget(10, 0, new HTML(Mes.get("createTime") + ":"));
+		formTable.setWidget(11, 0, new HTML(Mes.get("lastUpdateTime") + ":"));
 		formTable.getWidget(1, 0).setWidth("220px");
 
 		formTable.setWidget(0, 1, getIdField());
@@ -77,9 +78,10 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 		formTable.setWidget(5, 1, getStatusField());
 		formTable.setWidget(6, 1, getStatusMessageField());
 		formTable.setWidget(7, 1, getAmountField());
-		formTable.setWidget(8, 1, getClientCommissionField());
-		formTable.setWidget(9, 1, getCreateTimeField());
-		formTable.setWidget(10, 1, getLastChangeTimeField());
+		formTable.setWidget(8, 1, getServiceCommissionField());
+		formTable.setWidget(9, 1, getClientCommissionField());
+		formTable.setWidget(10, 1, getCreateTimeField());
+		formTable.setWidget(11, 1, getLastChangeTimeField());
 		formTable.setCellSpacing(4);
 
 		return formTable;
@@ -166,6 +168,14 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 		clientCommissionField.setValue(dto.getClCommission() == null ? new BigDecimal(0) : dto.getClCommission());
 		clientCommissionField.setEnabled(false);
 		return clientCommissionField;
+	}
+
+	private BigDecimalField getServiceCommissionField() {
+		BigDecimalField serviceCommissionField = new BigDecimalField();
+		serviceCommissionField.setWidth(FIELD_WIDTH);
+		serviceCommissionField.setValue(dto.getSvcCommission() == null ? new BigDecimal(0) : dto.getClCommission());
+		serviceCommissionField.setEnabled(false);
+		return serviceCommissionField;
 	}
 
 	private ZDateField getCreateTimeField() {

@@ -29,7 +29,7 @@ public class PaymentWindow extends ZWindow {
 		buttonBar.setMinButtonWidth(75);
 		addButton(getCancelButton());
 
-		setHeight("480px");
+		setHeight("515px");
 		setWidth("570px");
 		setHeadingText(Mes.get("paymentInfo"));
 		showInCenter();

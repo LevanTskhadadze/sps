@@ -8,7 +8,6 @@ import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.ui.FlexTable;

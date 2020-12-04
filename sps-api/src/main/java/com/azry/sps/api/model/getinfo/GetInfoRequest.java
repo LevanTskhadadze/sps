@@ -1,10 +1,11 @@
-package com.azry.sps.api.dto;
+package com.azry.sps.api.model.getinfo;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
 
 @XmlType(name = "GetInfoRequest", propOrder = {"abonentCode", "serviceId"})
-public class GetInfoRequest {
+public class GetInfoRequest implements Serializable {
 
 	private String abonentCode;
 

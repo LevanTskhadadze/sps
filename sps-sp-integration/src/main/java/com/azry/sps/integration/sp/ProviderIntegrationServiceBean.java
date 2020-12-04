@@ -9,8 +9,8 @@ import com.azry.sps.integration.sp.exception.SpConnectivityException;
 import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.azry.sps.integration.sp.inteceptor.SpExceptionInterceptor;
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -19,8 +19,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.DependsOn;
-import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.core.Response;
@@ -28,8 +28,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
-
-@Singleton(name = "SpIntegrationService")
+@Stateless(name = "SpIntegrationService")
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 @DependsOn("SystemParametersProducer")
@@ -68,7 +67,7 @@ public class ProviderIntegrationServiceBean implements ProviderIntegrationServic
 			return getProxy().getAbonent(new AbonentRequest("gateway-" + serviceCode, abonentCode));
 	}
 
-	public PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException {
+	public PayResponse pay(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException {
 			Response response = getProxy().pay(new PaymentDTO("gateway-" + serviceCode,
 				String.valueOf(agentPaymentId),
 				abonentCode,

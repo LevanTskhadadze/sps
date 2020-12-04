@@ -35,6 +35,17 @@ public class BankClient {
 		this.birthPlace = client.getBirthPlace();
 	}
 	
+	public com.azry.sps.common.model.client.Client toClient() {
+		com.azry.sps.common.model.client.Client client = new com.azry.sps.common.model.client.Client();
+		client.setPersonalNumber(getPersonalNumber());
+		client.setFirstName(getFirstName());
+		client.setLastName(getLastName());
+		client.setBirthDate(getBirthDate());
+		client.setBirthPlace(getBirthPlace());
+
+		return client;
+	}
+
 	public void mapClientAccounts(List<com.azry.sps.fi.bankws.Account> accounts) {
 		for (com.azry.sps.fi.bankws.Account account : accounts) {
 			this.accounts.add(new Account(account));

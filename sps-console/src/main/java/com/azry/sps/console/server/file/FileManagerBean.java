@@ -1,8 +1,8 @@
 package com.azry.sps.console.server.file;
 
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
 import org.apache.commons.io.FileUtils;
 
 import javax.ejb.Stateless;
