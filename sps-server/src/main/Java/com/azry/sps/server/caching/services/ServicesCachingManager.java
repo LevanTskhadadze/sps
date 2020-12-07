@@ -111,6 +111,20 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		return filteredServices;
 	}
 
+	public Service getServiceByServicePayCode(String serviceCode) {
+		if (serviceCode == null) {
+			return null;
+		}
+		List<Service> filteredServices = getList();
+
+		for (Service service : filteredServices) {
+			if (serviceCode.equals(service.getServicePayCode()) && service.isActive()) {
+				return service;
+			}
+		}
+		return null;
+	}
+
 	private boolean channelIsActive(Service service, long channelId) {
 		for (ServiceChannelInfo channelInfo : service.getChannels()) {
 			if (channelInfo.getChannelId() == channelId) {

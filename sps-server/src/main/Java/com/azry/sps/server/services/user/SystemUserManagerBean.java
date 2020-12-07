@@ -55,7 +55,7 @@ public class SystemUserManagerBean implements SystemUserManager {
 		}
 		String queryPrefix = "SELECT su FROM SystemUser su ";
 		String countPrefix = "SELECT COUNT(su.id) FROM SystemUser su ";
-		StringBuilder str = new StringBuilder((join ? "INNER JOIN su.groups UG " : "") +
+		StringBuilder str = new StringBuilder((join ? "INNER JOIN FETCH su.groups UG " : "") +
 			"WHERE 1 = 1");
 		Map<String, Object> values = new HashMap<>();
 

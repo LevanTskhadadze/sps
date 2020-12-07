@@ -9,12 +9,16 @@ public class GetPaymentInfoRequest implements Serializable {
 
 	String agentPaymentId;
 
-	@XmlElement(name = "paymentId", required = true)
+	@XmlElement(name = "paymentId")
 	public String getAgentPaymentId() {
 		return agentPaymentId;
 	}
 
 	public void setAgentPaymentId(String agentPaymentId) {
 		this.agentPaymentId = agentPaymentId;
+	}
+
+	public boolean isValid() {
+		return agentPaymentId != null;
 	}
 }

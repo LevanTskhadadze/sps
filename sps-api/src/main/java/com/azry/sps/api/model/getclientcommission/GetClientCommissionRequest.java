@@ -7,25 +7,30 @@ import java.io.Serializable;
 @XmlType(name = "GetClientCommissionRequest", propOrder = {"serviceId", "channelId"})
 public class GetClientCommissionRequest implements Serializable {
 
-	long serviceId;
+	Long serviceId;
 
-	long channelId;
+	Long channelId;
 
 	@XmlElement(name = "serviceId")
-	public long getServiceId() {
+	public Long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(long serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
 	}
 
 	@XmlElement(name = "channelId")
-	public long getChannelId() {
+	public Long getChannelId() {
 		return channelId;
 	}
 
-	public void setChannelId(long channelId) {
+	public void setChannelId(Long channelId) {
 		this.channelId = channelId;
 	}
+
+	public boolean isValid() {
+		return serviceId != null && channelId != null;
+	}
+
 }

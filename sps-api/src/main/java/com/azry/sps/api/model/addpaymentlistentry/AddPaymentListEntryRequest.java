@@ -4,14 +4,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-@XmlType(name = "AddPaymentListEntryRequest", propOrder = {"personalNumber", "paymentList"})
+@XmlType(name = "AddPaymentListEntryRequest", propOrder = {"personalNumber", "paymentListEntry"})
 public class AddPaymentListEntryRequest implements Serializable {
 
 	String personalNumber;
 
-	PaymentListDTO paymentList;
+	PaymentListEntryDTO paymentListEntry;
 
-	@XmlElement(name = "personalNumber", required = true)
+	@XmlElement(name = "personalNumber")
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
@@ -20,12 +20,16 @@ public class AddPaymentListEntryRequest implements Serializable {
 		this.personalNumber = personalNumber;
 	}
 
-	@XmlElement(name = "paymentList", required = true)
-	public PaymentListDTO getPaymentList() {
-		return paymentList;
+	@XmlElement(name = "paymentListEntry")
+	public PaymentListEntryDTO getPaymentListEntry() {
+		return paymentListEntry;
 	}
 
-	public void setPaymentList(PaymentListDTO paymentList) {
-		this.paymentList = paymentList;
+	public void setPaymentListEntry(PaymentListEntryDTO paymentListEntry) {
+		this.paymentListEntry = paymentListEntry;
+	}
+
+	public boolean isValid() {
+		return personalNumber != null && paymentListEntry != null;
 	}
 }

@@ -155,6 +155,11 @@ public class ServiceManagerBean implements ServiceManager {
 //		return em.find(ServiceEntity.class, id).getService();
 	}
 
+	@Override
+	public Service getServiceByPaymentCode(String servicePaymentCode) {
+		return cachingService.getServiceByPayCode(servicePaymentCode);
+	}
+
 	private void updateCache() {
 		updateCacheEventEvent.fire(new UpdateCacheEvent(ServiceEntity.class.getSimpleName()));
 	}

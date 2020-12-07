@@ -13,7 +13,6 @@ import com.azry.sps.console.client.tabs.services.widgets.ServiceModifyWindow;
 import com.azry.sps.console.client.tabs.services.widgets.ServiceTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;

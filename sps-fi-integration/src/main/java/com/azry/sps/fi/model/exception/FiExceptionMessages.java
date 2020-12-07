@@ -1,4 +1,4 @@
-package com.azry.sps.api.model.pay;
+package com.azry.sps.fi.model.exception;
 
 public enum FiExceptionMessages {
 	VALIDATION("Invalid personal number"),

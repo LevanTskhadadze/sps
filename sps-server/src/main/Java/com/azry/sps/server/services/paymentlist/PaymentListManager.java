@@ -13,7 +13,11 @@ public interface PaymentListManager {
 
 	PaymentListEntry addPaymentListEntry(Client client, PaymentListEntry paymentListEntry);
 
+	Client getCLientFromAbonentCode(String abonentCode, long serviceId);
+
 	void deletePaymentListEntry(long id);
 
 	public void deletePaymentListEntriesByServiceId(long id);
+
+    void addPaymentList(PaymentList paymentList);
 }

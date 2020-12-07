@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="MPSDealersService" targetNamespace="http://localhost:8080/sps-api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8080/sps-api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="MPSDealersService" targetNamespace="http://localhost:8080/sps-integration-api/sps-api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8080/sps-integration-api/sps-api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8080/sps-api" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://localhost:8080/sps-api">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8080/sps-integration-api/sps-api" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://localhost:8080/sps-integration-api/sps-api">
 <xs:element name="addPaymentListEntry" type="tns:addPaymentListEntry"/>
 <xs:element name="addPaymentListEntryResponse" type="tns:addPaymentListEntryResponse"/>
 <xs:element name="getClientCommission" type="tns:getClientCommission"/>
@@ -20,36 +20,14 @@
 <xs:element name="payResponse" type="tns:payResponse"/>
 <xs:element name="removePaymentListEntry" type="tns:removePaymentListEntry"/>
 <xs:element name="removePaymentListEntryResponse" type="tns:removePaymentListEntryResponse"/>
-<xs:complexType name="getPaymentList">
-<xs:sequence>
-<xs:element name="personalNumber" type="xs:string"/>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="getPaymentListResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:GetPaymentListResponse"/>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="GetPaymentListResponse">
-<xs:sequence>
-<xs:element maxOccurs="unbounded" minOccurs="0" name="paymentLists" type="tns:PaymentList"/>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="PaymentList">
-<xs:sequence>
-<xs:element name="id" type="xs:long"/>
-<xs:element name="serviceId" type="xs:long"/>
-<xs:element name="abonentCode" type="xs:string"/>
-</xs:sequence>
-</xs:complexType>
 <xs:complexType name="getPaymentInfo">
 <xs:sequence>
-<xs:element name="GetPaymentInfoRequest" type="tns:GetPaymentInfoRequest"/>
+<xs:element form="qualified" minOccurs="0" name="GetPaymentInfoRequest" type="tns:GetPaymentInfoRequest"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="GetPaymentInfoRequest">
 <xs:sequence>
-<xs:element name="paymentId" type="xs:string"/>
+<xs:element minOccurs="0" name="paymentId" type="xs:string"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="getPaymentInfoResponse">
@@ -70,52 +48,30 @@
 <xs:element minOccurs="0" name="statusMessage" type="xs:string"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="pay">
+<xs:complexType name="getPaymentList">
 <xs:sequence>
-<xs:element name="PayRequest" type="tns:PayRequest"/>
+<xs:element form="qualified" minOccurs="0" name="personalNumber" type="tns:GetPaymentListRequest"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="PayRequest">
+<xs:complexType name="GetPaymentListRequest">
 <xs:sequence>
-<xs:element name="agentPaymentId" type="xs:string"/>
-<xs:element name="serviceId" type="xs:long"/>
-<xs:element name="channelId" type="xs:long"/>
-<xs:element name="abonentCode" type="xs:string"/>
-<xs:element name="personalNumber" type="xs:string"/>
-<xs:element name="amount" type="xs:decimal"/>
+<xs:element minOccurs="0" name="personalNumber" type="xs:string"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="payResponse">
-<xs:sequence/>
-</xs:complexType>
-<xs:complexType name="getClientCommission">
+<xs:complexType name="getPaymentListResponse">
 <xs:sequence>
-<xs:element name="getClientCommissionRequest" type="tns:GetClientCommissionRequest"/>
+<xs:element minOccurs="0" name="return" type="tns:GetPaymentListResponse"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="GetClientCommissionRequest">
+<xs:complexType name="GetPaymentListResponse">
+<xs:sequence>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="paymentLists" type="tns:PaymentListEntry"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="PaymentListEntry">
 <xs:sequence>
 <xs:element name="serviceId" type="xs:long"/>
-<xs:element name="channelId" type="xs:long"/>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="getClientCommissionResponse">
-<xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:GetClientCommissionResponse"/>
-</xs:sequence>
-</xs:complexType>
-<xs:complexType name="GetClientCommissionResponse">
-<xs:sequence>
-<xs:element name="id" type="xs:long"/>
-<xs:element name="priority" type="xs:long"/>
-<xs:element name="allServices" type="xs:boolean"/>
-<xs:element name="allChannels" type="xs:boolean"/>
-<xs:element minOccurs="0" name="serviceIds" type="xs:string"/>
-<xs:element minOccurs="0" name="channelIds" type="xs:string"/>
-<xs:element minOccurs="0" name="rateType" type="tns:commissionRateType"/>
-<xs:element minOccurs="0" name="minCommission" type="xs:decimal"/>
-<xs:element minOccurs="0" name="maxCommission" type="xs:decimal"/>
-<xs:element minOccurs="0" name="commission" type="xs:decimal"/>
+<xs:element minOccurs="0" name="abonentCode" type="xs:string"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="getServices">
@@ -154,36 +110,78 @@
 <xs:element minOccurs="0" name="maxAmount" type="xs:decimal"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="addPaymentListEntry">
+<xs:complexType name="getClientCommission">
 <xs:sequence>
-<xs:element name="AddPaymentListEntryRequest" type="tns:AddPaymentListEntryRequest"/>
+<xs:element name="getClientCommissionRequest" type="tns:GetClientCommissionRequest"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="AddPaymentListEntryRequest">
+<xs:complexType name="GetClientCommissionRequest">
 <xs:sequence>
-<xs:element name="personalNumber" type="xs:string"/>
-<xs:element name="paymentList" type="tns:PaymentList"/>
+<xs:element minOccurs="0" name="serviceId" type="xs:long"/>
+<xs:element minOccurs="0" name="channelId" type="xs:long"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="addPaymentListEntryResponse">
+<xs:complexType name="getClientCommissionResponse">
 <xs:sequence>
-<xs:element minOccurs="0" name="return" type="tns:AddPaymentListEntryResponse"/>
+<xs:element minOccurs="0" name="return" type="tns:GetClientCommissionResponse"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="AddPaymentListEntryResponse">
+<xs:complexType name="GetClientCommissionResponse">
 <xs:sequence>
 <xs:element name="id" type="xs:long"/>
+<xs:element name="priority" type="xs:long"/>
+<xs:element name="allServices" type="xs:boolean"/>
+<xs:element name="allChannels" type="xs:boolean"/>
+<xs:element minOccurs="0" name="serviceIds" type="xs:string"/>
+<xs:element minOccurs="0" name="channelIds" type="xs:string"/>
+<xs:element minOccurs="0" name="rateType" type="tns:commissionRateType"/>
+<xs:element minOccurs="0" name="minCommission" type="xs:decimal"/>
+<xs:element minOccurs="0" name="maxCommission" type="xs:decimal"/>
+<xs:element minOccurs="0" name="commission" type="xs:decimal"/>
 </xs:sequence>
+</xs:complexType>
+<xs:complexType name="pay">
+<xs:sequence>
+<xs:element form="qualified" minOccurs="0" name="PayRequest" type="tns:PayRequest"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="PayRequest">
+<xs:sequence>
+<xs:element minOccurs="0" name="agentPaymentId" type="xs:string"/>
+<xs:element minOccurs="0" name="serviceId" type="xs:long"/>
+<xs:element minOccurs="0" name="channelId" type="xs:long"/>
+<xs:element minOccurs="0" name="abonentCode" type="xs:string"/>
+<xs:element minOccurs="0" name="personalNumber" type="xs:string"/>
+<xs:element minOccurs="0" name="amount" type="xs:decimal"/>
+<xs:element minOccurs="0" name="clientAccountBAN" type="xs:string"/>
+<xs:element minOccurs="0" name="purpose" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="payResponse">
+<xs:sequence/>
+</xs:complexType>
+<xs:complexType name="removePaymentListEntry">
+<xs:sequence>
+<xs:element form="qualified" minOccurs="0" name="removePaymentListEntryRequest" type="tns:RemovePaymentListEntryRequest"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="RemovePaymentListEntryRequest">
+<xs:sequence>
+<xs:element minOccurs="0" name="id" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="removePaymentListEntryResponse">
+<xs:sequence/>
 </xs:complexType>
 <xs:complexType name="getInfo">
 <xs:sequence>
-<xs:element name="GetInfoRequest" type="tns:GetInfoRequest"/>
+<xs:element form="qualified" minOccurs="0" name="GetInfoRequest" type="tns:GetInfoRequest"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="GetInfoRequest">
 <xs:sequence>
-<xs:element name="abonentCode" type="xs:string"/>
-<xs:element name="serviceId" type="xs:long"/>
+<xs:element minOccurs="0" name="abonentCode" type="xs:string"/>
+<xs:element minOccurs="0" name="serviceId" type="xs:long"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="getInfoResponse">
@@ -197,18 +195,26 @@
 <xs:element minOccurs="0" name="debt" type="xs:decimal"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="removePaymentListEntry">
+<xs:complexType name="addPaymentListEntry">
 <xs:sequence>
-<xs:element name="removePaymentListEntryRequest" type="tns:RemovePaymentListEntryRequest"/>
+<xs:element form="qualified" minOccurs="0" name="AddPaymentListEntryRequest" type="tns:AddPaymentListEntryRequest"/>
 </xs:sequence>
 </xs:complexType>
-<xs:complexType name="RemovePaymentListEntryRequest">
+<xs:complexType name="AddPaymentListEntryRequest">
+<xs:sequence>
+<xs:element minOccurs="0" name="personalNumber" type="xs:string"/>
+<xs:element minOccurs="0" name="paymentListEntry" type="tns:PaymentListEntry"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="addPaymentListEntryResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:AddPaymentListEntryResponse"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="AddPaymentListEntryResponse">
 <xs:sequence>
 <xs:element name="id" type="xs:long"/>
 </xs:sequence>
-</xs:complexType>
-<xs:complexType name="removePaymentListEntryResponse">
-<xs:sequence/>
 </xs:complexType>
 <xs:complexType name="getServiceGroups">
 <xs:sequence/>
@@ -253,8 +259,8 @@
 </xs:complexType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="getClientCommissionResponse">
-    <wsdl:part name="parameters" element="tns:getClientCommissionResponse">
+  <wsdl:message name="getPaymentInfoResponse">
+    <wsdl:part name="parameters" element="tns:getPaymentInfoResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getPaymentList">
@@ -265,16 +271,24 @@
     <wsdl:part name="parameters" element="tns:getServiceGroupsResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getPaymentInfoResponse">
-    <wsdl:part name="parameters" element="tns:getPaymentInfoResponse">
+  <wsdl:message name="getClientCommissionResponse">
+    <wsdl:part name="parameters" element="tns:getClientCommissionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addPaymentListEntryResponse">
+    <wsdl:part name="parameters" element="tns:addPaymentListEntryResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="pay">
     <wsdl:part name="parameters" element="tns:pay">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="addPaymentListEntryResponse">
-    <wsdl:part name="parameters" element="tns:addPaymentListEntryResponse">
+  <wsdl:message name="removePaymentListEntry">
+    <wsdl:part name="parameters" element="tns:removePaymentListEntry">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getInfo">
+    <wsdl:part name="parameters" element="tns:getInfo">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="payResponse">
@@ -285,28 +299,8 @@
     <wsdl:part name="parameters" element="tns:addPaymentListEntry">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getInfo">
-    <wsdl:part name="parameters" element="tns:getInfo">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="removePaymentListEntry">
-    <wsdl:part name="parameters" element="tns:removePaymentListEntry">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getPaymentInfo">
     <wsdl:part name="parameters" element="tns:getPaymentInfo">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="SpsApiException">
-    <wsdl:part name="SpsApiException" element="tns:SpsApiException">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getClientCommission">
-    <wsdl:part name="parameters" element="tns:getClientCommission">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getServices">
-    <wsdl:part name="parameters" element="tns:getServices">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getServicesResponse">
@@ -317,19 +311,39 @@
     <wsdl:part name="parameters" element="tns:removePaymentListEntryResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getInfoResponse">
-    <wsdl:part name="parameters" element="tns:getInfoResponse">
+  <wsdl:message name="getServices">
+    <wsdl:part name="parameters" element="tns:getServices">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getPaymentListResponse">
-    <wsdl:part name="parameters" element="tns:getPaymentListResponse">
+  <wsdl:message name="getClientCommission">
+    <wsdl:part name="parameters" element="tns:getClientCommission">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SpsApiException">
+    <wsdl:part name="SpsApiException" element="tns:SpsApiException">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getServiceGroups">
     <wsdl:part name="parameters" element="tns:getServiceGroups">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getPaymentListResponse">
+    <wsdl:part name="parameters" element="tns:getPaymentListResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getInfoResponse">
+    <wsdl:part name="parameters" element="tns:getInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="SpsApi">
+    <wsdl:operation name="getPaymentInfo">
+      <wsdl:input name="getPaymentInfo" message="tns:getPaymentInfo">
+    </wsdl:input>
+      <wsdl:output name="getPaymentInfoResponse" message="tns:getPaymentInfoResponse">
+    </wsdl:output>
+      <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="getPaymentList">
       <wsdl:input name="getPaymentList" message="tns:getPaymentList">
     </wsdl:input>
@@ -338,10 +352,16 @@
       <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="getPaymentInfo">
-      <wsdl:input name="getPaymentInfo" message="tns:getPaymentInfo">
+    <wsdl:operation name="getServices">
+      <wsdl:input name="getServices" message="tns:getServices">
     </wsdl:input>
-      <wsdl:output name="getPaymentInfoResponse" message="tns:getPaymentInfoResponse">
+      <wsdl:output name="getServicesResponse" message="tns:getServicesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getClientCommission">
+      <wsdl:input name="getClientCommission" message="tns:getClientCommission">
+    </wsdl:input>
+      <wsdl:output name="getClientCommissionResponse" message="tns:getClientCommissionResponse">
     </wsdl:output>
       <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
     </wsdl:fault>
@@ -354,22 +374,10 @@
       <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="getClientCommission">
-      <wsdl:input name="getClientCommission" message="tns:getClientCommission">
+    <wsdl:operation name="removePaymentListEntry">
+      <wsdl:input name="removePaymentListEntry" message="tns:removePaymentListEntry">
     </wsdl:input>
-      <wsdl:output name="getClientCommissionResponse" message="tns:getClientCommissionResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getServices">
-      <wsdl:input name="getServices" message="tns:getServices">
-    </wsdl:input>
-      <wsdl:output name="getServicesResponse" message="tns:getServicesResponse">
-    </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addPaymentListEntry">
-      <wsdl:input name="addPaymentListEntry" message="tns:addPaymentListEntry">
-    </wsdl:input>
-      <wsdl:output name="addPaymentListEntryResponse" message="tns:addPaymentListEntryResponse">
+      <wsdl:output name="removePaymentListEntryResponse" message="tns:removePaymentListEntryResponse">
     </wsdl:output>
       <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
     </wsdl:fault>
@@ -382,11 +390,13 @@
       <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="removePaymentListEntry">
-      <wsdl:input name="removePaymentListEntry" message="tns:removePaymentListEntry">
+    <wsdl:operation name="addPaymentListEntry">
+      <wsdl:input name="addPaymentListEntry" message="tns:addPaymentListEntry">
     </wsdl:input>
-      <wsdl:output name="removePaymentListEntryResponse" message="tns:removePaymentListEntryResponse">
+      <wsdl:output name="addPaymentListEntryResponse" message="tns:addPaymentListEntryResponse">
     </wsdl:output>
+      <wsdl:fault name="SpsApiException" message="tns:SpsApiException">
+    </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="getServiceGroups">
       <wsdl:input name="getServiceGroups" message="tns:getServiceGroups">
@@ -397,20 +407,8 @@
   </wsdl:portType>
   <wsdl:binding name="SpsApiServiceSoapBinding" type="tns:SpsApi">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="getPaymentList">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getPaymentList" style="document"/>
-      <wsdl:input name="getPaymentList">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getPaymentListResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="SpsApiException">
-        <soap:fault name="SpsApiException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="getPaymentInfo">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getPaymentInfo" style="document"/>
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getPaymentInfo" style="document"/>
       <wsdl:input name="getPaymentInfo">
         <soap:body use="literal"/>
       </wsdl:input>
@@ -421,8 +419,41 @@
         <soap:fault name="SpsApiException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="getPaymentList">
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getPaymentListEntry" style="document"/>
+      <wsdl:input name="getPaymentList">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPaymentListResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SpsApiException">
+        <soap:fault name="SpsApiException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getServices">
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getServices" style="document"/>
+      <wsdl:input name="getServices">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServicesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getClientCommission">
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getServiceCommission" style="document"/>
+      <wsdl:input name="getClientCommission">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getClientCommissionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SpsApiException">
+        <soap:fault name="SpsApiException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="pay">
-      <soap:operation soapAction="http://localhost:8080/sps-api/pay" style="document"/>
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/pay" style="document"/>
       <wsdl:input name="pay">
         <soap:body use="literal"/>
       </wsdl:input>
@@ -433,30 +464,12 @@
         <soap:fault name="SpsApiException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="getClientCommission">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getServiceCommission" style="document"/>
-      <wsdl:input name="getClientCommission">
+    <wsdl:operation name="removePaymentListEntry">
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/removePaymentListEntry" style="document"/>
+      <wsdl:input name="removePaymentListEntry">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="getClientCommissionResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="getServices">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getServices" style="document"/>
-      <wsdl:input name="getServices">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="getServicesResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addPaymentListEntry">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getPaymentListEntry" style="document"/>
-      <wsdl:input name="addPaymentListEntry">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="addPaymentListEntryResponse">
+      <wsdl:output name="removePaymentListEntryResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="SpsApiException">
@@ -464,7 +477,7 @@
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="getInfo">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getInfo" style="document"/>
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getInfo" style="document"/>
       <wsdl:input name="getInfo">
         <soap:body use="literal"/>
       </wsdl:input>
@@ -475,17 +488,20 @@
         <soap:fault name="SpsApiException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="removePaymentListEntry">
-      <soap:operation soapAction="http://localhost:8080/sps-api/removePaymentListEntry" style="document"/>
-      <wsdl:input name="removePaymentListEntry">
+    <wsdl:operation name="addPaymentListEntry">
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getPaymentListEntry" style="document"/>
+      <wsdl:input name="addPaymentListEntry">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="removePaymentListEntryResponse">
+      <wsdl:output name="addPaymentListEntryResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="SpsApiException">
+        <soap:fault name="SpsApiException" use="literal"/>
+      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="getServiceGroups">
-      <soap:operation soapAction="http://localhost:8080/sps-api/getServiceGroups" style="document"/>
+      <soap:operation soapAction="http://localhost:8080/sps-integration-api/sps-api/getServiceGroups" style="document"/>
       <wsdl:input name="getServiceGroups">
         <soap:body use="literal"/>
       </wsdl:input>

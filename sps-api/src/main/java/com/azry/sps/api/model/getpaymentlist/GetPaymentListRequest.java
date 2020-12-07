@@ -9,12 +9,16 @@ public class GetPaymentListRequest implements Serializable {
 
 	String personalNumber;
 
-	@XmlElement(name = "personalNumber", required = true)
+	@XmlElement(name = "personalNumber")
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
 
 	public void setPersonalNumber(String personalNumber) {
 		this.personalNumber = personalNumber;
+	}
+
+	public boolean isValid() {
+		return personalNumber != null;
 	}
 }

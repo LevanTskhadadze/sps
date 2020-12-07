@@ -7,14 +7,18 @@ import java.io.Serializable;
 @XmlType(name = "RemovePaymentListEntryRequest", propOrder = {"id"})
 public class RemovePaymentListEntryRequest implements Serializable {
 
-	long id;
+	Long id;
 
-	@XmlElement(name = "id", required = true)
-	public long getId() {
+	@XmlElement(name = "id")
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isValid() {
+		return id != null;
 	}
 }

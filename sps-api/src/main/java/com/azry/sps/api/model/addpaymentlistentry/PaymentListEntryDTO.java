@@ -5,8 +5,8 @@ import com.azry.sps.common.model.paymentlist.PaymentListEntry;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlType(name = "PaymentList", propOrder = {"id", "serviceId", "abonentCode"})
-public class PaymentListDTO {
+@XmlType(name = "PaymentListEntry", propOrder = {"serviceId", "abonentCode"})
+public class PaymentListEntryDTO {
 
 	private long id;
 
@@ -14,16 +14,12 @@ public class PaymentListDTO {
 
 	private String abonentCode;
 
-	@XmlElement(name = "id", required = true)
-	public long getId() {
-		return id;
-	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	@XmlElement(name = "serviceId", required = true)
+	@XmlElement(name = "serviceId")
 	public long getServiceId() {
 		return serviceId;
 	}
@@ -32,7 +28,7 @@ public class PaymentListDTO {
 		this.serviceId = serviceId;
 	}
 
-	@XmlElement(name = "abonentCode", required = true)
+	@XmlElement(name = "abonentCode")
 	public String getAbonentCode() {
 		return abonentCode;
 	}
@@ -41,8 +37,8 @@ public class PaymentListDTO {
 		this.abonentCode = abonentCode;
 	}
 
-	public static PaymentListDTO listEntryToDTO(PaymentListEntry entry) {
-		PaymentListDTO info = new PaymentListDTO();
+	public static PaymentListEntryDTO listEntryToDTO(PaymentListEntry entry) {
+		PaymentListEntryDTO info = new PaymentListEntryDTO();
 		info.setAbonentCode(entry.getAbonentCode());
 		info.setId(entry.getId());
 		info.setServiceId(entry.getServiceId());
@@ -50,10 +46,9 @@ public class PaymentListDTO {
 		return info;
 	}
 
-	public static PaymentListEntry dtoToListEntry(PaymentListDTO info) {
+	public static PaymentListEntry dtoToListEntry(PaymentListEntryDTO info) {
 		PaymentListEntry entry = new PaymentListEntry();
 		entry.setAbonentCode(info.getAbonentCode());
-		entry.setId(info.getId());
 		entry.setServiceId(info.getServiceId());
 
 		return entry;

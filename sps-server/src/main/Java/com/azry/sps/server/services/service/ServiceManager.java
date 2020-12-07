@@ -32,4 +32,6 @@ public interface ServiceManager {
 	String getIcon(long id);
 
     Service getService(long id);
+
+    Service getServiceByPaymentCode(String paymentCode);
 }

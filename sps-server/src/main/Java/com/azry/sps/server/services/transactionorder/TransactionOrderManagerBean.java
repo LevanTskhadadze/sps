@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Stateless
 public class TransactionOrderManagerBean implements TransactionOrderManager {
@@ -29,5 +30,17 @@ public class TransactionOrderManagerBean implements TransactionOrderManager {
 		}
 	}
 
+	@Override
+	public void changeTransactions(List<TransactionOrder> transactions) {
+		for (TransactionOrder transaction : transactions) {
+			if (transaction != null) {
+				em.merge(transaction);
+			}
+		}
+	}
 
+	@Override
+	public void addTransection(TransactionOrder transaction) {
+		em.persist(transaction);
+	}
 }

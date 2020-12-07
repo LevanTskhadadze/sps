@@ -4,7 +4,7 @@ import com.azry.sps.api.model.Namespace;
 import com.azry.sps.api.model.SpsApiException;
 import com.azry.sps.api.model.addpaymentlistentry.AddPaymentListEntryRequest;
 import com.azry.sps.api.model.addpaymentlistentry.AddPaymentListEntryResponse;
-import com.azry.sps.api.model.addpaymentlistentry.PaymentListDTO;
+import com.azry.sps.api.model.addpaymentlistentry.PaymentListEntryDTO;
 import com.azry.sps.api.model.getServices.GetServicesResponse;
 import com.azry.sps.api.model.getServices.ServiceDTO;
 import com.azry.sps.api.model.getclientcommission.GetClientCommissionRequest;
@@ -13,10 +13,11 @@ import com.azry.sps.api.model.getinfo.GetInfoRequest;
 import com.azry.sps.api.model.getinfo.GetInfoResponse;
 import com.azry.sps.api.model.getpaymentinfo.GetPaymentInfoRequest;
 import com.azry.sps.api.model.getpaymentinfo.GetPaymentInfoResponse;
+import com.azry.sps.api.model.getpaymentlist.GetPaymentListRequest;
 import com.azry.sps.api.model.getpaymentlist.GetPaymentListResponse;
 import com.azry.sps.api.model.getservicegroups.GetServiceGroupsResponse;
 import com.azry.sps.api.model.getservicegroups.ServiceGroupDTO;
-import com.azry.sps.api.model.pay.FiExceptionMessages;
+import com.azry.sps.fi.model.exception.FiExceptionMessages;
 import com.azry.sps.api.model.pay.PayRequest;
 import com.azry.sps.api.model.pay.PaymentStatusDTO;
 import com.azry.sps.api.model.removepaymentlistentry.RemovePaymentListEntryRequest;
@@ -34,6 +35,8 @@ import com.azry.sps.api.dto.GetInfoStatus;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.common.model.service.ServiceChannelInfo;
+import com.azry.sps.common.model.transaction.TransactionOrder;
+import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
 import com.azry.sps.fi.model.exception.FiException;
 import com.azry.sps.fi.service.BankIntegrationService;
@@ -41,12 +44,14 @@ import com.azry.sps.integration.sp.ServiceProviderIntegrationService;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.exception.SpConnectivityException;
 import com.azry.sps.integration.sp.exception.SpIntegrationException;
+import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.azry.sps.server.services.payment.PaymentManager;
 import com.azry.sps.server.services.paymentlist.PaymentListManager;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.azry.sps.server.services.servicecommission.ServiceCommissionsManager;
 import com.azry.sps.server.services.servicegroup.ServiceGroupManager;
+import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
 import org.jboss.ws.api.annotation.WebContext;
 
 import javax.ejb.Stateless;
@@ -54,12 +59,11 @@ import javax.inject.Inject;
 import javax.jws.WebService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Stateless
 @WebService(endpointInterface = "com.azry.sps.api.SpsApi", targetNamespace = Namespace.TN, portName = "SpsApiPort", serviceName = "SpsApiService")
-@WebContext(contextRoot = "/", urlPattern = "/sps-api")
+@WebContext(contextRoot = "/sps-integration-api", urlPattern = "/sps-api")
 public class SpsApiImpl implements SpsApi{
 
 	@Inject
@@ -67,6 +71,12 @@ public class SpsApiImpl implements SpsApi{
 
 	@Inject
 	ServiceManager serviceManager;
+
+	@Inject
+	ChannelManager channelManager;
+
+	@Inject
+	TransactionOrderManager transactionOrderManager;
 
 	@Inject
 	ClientCommissionsManager clientCommissionsManager;
@@ -88,6 +98,9 @@ public class SpsApiImpl implements SpsApi{
 
 	@Override
 	public GetInfoResponse getInfo(GetInfoRequest request) throws SpsApiException {
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
 		GetInfoResponse response = new GetInfoResponse();
 		Service svc = serviceManager.getService(request.getServiceId());
 
@@ -111,7 +124,9 @@ public class SpsApiImpl implements SpsApi{
 
 	@Override
 	public void pay(PayRequest request) throws SpsApiException {
-
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
 		Service svc = serviceManager.getService(request.getServiceId());
 		if (svc == null) {
 			throw new SpsApiException("Invalid service ID.");
@@ -122,7 +137,7 @@ public class SpsApiImpl implements SpsApi{
 		for(ServiceChannelInfo channel : svc.getChannels()) {
 			if (channel.getChannelId() == request.getChannelId()) {
 				if (!channel.isActive()) {
-					throw new SpsApiException("Selected Channel is not available for selected service");
+					throw new SpsApiException("Selected Channel is not active for selected service");
 				}
 				else {
 					hasChannel = true;
@@ -137,7 +152,7 @@ public class SpsApiImpl implements SpsApi{
 
 		ClientCommissions clCommission = clientCommissionsManager.getClientCommission(svc.getId(), request.getChannelId());
 		BigDecimal clCommissionAmount;
-		if (clCommission == null) {
+		if (clCommission == null || clCommission.getCommission() == null) {
 			clCommissionAmount = BigDecimal.valueOf(0);
 		}
 		else {
@@ -154,7 +169,7 @@ public class SpsApiImpl implements SpsApi{
 
 		BigDecimal svcCommissionAmount;
 
-		if (svcCommission == null) {
+		if (svcCommission == null || svcCommission.getCommission() == null) {
 			svcCommissionAmount = BigDecimal.valueOf(0);
 		}
 		else {
@@ -188,11 +203,35 @@ public class SpsApiImpl implements SpsApi{
 			throw new SpsApiException("Could not connect to bank.");
 		}
 
-		paymentManager.addPayments(Collections.singletonList(payment));
+		payment = paymentManager.addPayment(payment);
+
+		TransactionOrder principalTransaction = new TransactionOrder();
+		principalTransaction.setAmount(request.getAmount());
+		principalTransaction.setSourceAccountBAN(request.getClientAccountBAN());
+		principalTransaction.setDestinationAccountBAN(svc.getProviderAccountIBAN());
+		principalTransaction.setType(TransactionType.PRINCIPAL_AMOUNT);
+		principalTransaction.setPaymentId(payment.getId());
+		principalTransaction.setPurpose(request.getPurpose());
+		transactionOrderManager.addTransection(principalTransaction);
+
+		TransactionOrder commissionTransaction = new TransactionOrder();
+		commissionTransaction.setAmount(clCommissionAmount);
+		commissionTransaction.setSourceAccountBAN(request.getClientAccountBAN());
+		commissionTransaction.setDestinationAccountBAN(svc.getProviderAccountIBAN());
+		commissionTransaction.setAmount(request.getAmount());
+		commissionTransaction.setType(TransactionType.CLIENT_COMMISSION_AMOUNT);
+		commissionTransaction.setPaymentId(payment.getId());
+		commissionTransaction.setPurpose(request.getPurpose());
+		transactionOrderManager.addTransection(commissionTransaction);
+
+
 	}
 
 	@Override
 	public GetPaymentInfoResponse getPaymentInfo(GetPaymentInfoRequest request) throws SpsApiException {
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
 		Payment payment = paymentManager.getPaymentByAgentId(request.getAgentPaymentId());
 
 		if (payment == null) {
@@ -214,17 +253,20 @@ public class SpsApiImpl implements SpsApi{
 	}
 
 	@Override
-	public GetPaymentListResponse getPaymentList(String personalNumber) throws SpsApiException {
-		PaymentList paymentList = paymentListManager.getPaymentList(personalNumber);
+	public GetPaymentListResponse getPaymentList(GetPaymentListRequest request) throws SpsApiException {
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request");
+		}
+		PaymentList paymentList = paymentListManager.getPaymentList(request.getPersonalNumber());
 
 		if (paymentList == null) {
-			throw new SpsApiException("No payment list found for personal number " + personalNumber);
+			throw new SpsApiException("No payment list found for personal number " + request.getPersonalNumber());
 		}
 
 		GetPaymentListResponse response = new GetPaymentListResponse();
 		response.setPaymentLists(new ArrayList<>());
 		for (PaymentListEntry entry : paymentList.getEntries()) {
-			response.getPaymentLists().add(PaymentListDTO.listEntryToDTO(entry));
+			response.getPaymentLists().add(PaymentListEntryDTO.listEntryToDTO(entry));
 		}
 
 		return response;
@@ -232,13 +274,27 @@ public class SpsApiImpl implements SpsApi{
 
 	@Override
 	public AddPaymentListEntryResponse addPaymentListEntry(AddPaymentListEntryRequest request) throws SpsApiException {
-
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
 		PaymentList paymentList = paymentListManager.getPaymentList(request.getPersonalNumber());
 
 		if (paymentList == null) {
-			throw new SpsApiException("No payment list found for personal number " + request.getPersonalNumber());
+			//throw new SpsApiException("No payment list found for personal number " + request.getPersonalNumber());
+			paymentList = new PaymentList();
+			try {
+				paymentList.setClient(bankIntegrationService.getClientWithAccount(request.getPersonalNumber()).toClient());
+			} catch (FiException ex) {
+			throw new SpsApiException("Error while interacting with bank: " + FiExceptionMessages.valueOf(ex.getCode()).getMessage());
+			} catch (FIConnectivityException ex) {
+				throw new SpsApiException("Could not connect to bank.");
+			}
+
+			paymentListManager.addPaymentList(paymentList);
 		}
-		PaymentListEntry entry = PaymentListDTO.dtoToListEntry(request.getPaymentList());
+
+		PaymentListEntry entry = PaymentListEntryDTO.dtoToListEntry(request.getPaymentListEntry());
+
 		entry = paymentListManager.addPaymentListEntry(paymentList.getClient(), entry);
 
 		AddPaymentListEntryResponse response = new AddPaymentListEntryResponse();
@@ -248,7 +304,10 @@ public class SpsApiImpl implements SpsApi{
 	}
 
 	@Override
-	public void removePaymentListEntry(RemovePaymentListEntryRequest request) {
+	public void removePaymentListEntry(RemovePaymentListEntryRequest request) throws SpsApiException {
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
 		paymentListManager.deletePaymentListEntry(request.getId());
 	}
 
@@ -272,8 +331,24 @@ public class SpsApiImpl implements SpsApi{
 	}
 
 	@Override
-	public GetClientCommissionResponse getClientCommission(GetClientCommissionRequest request) {
+	public GetClientCommissionResponse getClientCommission(GetClientCommissionRequest request) throws SpsApiException {
+		if (!request.isValid()) {
+			throw new SpsApiException("Invalid request!");
+		}
+
+		if (serviceManager.getService(request.getServiceId()) == null) {
+			throw new SpsApiException("Service not available!");
+		}
+
+		if (channelManager.getChannel(request.getServiceId()) == null) {
+			throw new SpsApiException("Channel not available!");
+		}
+
 		ClientCommissions commission = clientCommissionsManager.getClientCommission(request.getServiceId(), request.getChannelId());
+
+		if (commission == null) {
+			throw new SpsApiException("No client commission exists for selected channel and service.");
+		}
 
 		GetClientCommissionResponse response = new GetClientCommissionResponse();
 

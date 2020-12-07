@@ -17,8 +17,6 @@ import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ServiceChannelWindow extends Composite {
 
@@ -142,10 +140,7 @@ public class ServiceChannelWindow extends Composite {
 	}
 
 	public ChannelInfo getChannelInfos(){
-		Logger logger = Logger.getLogger("NameOfYourLogger");
-
 		for (int i = 0; i < rows.size(); i ++){
-			logger.log(Level.SEVERE, rows.get(i).getMinAmountField().getValue() + " " + rows.get(i).getMaxAmountField().getValue() + "!!!");
 			channelInfos.get(i).setActive(rows.get(i).getActiveBox().getValue());
 			channelInfos.get(i).setMinAmount(rows.get(i).getMinAmountField().getValue());
 			channelInfos.get(i).setMaxAmount(rows.get(i).getMaxAmountField().getValue());

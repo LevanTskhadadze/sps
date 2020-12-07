@@ -5,22 +5,26 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@XmlType(name = "PayRequest", propOrder = {"agentPaymentId", "serviceId", "channelId", "abonentCode", "personalNumber", "amount"})
+@XmlType(name = "PayRequest", propOrder = {"agentPaymentId", "serviceId", "channelId", "abonentCode", "personalNumber", "amount", "clientAccountBAN", "purpose"})
 public class PayRequest implements Serializable {
 
-	String agentPaymentId;
+	private String agentPaymentId;
 
-	String abonentCode;
+	private String abonentCode;
 
-	String personalNumber;
+	private String personalNumber;
 
-	BigDecimal amount;
+	private BigDecimal amount;
 
-	long serviceId;
+	private Long serviceId;
 
-	Long channelId;
+	private Long channelId;
 
-	@XmlElement(name = "personalNumber", required = true)
+	private String clientAccountBAN;
+
+	private String purpose;
+
+	@XmlElement(name = "personalNumber")
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
@@ -29,7 +33,7 @@ public class PayRequest implements Serializable {
 		this.personalNumber = personalNumber;
 	}
 
-	@XmlElement(name = "amount", required = true)
+	@XmlElement(name = "amount")
 	public BigDecimal getAmount() {
 		return amount;
 	}
@@ -38,16 +42,16 @@ public class PayRequest implements Serializable {
 		this.amount = amount;
 	}
 
-	@XmlElement(name = "serviceId", required = true)
-	public long getServiceId() {
+	@XmlElement(name = "serviceId")
+	public Long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(long serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
 	}
 
-	@XmlElement(name = "abonentCode", required = true)
+	@XmlElement(name = "abonentCode")
 	public String getAbonentCode() {
 		return abonentCode;
 	}
@@ -56,8 +60,7 @@ public class PayRequest implements Serializable {
 		this.abonentCode = abonentCode;
 	}
 
-
-	@XmlElement(name = "agentPaymentId", required = true)
+	@XmlElement(name = "agentPaymentId")
 	public String getAgentPaymentId() {
 		return agentPaymentId;
 	}
@@ -66,12 +69,39 @@ public class PayRequest implements Serializable {
 		this.agentPaymentId = personalNumber;
 	}
 
-	@XmlElement(name = "channelId", required = true)
+	@XmlElement(name = "channelId")
 	public Long getChannelId() {
 		return channelId;
 	}
 
 	public void setChannelId(Long channelId) {
 		this.channelId = channelId;
+	}
+
+	@XmlElement(name = "clientAccountBAN")
+	public String getClientAccountBAN() {
+		return clientAccountBAN;
+	}
+
+	public void setClientAccountBAN(String clientAccountBAN) {
+		this.clientAccountBAN = clientAccountBAN;
+	}
+
+	public String getPurpose() {
+		return purpose;
+	}
+
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+
+	public boolean isValid() {
+		return agentPaymentId != null
+			&& abonentCode != null
+			&& personalNumber != null
+			&& amount != null
+			&& serviceId != null
+			&& channelId != null
+			&& clientAccountBAN != null;
 	}
 }

@@ -36,6 +36,9 @@ public class PaymentListServiceImpl extends RemoteServiceServlet implements Paym
 		List<PaymentListEntryDTO> paymentListEntries = new ArrayList<>();
 		for (PaymentListEntryDTO entry : paymentList.getEntries()) {
 			Service service = serviceManager.getService(entry.getServiceId());
+			if (service == null) {
+				continue;
+			}
 			if (service.isActive()) {
 				entry.setService(ServiceDTO.toDTO(service));
 				paymentListEntries.add(entry);

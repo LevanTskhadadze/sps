@@ -50,9 +50,21 @@ public class PaymentListManagerBean implements PaymentListManager {
 		}
 	}
 
+	@Override
+	public Client getCLientFromAbonentCode(String abonentCode, long serviceId) {
+		return em.createQuery("SELECT pl.client FROM PaymentListEntry ple JOIN FETCH PaymentList pl WHERE ple.serviceId = :serviceId", Client.class)
+			.setParameter("serviceId", serviceId)
+			.getSingleResult();
+	}
+
 	public void deletePaymentListEntriesByServiceId(long id) {
 		em.createQuery("DELETE FROM PaymentListEntry p WHERE p.serviceId = :id")
 			.setParameter("id", id)
 			.executeUpdate();
+	}
+
+	@Override
+	public void addPaymentList(PaymentList paymentList) {
+		em.persist(paymentList);
 	}
 }
