@@ -8,6 +8,8 @@ import com.azry.sps.console.client.error.ErrorHandlerInit;
 import com.azry.sps.console.client.tabs.TabBuilder;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.shared.dto.usergroup.PermissionsDTO;
+import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,6 +32,8 @@ import com.sencha.gxt.widget.core.client.menu.Menu;
 public class ConsoleEntryPoint implements EntryPoint {
 
 	public static final Viewport VIEWPORT = new Viewport();
+
+	private SystemUserDTO user;
 
 	private HTML getFooter(){
 		HTML footerText = new HTML("This is a footer");
@@ -60,35 +64,55 @@ public class ConsoleEntryPoint implements EntryPoint {
 			}
 		});
 
-		HTML systemParameterMenuItem = TabBuilder.getSystemParameterMenuItem(centerPanel, menu);
-		menu.add(systemParameterMenuItem);
+		if (isUserInRole(PermissionsDTO.SYSTEM_PARAMETERS_VIEW.name()) || isUserInRole(PermissionsDTO.SYSTEM_PARAMETERS_MANAGE.name())) {
+			HTML systemParameterMenuItem = TabBuilder.getSystemParameterMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.SYSTEM_PARAMETERS_MANAGE.name()));
+			menu.add(systemParameterMenuItem);
+		}
 
-		HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel, menu);
-		menu.add(serviceGroupMenuItem);
+		if (isUserInRole(PermissionsDTO.SERVICE_GROUPS_VIEW.name()) || isUserInRole(PermissionsDTO.SERVICE_GROUPS_MANAGE.name())) {
+			HTML serviceGroupMenuItem = TabBuilder.getServiceGroupMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.SERVICE_GROUPS_MANAGE.name()));
+			menu.add(serviceGroupMenuItem);
+		}
 
-		HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel, menu);
-		menu.add(usersMenuItem);
+		if (isUserInRole(PermissionsDTO.USERS_VIEW.name()) || isUserInRole(PermissionsDTO.USERS_MANAGE.name())) {
+			HTML usersMenuItem = TabBuilder.getUsersMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.USERS_MANAGE.name()));
+			menu.add(usersMenuItem);
+		}
 
-		HTML userGroupMenuItem = TabBuilder.getUserGroupMenuItem(centerPanel, menu);
-		menu.add(userGroupMenuItem);
+		if (isUserInRole(PermissionsDTO.USER_GROUPS_VIEW.name()) || isUserInRole(PermissionsDTO.USER_GROUPS_MANAGE.name())) {
+			HTML userGroupMenuItem = TabBuilder.getUserGroupMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.USER_GROUPS_MANAGE.name()));
+			menu.add(userGroupMenuItem);
+		}
 
-		HTML servicesMenuItem = TabBuilder.getServicesMenuItem(centerPanel, menu);
-		menu.add(servicesMenuItem);
+		if (isUserInRole(PermissionsDTO.SERVICES_VIEW.name()) || isUserInRole(PermissionsDTO.SERVICES_MANAGE.name())) {
+			HTML servicesMenuItem = TabBuilder.getServicesMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.SERVICES_MANAGE.name()));
+			menu.add(servicesMenuItem);
+		}
 
-		HTML channelMenuItem = TabBuilder.getChannelMenuItem(centerPanel, menu);
-		menu.add(channelMenuItem);
+		if (isUserInRole(PermissionsDTO.CHANNELS_VIEW.name()) || isUserInRole(PermissionsDTO.CHANNELS_MANAGE.name())) {
+			HTML channelMenuItem = TabBuilder.getChannelMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.CHANNELS_MANAGE.name()));
+			menu.add(channelMenuItem);
+		}
 
-		HTML clientCommissionsMenuItem = TabBuilder.getClientCommissionsMenuItem(centerPanel, menu);
-		menu.add(clientCommissionsMenuItem);
+		if (isUserInRole(PermissionsDTO.CLIENT_COMMISSIONS_VIEW.name()) || isUserInRole(PermissionsDTO.CLIENT_COMMISSIONS_MANAGE.name())) {
+			HTML clientCommissionsMenuItem = TabBuilder.getClientCommissionsMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.CLIENT_COMMISSIONS_MANAGE.name()));
+			menu.add(clientCommissionsMenuItem);
+		}
 
-		HTML serviceCommissionsMenuItem = TabBuilder.getServiceCommissionsMenuItem(centerPanel, menu);
-		menu.add(serviceCommissionsMenuItem);
+		if (isUserInRole(PermissionsDTO.SERVICE_COMMISSIONS_VIEW.name()) || isUserInRole(PermissionsDTO.SERVICE_COMMISSIONS_MANAGE.name())) {
+			HTML serviceCommissionsMenuItem = TabBuilder.getServiceCommissionsMenuItem(centerPanel, menu, isUserInRole(PermissionsDTO.SERVICE_COMMISSIONS_MANAGE.name()));
+			menu.add(serviceCommissionsMenuItem);
+		}
 
-		HTML performPaymentsTabMenuItem = TabBuilder.getPerformPaymentsTabMenuItem(centerPanel, menu);
-		menu.add(performPaymentsTabMenuItem);
+		if (isUserInRole(PermissionsDTO.PAYMENTS_PERFORM.name())) {
+			HTML performPaymentsTabMenuItem = TabBuilder.getPerformPaymentsTabMenuItem(centerPanel, menu);
+			menu.add(performPaymentsTabMenuItem);
+		}
 
-		HTML paymentTabMenuItem = TabBuilder.getPaymentTabMenuItem(centerPanel, menu);
-		menu.add(paymentTabMenuItem);
+		if (isUserInRole(PermissionsDTO.PAYMENTS_VIEW.name())) {
+			HTML paymentTabMenuItem = TabBuilder.getPaymentTabMenuItem(centerPanel, menu);
+			menu.add(paymentTabMenuItem);
+		}
 
 
 		// button.setIcon(FAIconsProvider.getIcons().cog());
@@ -142,6 +166,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 		ServicesFactory.getUserService().loadAuthorisedUser(new ServiceCallback<SystemUserDTO>() {
 			@Override
 			public void onServiceSuccess(SystemUserDTO result) {
+				user = result;
 				VIEWPORT.add(BuildUI(result));
 			}
 		});
@@ -172,5 +197,16 @@ public class ConsoleEntryPoint implements EntryPoint {
 		mainFrame.setSouthWidget(footerText, footerData);
 
 		return mainFrame;
+	}
+
+	private boolean isUserInRole(String role) {
+		for (UserGroupDTO userGroup : user.getGroups()) {
+			for (String permission : userGroup.getPermissions().split(",")) {
+				if (permission.equals(role)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

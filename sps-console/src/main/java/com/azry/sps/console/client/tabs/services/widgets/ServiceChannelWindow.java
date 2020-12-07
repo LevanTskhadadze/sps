@@ -2,6 +2,7 @@ package com.azry.sps.console.client.tabs.services.widgets;
 
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
@@ -34,8 +35,11 @@ public class ServiceChannelWindow extends Composite {
 
 	VerticalLayoutContainer container;
 
-	public ServiceChannelWindow(final List<ServiceChannelInfoDTO> entries, boolean allSelected){
+	ActionMode actionMode;
+
+	public ServiceChannelWindow(final List<ServiceChannelInfoDTO> entries, boolean allSelected, ActionMode actionMode){
 		super();
+		this.actionMode = actionMode;
 		container = new VerticalLayoutContainer();
 		table = new FlexTable();
 		channelInfos = new ArrayList<>();
@@ -115,6 +119,12 @@ public class ServiceChannelWindow extends Composite {
 			if (newInfo.getMaxAmount() != null) {
 				maxAmountField.setValue(newInfo.getMaxAmount());
 			}
+			if (ActionMode.VIEW.equals(actionMode)) {
+				selectAllButton.disable();
+				activeBox.setEnabled(false);
+				minAmountField.disable();
+				maxAmountField.disable();
+			}
 
 			rows.add(new ChannelInfoRow(activeBox, minAmountField, maxAmountField));
 
@@ -133,10 +143,8 @@ public class ServiceChannelWindow extends Composite {
 	}
 
 	public boolean isValid() {
-		//Logger logger = java.util.logging.Logger.getLogger("NameOfYourLogger");
 		boolean valid = true;
 		for(ChannelInfoRow row : rows) {
-			//logger.log(Level.SEVERE, "!!!");
 			if(row.getMinAmountField().getValue() != null &&
 				row.getMaxAmountField().getValue() != null &&
 				row.getMinAmountField().getValue().compareTo(row.getMaxAmountField().getValue()) > 0) {
@@ -163,11 +171,11 @@ public class ServiceChannelWindow extends Composite {
 
 	private static class ChannelInfoRow {
 
-		private final CheckBox activeBox;
+		private CheckBox activeBox;
 
-		private final BigDecimalField minAmountField;
+		private BigDecimalField minAmountField;
 
-		private final BigDecimalField maxAmountField;
+		private BigDecimalField maxAmountField;
 
 		public ChannelInfoRow(CheckBox activeBox, BigDecimalField minAmountField, BigDecimalField maxAmountField) {
 			this.activeBox = activeBox;
@@ -206,6 +214,7 @@ public class ServiceChannelWindow extends Composite {
 		public boolean isAllChannels() {
 			return allChannels;
 		}
-	}
 
+
+	}
 }

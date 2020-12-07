@@ -15,6 +15,7 @@ import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.gxt.client.zcomp.helper.BooleanStateSelector;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.gxt.client.zcomp.helper.IconSelector;
+import com.azry.gxt.client.zcomp.helper.StringStateSelector;
 import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.ActionMode;
@@ -50,6 +51,8 @@ import java.util.List;
 
 public class ChannelTab extends Composite {
 
+	private static final String OPACITY_STYLE = "opacity: 0.3";
+
 	private final VerticalLayoutContainer verticalLayoutContainer;
 
 	private ZGrid<ChannelDTO> grid;
@@ -65,13 +68,16 @@ public class ChannelTab extends Composite {
 		}
 	});
 
-	Store.StoreSortInfo<ChannelDTO> storeSortInfo;
+	private Store.StoreSortInfo<ChannelDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ChannelDTO>> loader;
 
-	List<Boolean> booleans = new ArrayList<>();
+	private List<Boolean> booleans = new ArrayList<>();
 
-	public ChannelTab() {
+	private boolean isManage;
+
+	public ChannelTab(boolean isManage) {
+		this.isManage = isManage;
 		booleans.add(true);
 		booleans.add(false);
 		verticalLayoutContainer = new VerticalLayoutContainer();
@@ -137,12 +143,11 @@ public class ChannelTab extends Composite {
 			})
 			.build();
 
-		//			.visible(isManage)
 		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
-//			.visible(isManage)
+			.visible(isManage)
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
@@ -282,6 +287,7 @@ public class ChannelTab extends Composite {
 			})
 			.build());
 
+
 		columns.add(new ZColumnConfig.Builder<ChannelDTO, Boolean>()
 			.cell(new ZIconButtonCell.Builder<ChannelDTO, Boolean>()
 				.gridStore(gridStore)
@@ -303,90 +309,116 @@ public class ChannelTab extends Composite {
 						return Mes.get("activate");
 					}
 				})
-//				.dynamicStyle(new StringStateSelector<channelDTO>() {
-//					@Override
-//					public String getStyle(Cell.Context context, channelDTO com.azry.sps.api.dto) {
-//						return OPACITY_STYLE;
-//					}
-//				})
 				.dynamicEnabling(new BooleanStateSelector<ChannelDTO>() {
+						@Override
+						public boolean check(Cell.Context context, ChannelDTO dto) {
+							if (isManage) {
+								return true;
+							}
+							return false;
+						}
+					})
+				.dynamicStyle(new StringStateSelector<ChannelDTO>() {
 					@Override
-					public boolean check(Cell.Context context, ChannelDTO dto) {
-						return true;
+					public String getStyle(Cell.Context context, ChannelDTO channelDTO) {
+						if (!isManage) {
+							return OPACITY_STYLE;
+						}
+						return "";
 					}
 				})
 				.clickHandler(new GridClickHandler<ChannelDTO>() {
 					@Override
 					public void onClick(Cell.Context context, final ChannelDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
+						new ZConfirmDialog(Mes.get("confirm"),
+							dto.isActive() ? Mes.get("deactivateConfigurableConfirmation") : Mes.get("activateConfigurableConfirmation")) {
 							@Override
 							public void onConfirm() {
 								dto.setActive(!dto.isActive());
 								ServicesFactory.getChannelService().updateChannel(dto, new ServiceCallback<ChannelDTO>(this) {
 									@Override
 									public void onServiceSuccess(ChannelDTO result) {
-										gridStore.update(result);
-									}
+											gridStore.update(result);
+										}
 								});
 							}
 						}.show();
 					}
 				})
 				.build())
-			.fixed()
-			.width(32)
-			.build());
+				.fixed()
+				.width(32)
+				.build());
 
-//		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
-				.gridStore(gridStore)
-				.tooltip(Mes.get("edit"))
-				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ChannelDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ChannelDTO dto) {
-						new ChannelWindow(dto, ActionMode.EDIT) {
-							@Override
-							public void onSave(ChannelDTO dto) {
-								gridStore.update(dto);
-								gridStore.applySort(false);
-							}
-						}.showInCenter();
-					}
-				})
-				.build())
-			.build());
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("edit"))
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<ChannelDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ChannelDTO dto) {
+							new ChannelWindow(dto, ActionMode.EDIT) {
+								@Override
+								public void onSave(ChannelDTO dto) {
+									gridStore.update(dto);
+									gridStore.applySort(false);
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
 
-//		}
-
-		columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
-				.gridStore(gridStore)
-				.icon(FAIconsProvider.getIcons().trash())
-				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<ChannelDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ChannelDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getChannelService().deleteChannel(dto.getId(), new ServiceCallback<Void>(this) {
-									@Override
-									public void onServiceSuccess(Void result) {
-										gridStore.remove(gridStore.indexOf(dto));
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build())
-			.build());
+			columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
+					.gridStore(gridStore)
+					.icon(FAIconsProvider.getIcons().trash())
+					.tooltip(Mes.get("delete"))
+					.clickHandler(new GridClickHandler<ChannelDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ChannelDTO dto) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getChannelService().deleteChannel(dto.getId(), new ServiceCallback<Void>(this) {
+										@Override
+										public void onServiceSuccess(Void result) {
+											gridStore.remove(gridStore.indexOf(dto));
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build())
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<ChannelDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ChannelDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<ChannelDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ChannelDTO dto) {
+							new ChannelWindow(dto, ActionMode.VIEW) {
+								@Override
+								public void onSave(ChannelDTO dto) {
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

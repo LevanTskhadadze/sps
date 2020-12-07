@@ -77,9 +77,11 @@ public class ServiceCommissionsTab extends Composite {
 
 	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>> loader;
 
+	boolean isManage;
 
-	public ServiceCommissionsTab() {
+	public ServiceCommissionsTab(boolean isManage) {
 		verticalLayoutContainer = new VerticalLayoutContainer();
+		this.isManage = isManage;
 		initWidget(verticalLayoutContainer);
 		initToolbar();
 		ServicesFactory.getServiceTabService().getAllServices(new ServiceCallback<List<ServiceDTO>>(this) {
@@ -160,12 +162,11 @@ public class ServiceCommissionsTab extends Composite {
 			})
 			.build();
 
-		//			.visible(isManage)
 		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
-//			.visible(isManage)
+			.visible(isManage)
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
@@ -364,56 +365,75 @@ public class ServiceCommissionsTab extends Composite {
 			})
 			.build());
 
-//		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
-				.gridStore(gridStore)
-				.tooltip(Mes.get("edit"))
-				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
-						new ServiceCommissionsWindow(dto, serviceDTOs, ActionMode.EDIT) {
-							@Override
-							public void onSave(ServiceCommissionsDTO dto) {
-								gridStore.update(dto);
-								gridStore.applySort(false);
-							}
-						}.showInCenter();
-					}
-				})
-				.build())
-			.build());
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("edit"))
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
+							new ServiceCommissionsWindow(dto, serviceDTOs, ActionMode.EDIT) {
+								@Override
+								public void onSave(ServiceCommissionsDTO dto) {
+									gridStore.update(dto);
+									gridStore.applySort(false);
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
 
-//		}
-
-		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
-				.gridStore(gridStore)
-				.icon(FAIconsProvider.getIcons().trash())
-				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getServiceCommissionsService().deleteServiceCommissions(dto.getId(), new ServiceCallback<Void>(this) {
-									@Override
-									public void onServiceSuccess(Void result) {
-										gridStore.remove(gridStore.indexOf(dto));
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build())
-			.build());
+			columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.icon(FAIconsProvider.getIcons().trash())
+					.tooltip(Mes.get("delete"))
+					.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getServiceCommissionsService().deleteServiceCommissions(dto.getId(), new ServiceCallback<Void>(this) {
+										@Override
+										public void onServiceSuccess(Void result) {
+											gridStore.remove(gridStore.indexOf(dto));
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build())
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ServiceCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<ServiceCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceCommissionsDTO dto) {
+							new ServiceCommissionsWindow(dto, serviceDTOs, ActionMode.VIEW) {
+								@Override
+								public void onSave(ServiceCommissionsDTO dto) {
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

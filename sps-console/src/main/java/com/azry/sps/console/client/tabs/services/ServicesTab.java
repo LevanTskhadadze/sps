@@ -9,11 +9,11 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.tabs.services.widgets.ServiceModifyWindow;
 import com.azry.sps.console.client.tabs.services.widgets.ServiceTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.data.client.loader.RpcProxy;
@@ -45,17 +45,19 @@ public class ServicesTab extends Composite {
 
 	ZGrid<ServiceDTO> grid;
 
-	public ServicesTab() {
-		super();
+	boolean isManage;
+
+	public ServicesTab(boolean isManage) {
 
 		content = new VerticalLayoutContainer();
+
+		this.isManage = isManage;
 
 		assembleContent();
 
 		initWidget(content);
 
 		initPaging();
-
 	}
 
 	private void initPaging() {
@@ -100,7 +102,7 @@ public class ServicesTab extends Composite {
 	private void assembleContent() {
 		content.add(constructToolbar());
 
-		grid = new ZGrid<>(ServiceTable.getListStore(), ServiceTable.getMyColumnModel());
+		grid = new ZGrid<>(ServiceTable.getListStore(), ServiceTable.getMyColumnModel(isManage));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -181,13 +183,14 @@ public class ServicesTab extends Composite {
 
 	private ZButton getAddButton(){
 		return new ZButton.Builder()
+			.visible(isManage)
 			.appearance (new Css3ButtonCellAppearance<String>())
 			.icon (FAIconsProvider.getIcons().plus())
 			.text (Mes.get("addEntry"))
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					new ServiceModifyWindow(null, ServiceTable.getListStore());
+					new ServiceModifyWindow(null, ServiceTable.getListStore(), ActionMode.ADD);
 				}
 			})
 			.build();

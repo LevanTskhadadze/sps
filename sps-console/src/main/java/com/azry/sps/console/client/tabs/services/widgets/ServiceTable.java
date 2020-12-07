@@ -6,10 +6,13 @@ import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.ZURLBuilder;
+import com.azry.gxt.client.zcomp.helper.BooleanStateSelector;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.gxt.client.zcomp.helper.IconSelector;
+import com.azry.gxt.client.zcomp.helper.StringStateSelector;
 import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
@@ -30,6 +33,7 @@ import java.util.List;
 
 public class ServiceTable {
 
+	private static final String OPACITY_STYLE = "opacity: 0.3";
 
 	private static final ListStore<ServiceDTO> store = new ListStore<>(new ModelKeyProvider<ServiceDTO>() {
 		@Override
@@ -60,7 +64,7 @@ public class ServiceTable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static ColumnModel<ServiceDTO> getMyColumnModel() {
+	public static ColumnModel<ServiceDTO> getMyColumnModel(final boolean isManage) {
 
 		List<ColumnConfig<ServiceDTO, ?>> columns = new ArrayList<>();
 		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
@@ -68,7 +72,8 @@ public class ServiceTable {
 			.width(20)
 			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override
-				public String getProperty(ServiceDTO ServiceDTO) {return String.valueOf(ServiceDTO.getId());
+				public String getProperty(ServiceDTO ServiceDTO) {
+					return String.valueOf(ServiceDTO.getId());
 				}
 			})
 			.build());
@@ -106,7 +111,6 @@ public class ServiceTable {
 			.sortable()
 			.build());
 
-		final ZIconButtonCell<ServiceDTO, String> iconButtonCell;
 		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
 			.header("")
 			.width(32)
@@ -171,6 +175,15 @@ public class ServiceTable {
 						}
 					}
 				)
+				.dynamicEnabling(new BooleanStateSelector<ServiceDTO>() {
+					@Override
+					public boolean check(Cell.Context context, ServiceDTO dto) {
+						if (isManage) {
+							return true;
+						}
+						return false;
+					}
+				})
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
 					@Override
 					public void onClick(Cell.Context context, final ServiceDTO dto) {
@@ -188,22 +201,39 @@ public class ServiceTable {
 
 
 		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
-			.header("")
 			.width(32)
 			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
 				.gridStore(store)
 				.dynamicIcon(new IconSelector<ServiceDTO>() {
 					@Override
 					public ImageResource selectIcon(Cell.Context context, ServiceDTO ServiceDTO) {
-						if(ServiceDTO.isActive()) return FAIconsProvider.getIcons().green();
+						if (ServiceDTO.isActive()) return FAIconsProvider.getIcons().green();
 						return FAIconsProvider.getIcons().red();
 					}
 				})
 				.dynamicTooltip(new TooltipSelector<ServiceDTO>() {
 					@Override
 					public String selectTooltip(Cell.Context context, ServiceDTO serviceDTO) {
-						if(serviceDTO.isActive()) return Mes.get("deactivation");
+						if (serviceDTO.isActive()) return Mes.get("deactivation");
 						return Mes.get("activation");
+					}
+				})
+				.dynamicEnabling(new BooleanStateSelector<ServiceDTO>() {
+					@Override
+					public boolean check(Cell.Context context, ServiceDTO dto) {
+						if (isManage) {
+							return true;
+						}
+						return false;
+					}
+				})
+				.dynamicStyle(new StringStateSelector<ServiceDTO>() {
+					@Override
+					public String getStyle(Cell.Context context, ServiceDTO dto) {
+						if (!isManage) {
+							return OPACITY_STYLE;
+						}
+						return "";
 					}
 				})
 				.clickHandler(new GridClickHandler<ServiceDTO>() {
@@ -215,12 +245,12 @@ public class ServiceTable {
 								dto.setActive(!dto.isActive());
 								ServicesFactory.getServiceTabService().changeActivation(dto.getId(), dto.getVersion(),
 									new ServiceCallback<Void>(this) {
-									@Override
-									public void onServiceSuccess(Void ignored) {
-										dto.setVersion(dto.getVersion() + 1);
-										store.update(dto);
-									}
-								});
+										@Override
+										public void onServiceSuccess(Void ignored) {
+											dto.setVersion(dto.getVersion() + 1);
+											store.update(dto);
+										}
+									});
 							}
 						}.show();
 					}
@@ -231,54 +261,72 @@ public class ServiceTable {
 			.fixed()
 			.build());
 
-		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
-			.header("")
-			.width(32)
-			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
-				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ServiceDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ServiceDTO ServiceDTO) {
-						new ServiceModifyWindow(ServiceDTO, store);
-					}
-				})
-				.build()
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
+				.width(32)
+				.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
+					.gridStore(store)
+					.tooltip(Mes.get("edit"))
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<ServiceDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceDTO ServiceDTO) {
+							new ServiceModifyWindow(ServiceDTO, store, ActionMode.EDIT);
+						}
+					})
+					.build()
 
-			)
-			.fixed()
-			.build());
+				)
+				.fixed()
+				.build());
 
 
-		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
-			.header("")
-			.width(32)
-			.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
-				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().trash())
-				.clickHandler(new GridClickHandler<ServiceDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ServiceDTO serviceDTO) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getServiceTabService().removeService(serviceDTO.getId(), new ServiceCallback<Void>() {
+			columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
+				.width(32)
+				.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
+					.gridStore(store)
+					.tooltip(Mes.get("delete"))
+					.icon(FAIconsProvider.getIcons().trash())
+					.clickHandler(new GridClickHandler<ServiceDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceDTO serviceDTO) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getServiceTabService().removeService(serviceDTO.getId(), new ServiceCallback<Void>() {
 
-									@Override
-									public void onServiceSuccess(Void unused) {
-										store.remove(serviceDTO);
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build()
-			)
-			.fixed()
-			.build());
+										@Override
+										public void onServiceSuccess(Void unused) {
+											store.remove(serviceDTO);
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build()
+				)
+				.fixed()
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
+				.width(32)
+				.cell(new ZIconButtonCell.Builder<ServiceDTO, String>()
+					.gridStore(store)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<ServiceDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceDTO ServiceDTO) {
+							new ServiceModifyWindow(ServiceDTO, store, ActionMode.VIEW);
+						}
+					})
+					.build()
 
+				)
+				.fixed()
+				.build());
+		}
 		return new ColumnModel<>(columns);
 	}
-
 }

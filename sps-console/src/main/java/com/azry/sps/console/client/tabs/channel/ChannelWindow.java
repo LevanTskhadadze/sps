@@ -36,7 +36,7 @@ public abstract class ChannelWindow extends ZWindow {
 	private ChannelDTO channelDTO;
 
 	public ChannelWindow(ChannelDTO channelDTO, ActionMode actionMode) {
-		super(Mes.get("ofChannel") + " " + Mes.get("ActionMode_" + actionMode), 600, -1, false);
+		super(Mes.get("ofChannel") + " " + Mes.get(actionMode.name().toLowerCase()), 600, -1, false);
 		this.channelDTO = channelDTO;
 
 		initFields();
@@ -44,9 +44,11 @@ public abstract class ChannelWindow extends ZWindow {
 			setFieldValues();
 		}
 		add(container);
-		initButtons();
+		initButtons(actionMode);
 		addBottomHorizontalLine();
-
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 
@@ -90,8 +92,9 @@ public abstract class ChannelWindow extends ZWindow {
 		fiServiceUnavailabilityActionCombo.setValue(channelDTO.getFiServiceUnavailabilityAction());
 	}
 
-	protected  void initButtons(){
+	protected  void initButtons(ActionMode actionMode){
 		saveButton = new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -155,6 +158,11 @@ public abstract class ChannelWindow extends ZWindow {
 		channelDTO.setName(nameField.getCurrentValue());
 		channelDTO.setFiServiceUnavailabilityAction(fiServiceUnavailabilityActionCombo.getCurrentValue());
 		return channelDTO;
+	}
+
+	private void disableFields() {
+		nameField.disable();
+		fiServiceUnavailabilityActionCombo.disable();
 	}
 
 	public abstract void onSave(ChannelDTO dto);

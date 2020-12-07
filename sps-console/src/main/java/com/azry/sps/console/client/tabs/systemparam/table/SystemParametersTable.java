@@ -7,6 +7,7 @@ import com.azry.gxt.client.zcomp.ZIconButtonCell;
 import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
@@ -42,7 +43,7 @@ public class SystemParametersTable {
 	}
 
 
-	public static ColumnModel<SystemParameterDTO> getMyColumnModel() {
+	public static ColumnModel<SystemParameterDTO> getMyColumnModel(boolean isManage) {
 
 		List<ColumnConfig<SystemParameterDTO, ?>> columns = new ArrayList<>();
 		columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
@@ -93,53 +94,71 @@ public class SystemParametersTable {
 				.build());
 
 
-		columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
-				.header("")
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
 				.width(32)
 				.cell(new ZIconButtonCell.Builder<SystemParameterDTO, String>()
-						.gridStore(store)
-						.icon(FAIconsProvider.getIcons().pencil())
-						.clickHandler(new GridClickHandler<SystemParameterDTO>() {
-							@Override
-							public void onClick(Cell.Context context, final SystemParameterDTO systemParameterDTO) {
-									new SystemParametersModifyWindow(systemParameterDTO, store);
-
-							}
-						})
-						.build()
+					.gridStore(store)
+					.tooltip("edit")
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<SystemParameterDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final SystemParameterDTO systemParameterDTO) {
+							new SystemParametersModifyWindow(systemParameterDTO, store, ActionMode.EDIT);
+						}
+					})
+					.build()
 				)
 				.fixed()
 				.build());
 
 
-		columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
-			.header("")
-			.width(32)
-			.cell(new ZIconButtonCell.Builder<SystemParameterDTO, String>()
-				.gridStore(store)
-				.icon(FAIconsProvider.getIcons().trash())
-				.clickHandler(new GridClickHandler<SystemParameterDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final SystemParameterDTO systemParameterDTO) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getSystemParameterService().removeParameter(systemParameterDTO.getId(),
-									new ServiceCallback<Void>(this) {
+			columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
+				.width(32)
+				.cell(new ZIconButtonCell.Builder<SystemParameterDTO, String>()
+					.gridStore(store)
+					.tooltip(Mes.get("delete"))
+					.icon(FAIconsProvider.getIcons().trash())
+					.clickHandler(new GridClickHandler<SystemParameterDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final SystemParameterDTO systemParameterDTO) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("deleteConfirmMessage")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getSystemParameterService().removeParameter(systemParameterDTO.getId(),
+										new ServiceCallback<Void>(this) {
 
-									@Override
-									public void onServiceSuccess(Void unused) {
-										store.remove(systemParameterDTO);
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build()
-			)
-			.fixed()
-			.build());
+											@Override
+											public void onServiceSuccess(Void unused) {
+												store.remove(systemParameterDTO);
+											}
+										});
+								}
+							}.show();
+						}
+					})
+					.build()
+				)
+				.fixed()
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<SystemParameterDTO, String>()
+				.width(32)
+				.cell(new ZIconButtonCell.Builder<SystemParameterDTO, String>()
+					.gridStore(store)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<SystemParameterDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final SystemParameterDTO systemParameterDTO) {
+							new SystemParametersModifyWindow(systemParameterDTO, store, ActionMode.VIEW);
+						}
+					})
+					.build()
+				)
+				.fixed()
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

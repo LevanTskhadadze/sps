@@ -62,7 +62,10 @@ public class ServiceGroupTab extends Composite {
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ServiceGroupDTO>> loader;
 
-	public ServiceGroupTab() {
+	boolean isManage;
+
+	public ServiceGroupTab(boolean isManage) {
+		this.isManage = isManage;
 		verticalLayoutContainer = new VerticalLayoutContainer();
 		initWidget(verticalLayoutContainer);
 		initToolbar();
@@ -105,12 +108,11 @@ public class ServiceGroupTab extends Composite {
 			})
 			.build();
 
-		//			.visible(isManage)
 		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
-//			.visible(isManage)
+			.visible(isManage)
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
@@ -248,7 +250,7 @@ public class ServiceGroupTab extends Composite {
 			})
 			.build());
 
-//		if (canEdit()) {
+		if (isManage) {
 			columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
 				.width(32)
 				.fixed()
@@ -271,33 +273,52 @@ public class ServiceGroupTab extends Composite {
 					.build())
 				.build());
 
-//		}
-
-		columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ServiceGroupDTO, String>()
-				.gridStore(gridStore)
-				.icon(FAIconsProvider.getIcons().trash())
-				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<ServiceGroupDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ServiceGroupDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getServiceGroupService().deleteServiceGroup(dto.getId(), new ServiceCallback<Void>(this) {
-									@Override
-									public void onServiceSuccess(Void result) {
-										gridStore.remove(gridStore.indexOf(dto));
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build())
-			.build());
+			columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ServiceGroupDTO, String>()
+					.gridStore(gridStore)
+					.icon(FAIconsProvider.getIcons().trash())
+					.tooltip(Mes.get("delete"))
+					.clickHandler(new GridClickHandler<ServiceGroupDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceGroupDTO dto) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getServiceGroupService().deleteServiceGroup(dto.getId(), new ServiceCallback<Void>(this) {
+										@Override
+										public void onServiceSuccess(Void result) {
+											gridStore.remove(gridStore.indexOf(dto));
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build())
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<ServiceGroupDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ServiceGroupDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<ServiceGroupDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ServiceGroupDTO dto) {
+							new ServiceGroupWindow(dto, ActionMode.VIEW) {
+								@Override
+								public void onSave(ServiceGroupDTO dto) {
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

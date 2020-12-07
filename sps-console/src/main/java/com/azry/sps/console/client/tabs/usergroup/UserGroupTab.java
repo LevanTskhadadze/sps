@@ -16,6 +16,7 @@ import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.gxt.client.zcomp.helper.BooleanStateSelector;
 import com.azry.gxt.client.zcomp.helper.GridClickHandler;
 import com.azry.gxt.client.zcomp.helper.IconSelector;
+import com.azry.gxt.client.zcomp.helper.StringStateSelector;
 import com.azry.gxt.client.zcomp.helper.TooltipSelector;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.ActionMode;
@@ -55,7 +56,7 @@ import java.util.List;
 
 public class UserGroupTab extends Composite {
 
-//	private static final String OPACITY_STYLE = "opacity: 0.3";
+	private static final String OPACITY_STYLE = "opacity: 0.3";
 
 	private final VerticalLayoutContainer verticalLayoutContainer;
 
@@ -82,8 +83,10 @@ public class UserGroupTab extends Composite {
 
 	private ListLoader<ListLoadConfig, ListLoadResult<UserGroupDTO>> loader;
 
+	private boolean isManage;
 
-	public UserGroupTab() {
+	public UserGroupTab(boolean isManage) {
+		this.isManage = isManage;
 		booleans.add(true);
 		booleans.add(false);
 		permissions = Arrays.asList(PermissionsDTO.values());
@@ -188,7 +191,7 @@ public class UserGroupTab extends Composite {
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
-//			.visible(isManage)
+			.visible(isManage)
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
@@ -330,6 +333,7 @@ public class UserGroupTab extends Composite {
 			})
 			.build());
 
+
 		columns.add(new ZColumnConfig.Builder<UserGroupDTO, Boolean>()
 			.cell(new ZIconButtonCell.Builder<UserGroupDTO, Boolean>()
 				.gridStore(gridStore)
@@ -351,16 +355,22 @@ public class UserGroupTab extends Composite {
 						return Mes.get("activate");
 					}
 				})
-//				.dynamicStyle(new StringStateSelector<UserGroupDTO>() {
-//					@Override
-//					public String getStyle(Cell.Context context, UserGroupDTO com.azry.sps.api.dto) {
-//						return OPACITY_STYLE;
-//					}
-//				})
 				.dynamicEnabling(new BooleanStateSelector<UserGroupDTO>() {
 					@Override
 					public boolean check(Cell.Context context, UserGroupDTO dto) {
-						return true;
+						if (isManage) {
+							return true;
+						}
+						return false;
+					}
+				})
+				.dynamicStyle(new StringStateSelector<UserGroupDTO>() {
+					@Override
+					public String getStyle(Cell.Context context, UserGroupDTO dto) {
+						if (!isManage) {
+							return OPACITY_STYLE;
+						}
+						return "";
 					}
 				})
 				.clickHandler(new GridClickHandler<UserGroupDTO>() {
@@ -386,56 +396,75 @@ public class UserGroupTab extends Composite {
 			.width(32)
 			.build());
 
-//		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
-				.gridStore(gridStore)
-				.tooltip(Mes.get("edit"))
-				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<UserGroupDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final UserGroupDTO dto) {
-						new UserGroupWindow(dto, ActionMode.EDIT) {
-							@Override
-							public void onSave(UserGroupDTO dto) {
-								gridStore.update(dto);
-								gridStore.applySort(false);
-							}
-						}.showInCenter();
-					}
-				})
-				.build())
-			.build());
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("edit"))
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<UserGroupDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final UserGroupDTO dto) {
+							new UserGroupWindow(dto, ActionMode.EDIT) {
+								@Override
+								public void onSave(UserGroupDTO dto) {
+									gridStore.update(dto);
+									gridStore.applySort(false);
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
 
-//		}
-
-		columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
-				.gridStore(gridStore)
-				.icon(FAIconsProvider.getIcons().trash())
-				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<UserGroupDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final UserGroupDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getUserGroupService().deleteUserGroup(dto.getId(), new ServiceCallback<Void>(this) {
-									@Override
-									public void onServiceSuccess(Void result) {
-										gridStore.remove(gridStore.indexOf(dto));
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build())
-			.build());
+			columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
+					.gridStore(gridStore)
+					.icon(FAIconsProvider.getIcons().trash())
+					.tooltip(Mes.get("delete"))
+					.clickHandler(new GridClickHandler<UserGroupDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final UserGroupDTO dto) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getUserGroupService().deleteUserGroup(dto.getId(), new ServiceCallback<Void>(this) {
+										@Override
+										public void onServiceSuccess(Void result) {
+											gridStore.remove(gridStore.indexOf(dto));
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build())
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<UserGroupDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<UserGroupDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<UserGroupDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final UserGroupDTO dto) {
+							new UserGroupWindow(dto, ActionMode.VIEW) {
+								@Override
+								public void onSave(UserGroupDTO dto) {
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

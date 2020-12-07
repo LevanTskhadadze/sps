@@ -31,7 +31,7 @@ public abstract class ServiceGroupWindow extends ZWindow {
 	private ServiceGroupDTO serviceGroupDTO;
 
 	public ServiceGroupWindow(ServiceGroupDTO serviceGroupDTO, ActionMode actionMode) {
-		super(Mes.get("ofServiceGroup") + " " + Mes.get("ActionMode_" + actionMode), 500, -1, false);
+		super(Mes.get("ofServiceGroup") + " " + Mes.get(actionMode.name().toLowerCase()), 500, -1, false);
 		this.serviceGroupDTO = serviceGroupDTO;
 
 		initFields();
@@ -40,11 +40,12 @@ public abstract class ServiceGroupWindow extends ZWindow {
 		}
 
 		add(container);
-
-		initButtons();
-
+		initButtons(actionMode);
 		addBottomHorizontalLine();
 
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 
@@ -62,15 +63,14 @@ public abstract class ServiceGroupWindow extends ZWindow {
 		container.add(getFieldLabel(priorityField, "priority", true), layoutData);
 	}
 
-
-
 	private void setFieldValues() {
 		nameField.setValue(serviceGroupDTO.getName());
 		priorityField.setValue(serviceGroupDTO.getPriority());
 	}
 
-	protected  void initButtons(){
+	protected  void initButtons(ActionMode actionMode){
 		saveButton = new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -134,6 +134,11 @@ public abstract class ServiceGroupWindow extends ZWindow {
 		serviceGroupDTO.setName(nameField.getValue());
 		serviceGroupDTO.setPriority(priorityField.getValue());
 		return serviceGroupDTO;
+	}
+
+	private void disableFields() {
+		nameField.disable();
+		priorityField.disable();
 	}
 
 	public abstract void onSave(ServiceGroupDTO dto);

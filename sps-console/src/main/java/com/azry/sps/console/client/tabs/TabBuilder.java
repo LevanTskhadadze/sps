@@ -30,7 +30,7 @@ public class TabBuilder {
 
 	private static ServiceGroupTab serviceGroupPage;
 
-	public static HTML getServiceGroupMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getServiceGroupMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-tag'></i>";
 
@@ -49,7 +49,7 @@ public class TabBuilder {
 						return;
 					}
 				}
-				serviceGroupPage = new ServiceGroupTab();
+				serviceGroupPage = new ServiceGroupTab(isManage);
 				serviceGroupPage.setVisible(true);
 				centerPanel.add(serviceGroupPage, Mes.get("serviceGroups"));
 
@@ -67,7 +67,7 @@ public class TabBuilder {
 	}
 
 	private static SystemParameterTab systemParameterTab;
-	public static HTML getSystemParameterMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getSystemParameterMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-wrench'></i>";
 
@@ -87,7 +87,7 @@ public class TabBuilder {
 					}
 				}
 
-				systemParameterTab = new SystemParameterTab();
+				systemParameterTab = new SystemParameterTab(isManage);
 				centerPanel.add(systemParameterTab, Mes.get("sysPar"));
 
 				TabItemConfig config = centerPanel.getConfig(systemParameterTab);
@@ -104,7 +104,7 @@ public class TabBuilder {
 
 
 	private static UsersTab usersTab;
-	public static HTML getUsersMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getUsersMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-user'></i>";
 
@@ -126,7 +126,7 @@ public class TabBuilder {
 				ServicesFactory.getUserGroupService().getUserGroups(new ServiceCallback<List<UserGroupDTO>>() {
 					@Override
 					public void onServiceSuccess(List<UserGroupDTO> result) {
-						usersTab = new UsersTab(result);
+						usersTab = new UsersTab(result, isManage);
 						centerPanel.add(usersTab, Mes.get("users"));
 
 						TabItemConfig config = centerPanel.getConfig(usersTab);
@@ -149,7 +149,7 @@ public class TabBuilder {
 
 	private static UserGroupTab userGroupTab;
 
-	public static HTML getUserGroupMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getUserGroupMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-users'></i>";
 
@@ -169,7 +169,7 @@ public class TabBuilder {
 					}
 				}
 
-				userGroupTab = new UserGroupTab();
+				userGroupTab = new UserGroupTab(isManage);
 				centerPanel.add(userGroupTab, Mes.get("userGroups"));
 
 				TabItemConfig config = centerPanel.getConfig(userGroupTab);
@@ -186,7 +186,7 @@ public class TabBuilder {
 
 	private static ChannelTab channelTab;
 
-	public static HTML getChannelMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getChannelMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-arrow-circle-right'></i>";
 
@@ -206,7 +206,7 @@ public class TabBuilder {
 					}
 				}
 
-				channelTab = new ChannelTab();
+				channelTab = new ChannelTab(isManage);
 				centerPanel.add(channelTab, Mes.get("channels"));
 
 				TabItemConfig config = centerPanel.getConfig(channelTab);
@@ -222,7 +222,7 @@ public class TabBuilder {
 	}
 
 	private static ServicesTab servicesTab;
-	public static HTML getServicesMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getServicesMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-leaf'></i>";
 
@@ -242,7 +242,7 @@ public class TabBuilder {
 					}
 				}
 
-				servicesTab = new ServicesTab();
+				servicesTab = new ServicesTab(isManage);
 				centerPanel.add(servicesTab, Mes.get("services"));
 
 				TabItemConfig config = centerPanel.getConfig(servicesTab);
@@ -259,7 +259,7 @@ public class TabBuilder {
 
 	private static ClientCommissionsTab clientCommissionsTab;
 
-	public static HTML getClientCommissionsMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getClientCommissionsMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-money'></i>";
 
@@ -279,7 +279,7 @@ public class TabBuilder {
 					}
 				}
 
-				clientCommissionsTab = new ClientCommissionsTab();
+				clientCommissionsTab = new ClientCommissionsTab(isManage);
 				centerPanel.add(clientCommissionsTab, Mes.get("clientCommissions"));
 
 				TabItemConfig config = centerPanel.getConfig(clientCommissionsTab);
@@ -296,7 +296,7 @@ public class TabBuilder {
 
 	private static ServiceCommissionsTab serviceCommissionsTab;
 
-	public static HTML getServiceCommissionsMenuItem(final TabPanel centerPanel, final Menu menu) {
+	public static HTML getServiceCommissionsMenuItem(final TabPanel centerPanel, final Menu menu, final boolean isManage) {
 
 		String img = "<i style='width:16px; height:16px;' class='fa fa-briefcase'></i>";
 
@@ -316,7 +316,7 @@ public class TabBuilder {
 					}
 				}
 
-				serviceCommissionsTab = new ServiceCommissionsTab();
+				serviceCommissionsTab = new ServiceCommissionsTab(isManage);
 				centerPanel.add(serviceCommissionsTab, Mes.get("serviceCommissions"));
 
 				TabItemConfig config = centerPanel.getConfig(serviceCommissionsTab);

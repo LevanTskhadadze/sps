@@ -70,7 +70,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 	private final ClientCommissionsDTO clientCommissionsDTO;
 
 	public ClientCommissionsWindow(ClientCommissionsDTO dto, List<ServiceDTO> serviceDTOs, List<ChannelDTO> channelDTOS, ActionMode actionMode) {
-		super(Mes.get("ofClientCommissions") + " " + Mes.get("ActionMode_" + actionMode), 900, 650, false);
+		super(Mes.get("ofClientCommissions") + " " + Mes.get(actionMode.name().toLowerCase()), 900, 650, false);
 
 		initWidgetLists(serviceDTOs, channelDTOS);
 
@@ -87,10 +87,14 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 
 		add(container, new MarginData(0));
 
-		initButtons();
+		initButtons(actionMode);
 
 		buildDisplay();
 		toggleDualWidget();
+
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 	private void buildDisplay() {
@@ -190,8 +194,9 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 
 	}
 
-	private   void initButtons(){
+	private   void initButtons(ActionMode actionMode){
 		saveButton = new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -380,6 +385,18 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		} else {
 			channelsDualListWidget.enable();
 		}
+	}
+
+	private void disableFields() {
+		commissionField.disable();
+		rateTypeCombo.disable();
+		priorityField.disable();
+		minCommissionField.disable();
+		maxCommissionField.disable();
+		allServicesButton.disable();
+		allChannelsButton.disable();
+		servicesDualListWidget.disable();
+		channelsDualListWidget.disable();
 	}
 
 	public abstract void onSave(ClientCommissionsDTO dto);

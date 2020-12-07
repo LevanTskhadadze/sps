@@ -8,6 +8,7 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.tabs.users.widgets.UsersModifyWindow;
 import com.azry.sps.console.client.tabs.users.widgets.UsersTable;
 import com.azry.sps.console.client.utils.Mes;
@@ -51,8 +52,10 @@ public class UsersTab extends Composite {
 
 	ZGrid<SystemUserDTO> grid;
 
-	public UsersTab(List<UserGroupDTO> result){
-		super();
+	boolean isManage;
+
+	public UsersTab(List<UserGroupDTO> result, boolean isManage){
+		this.isManage = isManage;
 		content = new VerticalLayoutContainer();
 		buildGroupField(result);
 
@@ -176,7 +179,7 @@ public class UsersTab extends Composite {
 	private void assembleContent(){
 
 		content.add(getToolbar());
-		grid = new ZGrid<>(UsersTable.getListStore(), UsersTable.getMyColumnModel());
+		grid = new ZGrid<>(UsersTable.getListStore(), UsersTable.getMyColumnModel(isManage));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -225,13 +228,14 @@ public class UsersTab extends Composite {
 
 	private ZButton getAddButton(){
 		return new ZButton.Builder()
+			.visible(isManage)
 			.appearance (new Css3ButtonCellAppearance<String>())
 			.icon (FAIconsProvider.getIcons().plus())
 			.text (Mes.get("addEntry"))
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					new UsersModifyWindow(null, UsersTable.getListStore());
+					new UsersModifyWindow(null, UsersTable.getListStore(), ActionMode.ADD);
 				}
 			})
 			.build();

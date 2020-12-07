@@ -1,5 +1,6 @@
 package com.azry.sps.console.client.tabs.users.widgets;
 
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.google.gwt.dom.client.Style;
@@ -20,7 +21,7 @@ public class UserGroupTab extends FlexTable {
 
 	private final List<UserGroupDTO> groups;
 
-	public UserGroupTab(List<UserGroupDTO> entries, List<UserGroupDTO> initialGroups){
+	public UserGroupTab(List<UserGroupDTO> entries, List<UserGroupDTO> initialGroups, ActionMode actionMode){
 		super();
 		groups = entries;
 		checkBoxes = new ArrayList<>();
@@ -48,6 +49,10 @@ public class UserGroupTab extends FlexTable {
 		getWidget(0, 0).setWidth("10px");
 		getColumnFormatter().setWidth(0, "10px");
 		getColumnFormatter().setWidth(1, "100%");
+
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableCheckboxes();
+		}
 	}
 
 	private void addEntries(List<UserGroupDTO> initialGroups) {
@@ -82,7 +87,13 @@ public class UserGroupTab extends FlexTable {
 				res.add(groups.get(i));
 			}
 		}
-
 		return res;
+	}
+
+	private void disableCheckboxes() {
+		selectAllBox.setEnabled(false);
+		for (CheckBox checkbox : checkBoxes) {
+			checkbox.setEnabled(false);
+		}
 	}
 }

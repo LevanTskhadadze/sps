@@ -19,7 +19,6 @@ import com.sencha.gxt.widget.core.client.tree.Tree;
 public abstract class UserGroupWindow extends ZWindow {
 
 	private final static String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
-	private final static int WINDOW_HEIGHT = 500;
 
 	private final VerticalLayoutContainer container = new VerticalLayoutContainer();
 
@@ -30,16 +29,19 @@ public abstract class UserGroupWindow extends ZWindow {
 	private final Tree<PermissionTreeModel, String> tree;
 
 	public UserGroupWindow(UserGroupDTO dto, ActionMode actionMode) {
-		super(Mes.get("ofUserGroup") + " " + Mes.get("ActionMode_" + actionMode), 600, WINDOW_HEIGHT, false);
+		super(Mes.get("ofUserGroup") + " " + Mes.get("ActionMode_" + actionMode), 600, 500, false);
 		tree = PermissionTree.createTree();
 		userGroupDTO = dto;
 		initFields();
-		initButtons();
+		initButtons(actionMode);
 		addBottomHorizontalLine();
 		if (userGroupDTO != null) {
 			setFieldValues();
 		}
 		add(container);
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableTreeNodes();
+		}
 	}
 
 	private void initFields() {
@@ -66,8 +68,9 @@ public abstract class UserGroupWindow extends ZWindow {
 	}
 
 
-	protected  void initButtons(){
+	protected  void initButtons(ActionMode actionMode){
 		ZButton saveButton = new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -125,6 +128,11 @@ public abstract class UserGroupWindow extends ZWindow {
 		userGroupDTO.setPermissions(PermissionTree.getCheckedPermissions(tree));
 
 		return userGroupDTO;
+	}
+
+	private void disableTreeNodes() {
+		nameField.disable();
+		tree.disable();
 	}
 
 	public abstract void onSave(UserGroupDTO dto);

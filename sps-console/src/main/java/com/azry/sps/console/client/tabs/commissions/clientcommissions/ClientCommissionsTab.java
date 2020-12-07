@@ -79,9 +79,11 @@ public class ClientCommissionsTab extends Composite {
 
 	private PagingLoader<PagingLoadConfig, PagingLoadResult<ClientCommissionsDTO>> loader;
 
+	boolean isManage;
 
-	public ClientCommissionsTab() {
+	public ClientCommissionsTab(boolean isManage) {
 		verticalLayoutContainer = new VerticalLayoutContainer();
+		this.isManage = isManage;
 		initWidget(verticalLayoutContainer);
 		initToolbar();
 		getData();
@@ -433,56 +435,75 @@ public class ClientCommissionsTab extends Composite {
 			})
 			.build());
 
-//		if (canEdit()) {
-		columns.add(new ZColumnConfig.Builder<ClientCommissionsDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ClientCommissionsDTO, String>()
-				.gridStore(gridStore)
-				.tooltip(Mes.get("edit"))
-				.icon(FAIconsProvider.getIcons().pencil())
-				.clickHandler(new GridClickHandler<ClientCommissionsDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ClientCommissionsDTO dto) {
-						new ClientCommissionsWindow(dto, serviceDTOs, channelDTOs, ActionMode.EDIT) {
-							@Override
-							public void onSave(ClientCommissionsDTO dto) {
-								gridStore.update(dto);
-								gridStore.applySort(false);
-							}
-						}.showInCenter();
-					}
-				})
-				.build())
-			.build());
+		if (isManage) {
+			columns.add(new ZColumnConfig.Builder<ClientCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ClientCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("edit"))
+					.icon(FAIconsProvider.getIcons().pencil())
+					.clickHandler(new GridClickHandler<ClientCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ClientCommissionsDTO dto) {
+							new ClientCommissionsWindow(dto, serviceDTOs, channelDTOs, ActionMode.EDIT) {
+								@Override
+								public void onSave(ClientCommissionsDTO dto) {
+									gridStore.update(dto);
+									gridStore.applySort(false);
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
 
-//		}
-
-		columns.add(new ZColumnConfig.Builder<ClientCommissionsDTO, String>()
-			.width(32)
-			.fixed()
-			.cell(new ZIconButtonCell.Builder<ClientCommissionsDTO, String>()
-				.gridStore(gridStore)
-				.icon(FAIconsProvider.getIcons().trash())
-				.tooltip(Mes.get("delete"))
-				.clickHandler(new GridClickHandler<ClientCommissionsDTO>() {
-					@Override
-					public void onClick(Cell.Context context, final ClientCommissionsDTO dto) {
-						new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
-							@Override
-							public void onConfirm() {
-								ServicesFactory.getClientCommissionsService().deleteClientCommissions(dto.getId(), new ServiceCallback<Void>() {
-									@Override
-									public void onServiceSuccess(Void result) {
-										gridStore.remove(gridStore.indexOf(dto));
-									}
-								});
-							}
-						}.show();
-					}
-				})
-				.build())
-			.build());
+			columns.add(new ZColumnConfig.Builder<ClientCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ClientCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.icon(FAIconsProvider.getIcons().trash())
+					.tooltip(Mes.get("delete"))
+					.clickHandler(new GridClickHandler<ClientCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ClientCommissionsDTO dto) {
+							new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+								@Override
+								public void onConfirm() {
+									ServicesFactory.getClientCommissionsService().deleteClientCommissions(dto.getId(), new ServiceCallback<Void>() {
+										@Override
+										public void onServiceSuccess(Void result) {
+											gridStore.remove(gridStore.indexOf(dto));
+										}
+									});
+								}
+							}.show();
+						}
+					})
+					.build())
+				.build());
+		} else {
+			columns.add(new ZColumnConfig.Builder<ClientCommissionsDTO, String>()
+				.width(32)
+				.fixed()
+				.cell(new ZIconButtonCell.Builder<ClientCommissionsDTO, String>()
+					.gridStore(gridStore)
+					.tooltip(Mes.get("view"))
+					.icon(FAIconsProvider.getIcons().eye())
+					.clickHandler(new GridClickHandler<ClientCommissionsDTO>() {
+						@Override
+						public void onClick(Cell.Context context, final ClientCommissionsDTO dto) {
+							new ClientCommissionsWindow(dto, serviceDTOs, channelDTOs, ActionMode.VIEW) {
+								@Override
+								public void onSave(ClientCommissionsDTO dto) {
+								}
+							}.showInCenter();
+						}
+					})
+					.build())
+				.build());
+		}
 
 		return new ColumnModel<>(columns);
 	}

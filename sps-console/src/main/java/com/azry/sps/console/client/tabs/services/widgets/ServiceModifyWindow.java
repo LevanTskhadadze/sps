@@ -6,9 +6,9 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -55,10 +55,12 @@ public class ServiceModifyWindow extends ZWindow {
 
 	private final ListStore<ServiceDTO> store;
 
+	ActionMode actionMode;
 
+	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store, ActionMode actionMode) {
+		super(Mes.get("ofService") + " " + Mes.get(actionMode.name().toLowerCase()), 700, 500, false);
 
-	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store) {
-		super();
+		this.actionMode = actionMode;
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
@@ -69,7 +71,7 @@ public class ServiceModifyWindow extends ZWindow {
 			this.dto.setActive(false);
 			this.dto.setId(0);
 		}
-		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), this.dto.isAllChannels());
+		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), this.dto.isAllChannels(), actionMode);
 		tabPanel = new TabPanel();
 
 		this.store = store;
@@ -89,11 +91,11 @@ public class ServiceModifyWindow extends ZWindow {
 
 		add(tabPanel, new MarginData(0));
 
-		setHeight("500px");
-		setWidth("700px");
-		String header = Mes.get("ofService") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
-		setHeadingText(header);
 		showInCenter();
+
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 	private String getRequiredFieldNotification() {
@@ -111,7 +113,7 @@ public class ServiceModifyWindow extends ZWindow {
 		final FlexTable formTable = new FlexTable();
 		formTable.getElement().getStyle().setMarginTop(15, com.google.gwt.dom.client.Style.Unit.PX);
 		formTable.getElement().getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
-		
+
 		formTable.setWidget(0, 0, new HTML(Mes.get("name") + getRequiredFieldNotification() + ":"));
 		formTable.setWidget(1, 0, new HTML(Mes.get("serviceGroup") + getRequiredFieldNotification() + ":"));
 		formTable.setWidget(2, 0, new HTML(Mes.get("minAmount") + getRequiredFieldNotification() + ":"));
@@ -125,9 +127,18 @@ public class ServiceModifyWindow extends ZWindow {
 		ServicesFactory.getServiceGroupService().getFilteredServiceGroups("", new ServiceCallback<List<ServiceGroupDTO>>(this) {
 			@Override
 			public void onServiceSuccess(List<ServiceGroupDTO> result) {
-				formTable.setWidget(1, 1, getServiceGroupField(result));
+				serviceGroupField.addAll(result);
+				if (redactMode) {
+					for(ServiceGroupDTO serviceGroup : result) {
+
+						if (dto.getGroupId() == serviceGroup.getId()) {
+							serviceGroupField.setValue(serviceGroup);
+						}
+					}
+				}
 			}
 		});
+		formTable.setWidget(1, 1, getServiceGroupField());
 		formTable.setWidget(2, 1, getMinAmountField());
 		formTable.setWidget(3, 1, getMaxAmountField());
 		formTable.setWidget(4, 1, getDebtCodeField());
@@ -149,7 +160,7 @@ public class ServiceModifyWindow extends ZWindow {
 		return nameField;
 	}
 
-	private ZSimpleComboBox<ServiceGroupDTO> getServiceGroupField(List<ServiceGroupDTO> serviceGroups) {
+	private ZSimpleComboBox<ServiceGroupDTO> getServiceGroupField() {
 		 serviceGroupField = new ZSimpleComboBox.Builder<ServiceGroupDTO>()
 			 .keyProvider(new ModelKeyProvider<ServiceGroupDTO>() {
 				 @Override
@@ -163,19 +174,10 @@ public class ServiceModifyWindow extends ZWindow {
 					 return item.getName();
 				 }
 			 })
-			 .values(serviceGroups)
 			 .width(FIELD_WIDTH)
 			 .noSelectionLabel("")
 			 .build();
 
-		if (redactMode) {
-			for(ServiceGroupDTO serviceGroup : serviceGroups) {
-
-				if (dto.getGroupId() == serviceGroup.getId()) {
-					serviceGroupField.setValue(serviceGroup);
-				}
-			}
-		}
 		return serviceGroupField;
 	}
 
@@ -294,6 +296,7 @@ public class ServiceModifyWindow extends ZWindow {
 		}
 		return good && channelContainer.isValid();
 	}
+
 	private void retrieveInfo(ServiceDTO dto, ServiceChannelWindow.ChannelInfo info) {
 		dto.setName(nameField.getCurrentValue());
 		dto.setProviderAccountIBAN(IBANField.getCurrentValue());
@@ -306,7 +309,6 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setChannels(info.getChannels());
 
 	}
-
 	private boolean doRedact() {
 		if(!validate()) return false;
 
@@ -351,6 +353,7 @@ public class ServiceModifyWindow extends ZWindow {
 	private ZButton getConfirmButton() {
 		return new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
@@ -366,5 +369,15 @@ public class ServiceModifyWindow extends ZWindow {
 				}
 			})
 			.build();
+	}
+
+	private void disableFields() {
+		nameField.disable();
+		serviceGroupField.disable();
+		minAmountField.disable();
+		maxAmountField.disable();
+		debtCodeField.disable();
+		payCodeField.disable();
+		IBANField.disable();
 	}
 }

@@ -6,6 +6,7 @@ import com.azry.gxt.client.zcomp.ZGrid;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
 import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
 import com.azry.sps.console.client.utils.Mes;
@@ -29,8 +30,10 @@ public class SystemParameterTab extends Composite {
 
 	private final ZTextField valueField;
 
-	public SystemParameterTab(){
-		super();
+	private boolean isManage;
+
+	public SystemParameterTab(boolean isManage){
+		this.isManage = isManage;
 		content = new VerticalLayoutContainer();
 		codeField = new ZTextField.Builder()
 			.emptyText(Mes.get("codeEmptyText"))
@@ -51,7 +54,7 @@ public class SystemParameterTab extends Composite {
 
 	private void assembleContent(List<SystemParameterDTO> data){
 		content.add(getToolbar());
-		ZGrid<SystemParameterDTO> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel());
+		ZGrid<SystemParameterDTO> grid = new ZGrid<>(SystemParametersTable.setListStore(data), SystemParametersTable.getMyColumnModel(isManage));
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -70,13 +73,15 @@ public class SystemParameterTab extends Composite {
 		toolbar.add(getClearButton());
 
 		ZButton addButton = new ZButton.Builder()
+			.visible(isManage)
 			.appearance (new Css3ButtonCellAppearance<String>())
 			.icon (FAIconsProvider.getIcons().plus())
 			.text (Mes.get("addEntry"))
+			.visible(isManage)
 			.handler (new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent event) {
-					new SystemParametersModifyWindow(null, SystemParametersTable.getListStore());
+					new SystemParametersModifyWindow(null, SystemParametersTable.getListStore(), ActionMode.ADD);
 				}
 			})
 			.build();

@@ -5,6 +5,7 @@ import com.azry.gxt.client.zcomp.ZButton;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.DialogUtils;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
@@ -52,11 +53,14 @@ public class UsersModifyWindow extends ZWindow {
 
 	private UserGroupTab userGroupTab;
 
-	public UsersModifyWindow(SystemUserDTO dto, ListStore<SystemUserDTO> store) {
-		super();
+	ActionMode actionMode;
+
+	public UsersModifyWindow(SystemUserDTO dto, ListStore<SystemUserDTO> store, ActionMode actionMode) {
+		super(Mes.get("ofUser") + " " + Mes.get(actionMode.name().toLowerCase()), 550, 500, false);
 
 		tabPanel = new TabPanel();
 
+		this.actionMode = actionMode;
 		this.store = store;
 
 		if (dto != null) {
@@ -73,8 +77,6 @@ public class UsersModifyWindow extends ZWindow {
 			this.dto.setId(0);
 		}
 
-
-
 		ZButton confirmButton = getConfirmButton();
 		ZButton cancelButton = getCancelButton();
 		buttonBar.setMinButtonWidth(75);
@@ -90,10 +92,10 @@ public class UsersModifyWindow extends ZWindow {
 
 		add(tabPanel, new MarginData(0));
 
-		setHeight("500px");
-		setWidth("550px");
-		String header = Mes.get("ofUser") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
-		setHeadingText(header);
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
+
 		showInCenter();
 	}
 
@@ -113,8 +115,7 @@ public class UsersModifyWindow extends ZWindow {
 			@Override
 			public void onServiceSuccess(List<UserGroupDTO> result) {
 				entries.addAll(result);
-				userGroupTabContainer.add(userGroupTab = new UserGroupTab(entries, dto.getGroups()), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
-
+				userGroupTabContainer.add(userGroupTab = new UserGroupTab(entries, dto.getGroups(), actionMode), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 			}
 		});
 		tabPanel.add(userGroupTabContainer, Mes.get("userGroups"));
@@ -124,7 +125,7 @@ public class UsersModifyWindow extends ZWindow {
 		FlexTable formTable = new FlexTable();
 		formTable.getElement().getStyle().setMarginTop(15, com.google.gwt.dom.client.Style.Unit.PX);
 		formTable.getElement().getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
-		
+
 		formTable.setWidget(0, 0, new HTML(Mes.get("username") + getRequiredFieldNotification() + ":"));
 		formTable.setWidget(1, 0, new HTML(Mes.get("name") + getRequiredFieldNotification() + ":"));
 		formTable.setWidget(2, 0, new HTML(Mes.get("email") + ":"));
@@ -199,6 +200,7 @@ public class UsersModifyWindow extends ZWindow {
 			})
 			.build();
 	}
+
 	private boolean validate() {
 		boolean good = true;
 		if(usernameField.getCurrentValue() == null || usernameField.getCurrentValue().equals("")) {
@@ -233,7 +235,6 @@ public class UsersModifyWindow extends ZWindow {
 		}
 		return good & groupTabValid;
 	}
-
 	private boolean doRedact() {
 		if(!validate()) return false;
 
@@ -291,6 +292,7 @@ public class UsersModifyWindow extends ZWindow {
 
 	private ZButton getConfirmButton() {
 		return new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.text(Mes.get("save"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -307,5 +309,13 @@ public class UsersModifyWindow extends ZWindow {
 				}
 			})
 			.build();
+	}
+
+	private void disableFields() {
+		usernameField.disable();
+		nameField.disable();
+		emailField.disable();
+		passwordField.disable();
+		repeatPasswordField.disable();
 	}
 }

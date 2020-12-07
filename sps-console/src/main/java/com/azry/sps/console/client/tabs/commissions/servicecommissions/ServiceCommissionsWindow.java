@@ -67,7 +67,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 	private final ServiceCommissionsDTO serviceCommissionsDTO;
 
 	public ServiceCommissionsWindow(ServiceCommissionsDTO dto, List<ServiceDTO> serviceEntityDTOs, ActionMode actionMode) {
-		super(Mes.get("ofServiceCommissions") + " " + Mes.get("ActionMode_" + actionMode), 1000, 800, false);
+		super(Mes.get("ofServiceCommissions") + " " + Mes.get(actionMode.name().toLowerCase()), 900, 650, false);
 
 		initWidgetLists(serviceEntityDTOs);
 
@@ -84,12 +84,13 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 		add(container, new MarginData(0));
 
-		initButtons();
+		initButtons(actionMode);
 
 		buildDisplay();
 
-		setHeight("650px");
-		setWidth("900px");
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 	private void buildDisplay() {
@@ -182,8 +183,9 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	}
 
-	private   void initButtons(){
+	private   void initButtons(ActionMode actionMode){
 		saveButton = new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.text(Mes.get("save"))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.handler(new SelectEvent.SelectHandler() {
@@ -258,7 +260,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 
 	private ZFieldLabel getFieldLabel(IsWidget field, String labelKey, boolean required) {
 		return new ZFieldLabel.Builder()
-			.labelWidth(150)
+			.labelWidth(180)
 			.label(Mes.get(labelKey))
 			.field(field)
 			.required(required)
@@ -346,6 +348,15 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		}
 	}
 
+	private void disableFields() {
+		allServices.disable();
+		commission.disable();
+		rateType.disable();
+		minCommission.disable();
+		priorityField.disable();
+		maxCommission.disable();
+		servicesDualListWidget.disable();
+	}
 
 	@Override
 	public void onListItemsChanged() {

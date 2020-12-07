@@ -6,6 +6,7 @@ import com.azry.gxt.client.zcomp.ZSimpleComboBox;
 import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZWindow;
 import com.azry.sps.console.client.ServicesFactory;
+import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
@@ -46,9 +47,12 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private final ListStore<SystemParameterDTO> store;
 
-	public SystemParametersModifyWindow(SystemParameterDTO dto, ListStore<SystemParameterDTO> store) {
-		super();
+	ActionMode actionMode;
+
+	public SystemParametersModifyWindow(SystemParameterDTO dto, ListStore<SystemParameterDTO> store, ActionMode actionMode) {
+		super(Mes.get("systemParam") + " " + Mes.get(actionMode.name().toLowerCase()), 490, -1, false);
 		this.store = store;
+		this.actionMode = actionMode;
 
 		if (dto != null) {
 			redactMode = true;
@@ -68,9 +72,8 @@ public class SystemParametersModifyWindow extends ZWindow {
 		ZButton cancelButton = getCancelButton();
 		buttonBar.setMinButtonWidth(75);
 		getButtonBar().getElement().getStyle().setProperty("borderTop", "1px solid #3291D6");
-
-		addButton(confirmButton);
 		addButton(cancelButton);
+		addButton(confirmButton);
 
 		formContainer.setStyleName("editForm");
 
@@ -80,15 +83,16 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 		add(mainContainer);
 
-		setHeight("400px");
-		setWidth("490px");
-		String header = Mes.get("systemParam") + " " + (redactMode ? Mes.get("redact") : Mes.get("addEntry"));
-		setHeadingText(header);
 		showInCenter();
+
+		if (ActionMode.VIEW.equals(actionMode)) {
+			disableFields();
+		}
 	}
 
 	private String getRequiredFieldNotification() {
 		return "<span style='color: red;'>*</span>";
+
 	}
 
 	private void constructForm(FlexTable formContainer) {
@@ -102,8 +106,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 		formContainer.setWidget(1, 1, getTypeField());
 		formContainer.setWidget(2, 1, getValueField());
 		formContainer.setWidget(3, 1, getDescriptionField());
-
-
 	}
 
 	private ZTextField getCodeField() {
@@ -172,7 +174,9 @@ public class SystemParametersModifyWindow extends ZWindow {
 		if (dto.getType().equals(SystemParameterDTOType.BOOLEAN)) {
 			checkBox.setValue(Boolean.parseBoolean(dto.getValue()));
 		}
-
+		if (ActionMode.VIEW.equals(actionMode)) {
+			checkBox.setEnabled(false);
+		}
 		valueField = checkBox;
 		return valueField;
 	}
@@ -185,7 +189,11 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 		textArea.setWidth("305px");
 		textArea.setHeight("150px");
+		if (ActionMode.VIEW.equals(actionMode)) {
+			textArea.disable();
+		}
 		valueField = textArea;
+
 		return valueField;
 	}
 
@@ -195,6 +203,9 @@ public class SystemParametersModifyWindow extends ZWindow {
 			integerField.setValue(Integer.parseInt(dto.getValue()));
 		}
 		integerField.setWidth("305px");
+		if (ActionMode.VIEW.equals(actionMode)) {
+			integerField.disable();
+		}
 		valueField = integerField;
 		return valueField;
 	}
@@ -250,6 +261,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 		dto.setType(typeField.getCurrentValue());
 		dto.setValue(getValueFieldValue());
 	}
+
 	private void doRedact() {
 		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().editParameter(dto,
@@ -261,7 +273,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 				}
 			});
 	}
-
 	private void doAdd() {
 		retreiveFieldValues();
 		ServicesFactory.getSystemParameterService().addParameter(dto,
@@ -277,6 +288,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private ZButton getConfirmButton() {
 		return new ZButton.Builder()
+			.visible(!ActionMode.VIEW.equals(actionMode))
 			.icon(FAIconsProvider.getIcons().floppy_o_white())
 			.text(Mes.get("save"))
 			.handler(new SelectEvent.SelectHandler() {
@@ -303,5 +315,11 @@ public class SystemParametersModifyWindow extends ZWindow {
 				}
 			})
 			.build();
+	}
+
+	private void disableFields() {
+		codeField.disable();
+		typeField.disable();
+		descField.disable();
 	}
 }
