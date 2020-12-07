@@ -353,4 +353,8 @@ public class RowEntry {
 	public void decrementRow() {
 		this.row = row - 1;
 	}
+
+	public void setCommissionVerified(boolean commissionVerified) {
+		this.commissionVerified = commissionVerified;
+	}
 }

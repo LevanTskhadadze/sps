@@ -95,6 +95,14 @@ public class PaymentManagerBean implements PaymentManager {
 	}
 
 	@Override
+	public List<Payment> getCollectedAndPendingPayments() {
+		return em.createQuery("SELECT p FROM Payment p WHERE p.status = :collected or p.status = :pending", Payment.class)
+			.setParameter("collected", PaymentStatus.COLLECTED)
+			.setParameter("pending", PaymentStatus.PENDING)
+			.getResultList();
+	}
+
+	@Override
 	public List<PaymentStatusLog> getChanges(long id) {
 		TypedQuery<PaymentStatusLog> query =
 			em.createQuery("SELECT p FROM PaymentStatusLog p WHERE p.paymentId = :id ORDER BY p.statusTime ASC ", PaymentStatusLog.class)
@@ -108,5 +116,15 @@ public class PaymentManagerBean implements PaymentManager {
 		for (Payment payment : payments) {
 			em.persist(payment);
 		}
+	}
+
+	@Override
+	public void updatePayment(Payment payment) {
+		em.merge(payment);
+	}
+
+	@Override
+	public void addPaymentStatusLog(PaymentStatusLog paymentStatusLog) {
+		em.persist(paymentStatusLog);
 	}
 }

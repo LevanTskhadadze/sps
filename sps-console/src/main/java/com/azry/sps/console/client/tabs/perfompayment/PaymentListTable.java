@@ -29,7 +29,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
@@ -163,17 +162,11 @@ public class PaymentListTable extends Composite {
 					for (RowEntry entry : tableRows) {
 						PaymentDTO payment = new PaymentDTO();
 						if (entry.isCommissionVerified()) {
-//							payment.setAgentPaymentId();
 							payment.setServiceId(entry.getPaymentListEntryDTO().getServiceId());
-//							payment.setChannelId();
 							payment.setAbonentCode(entry.getPaymentListEntryDTO().getAbonentCode());
 							payment.setAmount(entry.getPaymentAmount());
 							payment.setClCommission(entry.getCommission());
-//							payment.setSvcCommission();
 							payment.setStatus(PaymentStatusDTO.CREATED);
-							payment.setStatusChangeTime(new Date());
-//							payment.statusMessage;
-							payment.setCreateTime(new Date());
 							payment.setClient(clientDTO);
 
 							paymentList.add(payment);
@@ -187,7 +180,9 @@ public class PaymentListTable extends Composite {
 							for (RowEntry entry : tableRows) {
 								entry.clearAmountF();
 								entry.updateCommissionValue();
+								entry.setCommissionVerified(false);
 							}
+							payB.disable();
 							setAggregatesValues();
 						}
 					});

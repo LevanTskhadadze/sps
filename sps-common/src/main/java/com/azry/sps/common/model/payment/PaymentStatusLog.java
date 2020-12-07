@@ -1,6 +1,7 @@
 package com.azry.sps.common.model.payment;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ public class PaymentStatusLog {
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 
+	@CreationTimestamp
 	private Date statusTime;
 
 	@Column(length = 500)

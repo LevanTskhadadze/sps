@@ -2,31 +2,16 @@ package com.azry.sps.integration.sp.exception;
 
 public class SpIntegrationException extends Exception {
 
-	public enum Type {
-		CONNECTION_FAILED("spConnectionFailed"),
-		BAD_REQUEST("spBadRequest");
+	private String status;
 
-		private String code;
-
-		private Type(String code) {
-			this.code = code;
-		}
-
-		public String getCode() {
-			return code;
-		}
+	public SpIntegrationException(String message) {
+		super(message);
 	}
 
-	Type type;
-
-
-
-	public SpIntegrationException(Type type, Exception ex) {
-		super(ex.getCause());
-		this.type = type;
+	public SpIntegrationException(String message, String status) {
+		super(message);
+		this.status = status;
 	}
 
-	public Type getType() {
-		return type;
-	}
+
 }

@@ -3,10 +3,12 @@ package com.azry.sps.fi.model.transaction;
 import com.azry.sps.fi.bankws.Transaction;
 import com.azry.sps.fi.bankws.TransactionType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 public class FiTransaction {
 
 	private String transactionId;

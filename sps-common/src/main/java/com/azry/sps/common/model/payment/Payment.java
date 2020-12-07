@@ -2,6 +2,8 @@ package com.azry.sps.common.model.payment;
 
 import com.azry.sps.common.model.client.Client;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -45,11 +47,13 @@ public class Payment {
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 
+	@UpdateTimestamp
 	private Date statusChangeTime;
 
 	@Column(length = 500)
 	private String statusMessage;
 
+	@CreationTimestamp
 	private Date createTime;
 
 	@Embedded

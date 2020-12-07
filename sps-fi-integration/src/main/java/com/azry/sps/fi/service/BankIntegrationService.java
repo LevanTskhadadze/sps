@@ -1,7 +1,6 @@
 package com.azry.sps.fi.service;
 
 
-import com.azry.sps.fi.bankws.BankServiceException_Exception;
 import com.azry.sps.fi.model.BankClient;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
 import com.azry.sps.fi.model.exception.FiException;
@@ -15,9 +14,5 @@ public interface BankIntegrationService {
 
 	BankClient getClientWithAccount(String personalNumber) throws FiException, FIConnectivityException;
 
-//	Client findClient(String personalNumber) throws SPSException;
-
-//	List<Account> getClientAccounts(long clientId);
-
-	FiTransactionResponse processTransactions(FiTransactionRequest request) throws BankServiceException_Exception, FiException, FIConnectivityException;
+	FiTransactionResponse processTransactions(FiTransactionRequest request) throws FiException, FIConnectivityException;
 }

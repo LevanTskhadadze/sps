@@ -19,8 +19,13 @@ public interface PaymentManager {
 
 	Payment getPaymentByAgentId(String agentPaymentId);
 
+	List<Payment> getCollectedAndPendingPayments();
+
 	List<PaymentStatusLog> getChanges(long id);
 
 	void addPayments(List<Payment> payments);
 
+	void updatePayment(Payment payment);
+
+	void addPaymentStatusLog(PaymentStatusLog paymentStatusLog);
 }

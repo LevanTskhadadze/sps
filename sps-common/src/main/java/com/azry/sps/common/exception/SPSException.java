@@ -14,7 +14,6 @@ public class SPSException extends Exception {
 		super(message);
 	}
 
-
 	public SPSException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
