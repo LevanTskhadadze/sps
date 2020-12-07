@@ -3,7 +3,7 @@ package com.azry.sps.console.server;
 import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
 import com.azry.sps.console.shared.systemparameter.SystemParameterService;
-import com.azry.sps.systemparameters.model.services.SystemParameterManager;
+import com.azry.sps.systemparameters.services.SystemParameterManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;

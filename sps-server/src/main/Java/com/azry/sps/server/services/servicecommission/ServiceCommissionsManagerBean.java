@@ -54,6 +54,11 @@ public class ServiceCommissionsManagerBean implements ServiceCommissionsManager 
 		}
 	}
 
+	@Override
+	public ServiceCommissions getCommissionForService(long serviceId) {
+		return cachingService.getCommissionForService(String.valueOf(serviceId));
+	}
+
 	private void updateCache() {
 		updateCacheEvent.fire(new UpdateCacheEvent(ServiceCommissions.class.getSimpleName()));
 	}

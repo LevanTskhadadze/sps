@@ -13,5 +13,7 @@ public interface ServiceCommissionsManager {
 
 	ServiceCommissions updateServiceCommissions(ServiceCommissions serviceCommissions) throws SPSException;
 
+	ServiceCommissions getCommissionForService(long serviceId);
+
 	void deleteServiceCommissions(long id);
 }

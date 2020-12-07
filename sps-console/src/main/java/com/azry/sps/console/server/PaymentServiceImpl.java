@@ -10,6 +10,7 @@ import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusLogDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDTO;
+import com.azry.sps.console.shared.payment.PaymentParamDTO;
 import com.azry.sps.console.shared.payment.PaymentService;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.payment.PaymentManager;
@@ -21,9 +22,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 @WebServlet("sps/servlet/payment")
 public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentService {
@@ -41,8 +40,8 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 	ChannelManager channelManager;
 
 	@Override
-	public PagingLoadResult<PaymentDTO> getPayments(int offset, int limit, Map<String, Serializable> params, List<PaymentStatusDTO> statuses) {
-		ListResult<Payment> res = paymentManager.getPayments(offset, limit, params, PaymentDTO.convertDTOToStatuses(statuses));
+	public PagingLoadResult<PaymentDTO> getPayments(int offset, int limit, PaymentParamDTO params, List<PaymentStatusDTO> statuses) {
+		ListResult<Payment> res = paymentManager.getPayments(offset, limit, params.toServer(), PaymentDTO.convertDTOToStatuses(statuses));
 
 		return new PagingLoadResultBean<>(
 			PaymentDTO.toDTOs(res.getResultList()),

@@ -69,7 +69,21 @@ public class ServiceCommissionsCachingManager implements CachingService<ServiceC
 		return new ListResult<>(new ArrayList<>(filteredServiceCommissions.subList(offset, lastIndex)), filteredServiceCommissions.size());
 	}
 
-
+	public ServiceCommissions getCommissionForService(String serviceId) {
+		ServiceCommissions serviceCommissions = null;
+		for (ServiceCommissions commissions : getList()) {
+			if (commissions.isAllServices() || Arrays.asList(commissions.getServicesIds().split(",")).contains(serviceId)) {
+				if (serviceCommissions == null) {
+					serviceCommissions = commissions;
+				} else {
+					if (commissions.getPriority() < serviceCommissions.getPriority()) {
+						serviceCommissions = commissions;
+					}
+				}
+			}
+		}
+		return serviceCommissions;
+	}
 
 	private void loadCache() {
 		List<ServiceCommissions> serviceCommissions = getAllServiceCommissions();

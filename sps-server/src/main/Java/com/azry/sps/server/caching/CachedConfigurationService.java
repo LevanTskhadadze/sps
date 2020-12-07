@@ -29,6 +29,8 @@ public interface CachedConfigurationService {
 
 	List<Service> getServicesByServiceGroup(Long groupId);
 
+	Service getServiceByPayCode(String servicePayCode);
+
 	ListResult<Service> filterServices(Map<String, String> filter, int offset, int limit);
 
 	List<ClientCommissions> getAllClientCommissions();
@@ -38,6 +40,8 @@ public interface CachedConfigurationService {
 	ListResult<ClientCommissions> filterClientCommissions(String serviceId, String channelId, int offset, int limit);
 
 	ClientCommissions getClientCommissionByServiceId(String serviceId);
+
+	ClientCommissions getClientCommission(String serviceId, String channelId);
 
 	List<Channel> getAllChannels();
 
@@ -49,4 +53,5 @@ public interface CachedConfigurationService {
 
 	ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit);
 
+	ServiceCommissions getCommissionForService(String serviceId);
 }

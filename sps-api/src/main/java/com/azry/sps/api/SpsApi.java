@@ -1,14 +1,57 @@
 package com.azry.sps.api;
 
-import com.azry.sps.api.dto.GetInfoRequest;
-import com.azry.sps.api.dto.GetInfoResponse;
+import com.azry.sps.api.model.Namespace;
+import com.azry.sps.api.model.SpsApiException;
+import com.azry.sps.api.model.addpaymentlistentry.AddPaymentListEntryRequest;
+import com.azry.sps.api.model.addpaymentlistentry.AddPaymentListEntryResponse;
+import com.azry.sps.api.model.getServices.GetServicesResponse;
+import com.azry.sps.api.model.getclientcommission.GetClientCommissionRequest;
+import com.azry.sps.api.model.getclientcommission.GetClientCommissionResponse;
+import com.azry.sps.api.model.getinfo.GetInfoRequest;
+import com.azry.sps.api.model.getinfo.GetInfoResponse;
+import com.azry.sps.api.model.getpaymentinfo.GetPaymentInfoRequest;
+import com.azry.sps.api.model.getpaymentinfo.GetPaymentInfoResponse;
+import com.azry.sps.api.model.getpaymentlist.GetPaymentListRequest;
+import com.azry.sps.api.model.getpaymentlist.GetPaymentListResponse;
+import com.azry.sps.api.model.getservicegroups.GetServiceGroupsResponse;
+import com.azry.sps.api.model.pay.PayRequest;
+import com.azry.sps.api.model.removepaymentlistentry.RemovePaymentListEntryRequest;
 
+import javax.ejb.Remote;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
+import java.rmi.RemoteException;
 
-@WebService
-public interface SpsApi {
+@Remote
+@WebService(targetNamespace = Namespace.TN)
+public interface SpsApi extends java.rmi.Remote {
 
-	public GetInfoResponse getInfo(@XmlElement(name = "GetInfoRequest")GetInfoRequest request);
+	@WebMethod(action = Namespace.TN + "/getInfo")
+	GetInfoResponse getInfo(@WebParam(name = "GetInfoRequest", targetNamespace = Namespace.TN) GetInfoRequest request) throws SpsApiException, RemoteException;
 
+	@WebMethod(action = Namespace.TN + "/pay")
+	void pay(@WebParam(name = "PayRequest", targetNamespace = Namespace.TN) PayRequest request) throws SpsApiException, RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/getPaymentInfo")
+	GetPaymentInfoResponse getPaymentInfo(@WebParam(name = "GetPaymentInfoRequest", targetNamespace = Namespace.TN) GetPaymentInfoRequest request) throws SpsApiException, RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/getPaymentListEntry")
+	GetPaymentListResponse getPaymentList(@WebParam(name = "personalNumber",  targetNamespace = Namespace.TN) GetPaymentListRequest getPaymentListRequest) throws SpsApiException, RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/getPaymentListEntry")
+	AddPaymentListEntryResponse addPaymentListEntry(@WebParam(name = "AddPaymentListEntryRequest", targetNamespace = Namespace.TN) AddPaymentListEntryRequest request) throws SpsApiException, RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/removePaymentListEntry")
+	void removePaymentListEntry(@WebParam(name = "removePaymentListEntryRequest",  targetNamespace = Namespace.TN) RemovePaymentListEntryRequest request) throws RemoteException, SpsApiException;
+
+	@WebMethod(action = Namespace.TN + "/getServices")
+	GetServicesResponse getServices() throws RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/getServiceGroups")
+	GetServiceGroupsResponse getServiceGroups() throws RemoteException;
+
+	@WebMethod(action = Namespace.TN + "/getServiceCommission")
+	GetClientCommissionResponse getClientCommission(@WebParam(name = "getClientCommissionRequest",  targetNamespace = Namespace.TN) @XmlElement(required = true) GetClientCommissionRequest request) throws RemoteException, SpsApiException;
 }

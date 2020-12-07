@@ -35,6 +35,11 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 	}
 
 	@Override
+	public ClientCommissions getClientCommission(long serviceId, long channelId) {
+		return cachedConfigurationService.getClientCommission(String.valueOf(serviceId), String.valueOf(channelId));
+	}
+
+	@Override
 	public ClientCommissions updateClientCommissions(ClientCommissions clientCommissions) throws SPSException {
 		try {
 			clientCommissions = em.merge(clientCommissions);
@@ -45,6 +50,7 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			throw new SPSException("optimisticLockException", ex);
 		}
 	}
+
 
 	@Override
 	public void deleteClientCommissions(long id) {

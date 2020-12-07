@@ -14,5 +14,5 @@ public interface ProviderIntegrationService {
 
 	AbonentInfo getInfo(String serviceCode, String abonentCode) throws SpConnectivityException;
 
-	PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException;
+	PayResponse pay(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException;
 }

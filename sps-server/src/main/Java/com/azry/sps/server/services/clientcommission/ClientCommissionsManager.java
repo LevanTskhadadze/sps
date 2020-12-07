@@ -13,6 +13,8 @@ public interface ClientCommissionsManager {
 
 	ClientCommissions getClientCommissionByServiceId(long serviceId);
 
+	ClientCommissions getClientCommission(long serviceId, long channelId);
+
 	ClientCommissions updateClientCommissions(ClientCommissions clientCommissions) throws SPSException;
 
 	void deleteClientCommissions(long id);

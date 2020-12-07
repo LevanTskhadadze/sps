@@ -13,8 +13,8 @@ import com.azry.sps.server.caching.clientcommissions.ClientCommissionsCachingMan
 import com.azry.sps.server.caching.servicecommissions.ServiceCommissionsCachingManager;
 import com.azry.sps.server.caching.services.ServicesCachingManager;
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -126,6 +126,11 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	}
 
 	@Override
+	public Service getServiceByPayCode(String servicePayCode) {
+		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getServiceByServicePayCode(servicePayCode);
+	}
+
+	@Override
 	public ClientCommissions getClientCommission(long clientCommission) {
 		return ((ClientCommissionsCachingManager)cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName())).get(clientCommission);
 	}
@@ -146,6 +151,12 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	public ClientCommissions getClientCommissionByServiceId(String serviceId) {
 		return ((ClientCommissionsCachingManager)cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName()))
 			.getClientCommissionByServiceId(serviceId);
+	}
+
+	@Override
+	public ClientCommissions getClientCommission(String serviceId, String channelId) {
+		return ((ClientCommissionsCachingManager)cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName()))
+			.getClientCommission(serviceId, channelId);
 	}
 
 	@Override
@@ -173,5 +184,11 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 	public ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit) {
 		return ((ServiceCommissionsCachingManager) cacheMap.get(CachedDataType.SERVICE_COMMISSIONS.getClassSimpleName()))
 			.getFilteredServiceCommissions(serviceId, offset, limit);
+	}
+
+	@Override
+	public ServiceCommissions getCommissionForService(String serviceId) {
+		return ((ServiceCommissionsCachingManager) cacheMap.get(CachedDataType.SERVICE_COMMISSIONS.getClassSimpleName()))
+			.getCommissionForService(serviceId);
 	}
 }

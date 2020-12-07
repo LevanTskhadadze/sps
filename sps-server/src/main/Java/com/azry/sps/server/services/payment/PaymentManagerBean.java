@@ -9,7 +9,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,32 +22,40 @@ public class PaymentManagerBean implements PaymentManager {
 
 
 	@Override
-	public ListResult<Payment> getPayments(int offset, int limit, Map<String, Serializable> params, List<PaymentStatus> statuses) {
+	public ListResult<Payment> getPayments(int offset, int limit, PaymentParams params, List<PaymentStatus> statuses) {
 		StringBuilder sql = new StringBuilder();
 		String queryPrefix = "SELECT p FROM Payment p WHERE 1 = 1 ";
 		String countPrefix = "SELECT COUNT(p.id) FROM Payment p WHERE 1 = 1 ";
-		if (params.get("id") != null && !params.get("id").equals("")) {
+		Map<String, Object> parameters = new HashMap<>();
+
+		if (params.getId() != null) {
 			sql.append("AND p.id = :id ");
+			parameters.put("id", params.getId());
 		}
 
-		if (params.get("agentPaymentId") != null && !params.get("agentPaymentId").equals("")) {
+		if (params.getAgentPaymentId() != null && !params.getAgentPaymentId().equals("")) {
 			sql.append("AND p.agentPaymentId = :agentPaymentId ");
+			parameters.put("agentPaymentId", params.getAgentPaymentId());
 		}
 
-		if (params.get("startTime") != null && !params.get("startTime").equals("")) {
+		if (params.getCreationStartTime() != null) {
 			sql.append("AND p.createTime >= TRY_CONVERT(datetime, :startTime) ");
+			parameters.put("startTime", params.getCreationStartTime());
 		}
 
-		if (params.get("endTime") != null && !params.get("endTime").equals("")) {
+		if (params.getCreationEndTime() != null) {
 			sql.append("AND p.createTime <= TRY_CONVERT(datetime, :endTime) ");
+			parameters.put("endTime", params.getCreationEndTime());
 		}
 
-		if (params.get("serviceId") != null && !params.get("serviceId").equals("")) {
+		if (params.getServiceId() != null) {
 			sql.append("AND p.serviceId = :serviceId ");
+			parameters.put("serviceId", params.getServiceId());
 		}
 
-		if (params.get("channel") != null && !params.get("channelId").equals("")) {
+		if (params.getChannelId() != null) {
 			sql.append("AND p.channelId = :channelId ");
+			parameters.put("channelId", params.getChannelId());
 		}
 		if (statuses != null && statuses.size() > 0) {
 			sql.append("AND p.status IN (");
@@ -63,7 +72,7 @@ public class PaymentManagerBean implements PaymentManager {
 		TypedQuery<Payment> query = em.createQuery(queryPrefix + sql.toString(), Payment.class);
 
 
-		for(Map.Entry<String, Serializable> entry : params.entrySet()) {
+		for(Map.Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 			count.setParameter(entry.getKey(), entry.getValue());
 		}
@@ -116,6 +125,19 @@ public class PaymentManagerBean implements PaymentManager {
 		for (Payment payment : payments) {
 			em.persist(payment);
 		}
+	}
+
+	@Override
+	public Payment addPayment(Payment payment) {
+		em.persist(payment);
+
+		PaymentStatusLog statusLog = new PaymentStatusLog();
+		statusLog.setStatusTime(new Date());
+		statusLog.setStatus(payment.getStatus());
+		statusLog.setPaymentId(payment.getId());
+		em.persist(statusLog);
+
+		return payment;
 	}
 
 	@Override

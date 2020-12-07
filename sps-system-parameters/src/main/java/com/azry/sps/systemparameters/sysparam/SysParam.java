@@ -1,4 +1,4 @@
-package com.azry.sps.systemparameters.model.sysparam;
+package com.azry.sps.systemparameters.sysparam;
 
 import com.azry.sps.systemparameters.model.SystemParameterType;
 

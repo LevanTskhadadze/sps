@@ -14,7 +14,7 @@ import com.azry.sps.fi.model.transaction.FiTransactionResponse;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
-@Stateless
+@Stateless(name = "BankIntegrationServiceBean")
 @Interceptors(FIExceptionInterceptor.class)
 public class BankIntegrationServiceBean implements BankIntegrationService {
 

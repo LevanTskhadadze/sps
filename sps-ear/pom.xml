@@ -38,6 +38,10 @@
                             <artifactId>sps-console</artifactId>
                             <contextRoot>/sps-console</contextRoot>
                         </webModule>
+						<ejbModule>
+							<groupId>com.azry.sps</groupId>
+							<artifactId>sps-api</artifactId>
+						</ejbModule>
                         <ejbModule>
                             <groupId>com.azry.sps</groupId>
                             <artifactId>sps-common</artifactId>
@@ -45,10 +49,6 @@
                         <ejbModule>
                             <groupId>com.azry.sps</groupId>
                             <artifactId>sps-server</artifactId>
-                        </ejbModule>
-                        <ejbModule>
-                            <groupId>com.azry.sps</groupId>
-                            <artifactId>sps-api</artifactId>
                         </ejbModule>
                         <ejbModule>
                             <groupId>com.azry.sps</groupId>

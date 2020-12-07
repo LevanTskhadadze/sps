@@ -1,6 +1,5 @@
 package com.azry.sps.console.shared.dto.payment;
 
-import com.azry.sps.common.model.payment.PaymentStatusLog;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.azry.sps.console.shared.dto.transactionorder.TransactionOrderDTO;
