@@ -31,21 +31,6 @@ public class BankIntegrationServiceBean implements BankIntegrationService {
 		}
 	}
 
-//	@Override
-//	public Client findClient(String personalNumber) throws SPSException {
-//		try {
-//			return bankService.findClient(personalNumber);
-//		} catch (BankServiceException_Exception ex) {
-//			throw new SPSException(ex.getFaultInfo().getCode());
-//		}
-//
-//	}
-//
-//	@Override
-//	public List<Account> getClientAccounts(long clientId) {
-//		return bankService.getClientAccounts(clientId);
-//	}
-
 	@Override
 	public FiTransactionResponse processTransactions(FiTransactionRequest request) throws FiException, FIConnectivityException {
 		try {

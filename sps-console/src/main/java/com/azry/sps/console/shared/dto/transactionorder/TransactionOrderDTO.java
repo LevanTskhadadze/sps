@@ -11,21 +11,21 @@ import java.math.BigDecimal;
 @Data
 public class TransactionOrderDTO implements IsSerializable {
 
-		private long id;
+	private long id;
 
-		private String fild;
+	private String fild;
 
-		private long paymentId;
+	private long paymentId;
 
-		private String sourceAccountBAN;
+	private String sourceAccountBAN;
 
-		private String destinationAccountBAN;
+	private String destinationAccountBAN;
 
-		private String purpose;
+	private String purpose;
 
-		private BigDecimal amount;
+	private BigDecimal amount;
 
-		private TransactionTypeDTO type;
+	private TransactionTypeDTO type;
 
 	public long getId() {
 		return id;
@@ -92,32 +92,31 @@ public class TransactionOrderDTO implements IsSerializable {
 	}
 
 	@GwtIncompatible
-		public static TransactionTypeDTO TypeToDTO(TransactionType type) {
+	public static TransactionTypeDTO TypeToDTO(TransactionType type) {
 			return TransactionTypeDTO.valueOf(type.name());
 		}
 
-		@GwtIncompatible
-		public static TransactionType dtoToType(TransactionTypeDTO dto) {
-			return TransactionType.valueOf(dto.name());
-		}
+	@GwtIncompatible
+	public static TransactionType dtoToType(TransactionTypeDTO dto) {
+		return TransactionType.valueOf(dto.name());
+	}
 
-		@GwtIncompatible
-		public static TransactionOrderDTO toDTO(TransactionOrder entity) {
-			TransactionOrderDTO dto = new TransactionOrderDTO();
-			if (entity == null) {
-				return dto;
-			}
-
-			dto.setId(entity.getId());
-			dto.setFild(entity.getFild());
-			dto.setPaymentId(entity.getPaymentId());
-			dto.setSourceAccountBAN(entity.getSourceAccountBAN());
-			dto.setDestinationAccountBAN(entity.getDestinationAccountBAN());
-			dto.setPurpose(entity.getPurpose());
-			dto.setAmount(entity.getAmount());
-			dto.setType(TypeToDTO(entity.getType()));
-
+	@GwtIncompatible
+	public static TransactionOrderDTO toDTO(TransactionOrder entity) {
+		TransactionOrderDTO dto = new TransactionOrderDTO();
+		if (entity == null) {
 			return dto;
 		}
 
+		dto.setId(entity.getId());
+		dto.setFild(entity.getFild());
+		dto.setPaymentId(entity.getPaymentId());
+		dto.setSourceAccountBAN(entity.getSourceAccountBAN());
+		dto.setDestinationAccountBAN(entity.getDestinationAccountBAN());
+		dto.setPurpose(entity.getPurpose());
+		dto.setAmount(entity.getAmount());
+		dto.setType(TypeToDTO(entity.getType()));
+
+		return dto;
+	}
 }

@@ -9,7 +9,6 @@ import com.azry.sps.common.model.transaction.TransactionOrder;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
 import com.azry.sps.fi.model.exception.FiException;
-import com.azry.sps.fi.model.exception.FiExceptionMessages;
 import com.azry.sps.fi.model.transaction.FiTransaction;
 import com.azry.sps.fi.model.transaction.FiTransactionRequest;
 import com.azry.sps.fi.model.transaction.FiTransactionResponse;
@@ -38,14 +37,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Singleton(name = "ProcessFirstStage")
+@Singleton(name = "CollectPayments")
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
-public class ProcessFirstStage {
+public class CollectPayments {
 
 	private static final List<PaymentStatus> TARGET_STATUSES = Arrays.asList(PaymentStatus.CREATED, PaymentStatus.COLLECT_PENDING);
 
-	private final Logger log = LoggerFactory.getLogger(ProcessFirstStage.class);
+	private final Logger log = LoggerFactory.getLogger(CollectPayments.class);
 
 	@Inject
 	@SysParam(code = "paymentWaitingTime", type = SystemParameterType.INTEGER)
@@ -80,7 +79,7 @@ public class ProcessFirstStage {
 		newStatus.setStatusMessage(message);
 		newStatus.setStatusTime(new Date());
 
-		paymentManager.changePayment(payment);
+		paymentManager.updatePayment(payment);
 		paymentManager.addPaymentStatusLog(newStatus);
 	}
 
@@ -111,7 +110,7 @@ public class ProcessFirstStage {
 			transactionOrderManager.changeTransactions(Arrays.asList(principalTransactionOrder, clCommissionTransactionOrder));
 			setPayment(payment, "", PaymentStatus.COLLECTED);
 		} catch (FiException ex) {
-			setPayment(payment, FiExceptionMessages.valueOf(ex.getCode()).getMessage(), PaymentStatus.COLLECT_REJECTED);
+			setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
 		} catch (FIConnectivityException ex) {
 			Channel channel = channelManager.getChannel(payment.getChannelId());
 			if (channel.getFiServiceUnavailabilityAction() == FiServiceUnavailabilityAction.REJECT_IMMEDIATELY) {

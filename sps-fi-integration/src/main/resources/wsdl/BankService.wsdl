@@ -174,7 +174,7 @@
     </wsdl:binding>
     <wsdl:service name="BankServiceImplService">
         <wsdl:port binding="tns:BankServiceImplServiceSoapBinding" name="BankServiceImplPort">
-            <soap:address location="http://localhost:9055/services/bank-services"/>
+            <soap:address location="http://localhost:9005/services/bank-services"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

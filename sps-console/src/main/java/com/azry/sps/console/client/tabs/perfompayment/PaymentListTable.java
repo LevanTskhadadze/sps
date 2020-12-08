@@ -168,11 +168,11 @@ public class PaymentListTable extends Composite {
 							payment.setClCommission(entry.getCommission());
 							payment.setStatus(PaymentStatusDTO.CREATED);
 							payment.setClient(clientDTO);
+							payment.setSourceAccountBan(clientAccountsComboBox.getValue().getIban());
 
 							paymentList.add(payment);
 						}
 					}
-
 					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>(this) {
 						@Override
 						public void onServiceSuccess(Void result) {

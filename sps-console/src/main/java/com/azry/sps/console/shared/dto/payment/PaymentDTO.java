@@ -50,6 +50,8 @@ public class PaymentDTO implements IsSerializable {
 
 	private Date createTime;
 
+	private String sourceAccountBan;
+
 	private ClientDTO client;
 
 	public long getId() {
@@ -154,6 +156,14 @@ public class PaymentDTO implements IsSerializable {
 
 	public void setClient(ClientDTO client) {
 		this.client = client;
+	}
+
+	public String getSourceAccountBan() {
+		return sourceAccountBan;
+	}
+
+	public void setSourceAccountBan(String sourceAccountBan) {
+		this.sourceAccountBan = sourceAccountBan;
 	}
 
 	@GwtIncompatible

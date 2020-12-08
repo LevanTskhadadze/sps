@@ -38,18 +38,4 @@ public class BankIntegrationServiceImpl extends RemoteServiceServlet implements 
 			clientDTO.setPaymentListDTO(paymentListService.getPaymentListWithServices(personalNumber));
 			return clientDTO;
 	}
-
-	//	@Override
-//	public ClientDTO findClient(String personalNumber) throws SPSConsoleException {
-//		try {
-//			return ClientDTO.toDTO(bi.findClient(personalNumber));
-//		} catch (SPSException e) {
-//			throw new SPSConsoleException(e.getMessage());
-//		}
-//	}
-//
-//	@Override
-//	public List<AccountDTO> getClientAccounts(long clientId) {
-//		return AccountDTO.toDTOs(bi.getClientAccounts(clientId));
-//	}
 }

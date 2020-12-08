@@ -12,8 +12,9 @@ import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.azry.sps.server.services.payment.PaymentManager;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -31,6 +32,7 @@ import java.util.List;
 
 @Singleton(name = "ProcessPaymentService")
 @Startup
+@Slf4j
 public class ProcessPaymentService {
 
 	@Inject
@@ -72,7 +74,7 @@ public class ProcessPaymentService {
 		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
 		try {
 			PayResponse payResponse = bankIntegrationService.pay(service.getServicePayCode(),
-				payment.getId(),
+				String.valueOf(payment.getId()),
 				payment.getAbonentCode(),
 				payment.getAmount());
 			if (payResponse.getStatus().equals(SpResponseStatus.SUCCESS)) {
@@ -103,6 +105,12 @@ public class ProcessPaymentService {
 				paymentStatusLog.setStatus(PaymentStatus.REJECTED);
 				paymentStatusLog.setStatusMessage("Payment rejected. Max pending time elapsed");
 			}
+		} catch (Exception ex) {
+			payment.setStatus(PaymentStatus.REJECTED);
+			paymentStatusLog.setPaymentId(payment.getId());
+			paymentStatusLog.setStatus(PaymentStatus.REJECTED);
+			paymentStatusLog.setStatusMessage("Unexpected Error Payment Id: " + payment.getId());
+			log.error("Unexpected Error Payment Id: " + payment.getId(), ex);
 		} finally {
 			paymentManager.updatePayment(payment);
 			paymentManager.addPaymentStatusLog(paymentStatusLog);

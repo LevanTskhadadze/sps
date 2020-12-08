@@ -4,8 +4,8 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
-import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
+import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusLogDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
@@ -68,6 +68,8 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 
 	@Override
 	public void addPayments(List<PaymentDTO> payments) {
-		paymentManager.addPayments(PaymentDTO.toEntities(payments));
+		List<Payment> paymentList = PaymentDTO.toEntities(payments);
+		paymentManager.addPayments(paymentList);
+		transactionOrderManager.addTransactions(payments.get(0).getSourceAccountBan(), paymentList);
 	}
 }

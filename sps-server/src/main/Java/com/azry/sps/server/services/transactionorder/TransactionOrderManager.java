@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.transactionorder;
 
+import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.transaction.TransactionOrder;
 import com.azry.sps.common.model.transaction.TransactionType;
 
@@ -13,5 +14,7 @@ public interface TransactionOrderManager {
 
 	void changeTransactions(List<TransactionOrder> transactions);
 
-	void addTransection(TransactionOrder transaction);
+	void addTransaction(TransactionOrder transaction);
+
+	void addTransactions(String sourceAccountBan, List<Payment> payments);
 }

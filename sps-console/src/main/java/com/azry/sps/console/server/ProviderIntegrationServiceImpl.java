@@ -5,9 +5,6 @@ import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.integration.sp.exception.SpConnectivityException;
-import com.azry.sps.console.shared.providerintegration.ProviderIntegrationService;
-import com.azry.sps.integration.sp.ServiceProviderIntegrationService;
-import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
