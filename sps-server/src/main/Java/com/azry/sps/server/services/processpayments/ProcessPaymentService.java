@@ -30,10 +30,10 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
-@Singleton(name = "ProcessPaymentService")
+@Singleton(name = "ProcessPayments")
 @Startup
 @Slf4j
-public class ProcessPaymentService {
+public class ProcessPayments {
 
 	@Inject
 	private PaymentManager paymentManager;

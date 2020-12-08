@@ -104,7 +104,9 @@ public class SpsApiImpl implements SpsApi{
 
 
 		try {
-			AbonentInfo abonentInfo = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
+			AbonentInfo abonentInfo = null;
+			abonentInfo = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
+
 			response.setDebt(abonentInfo.getDebt());
 			response.setInfoMessage(abonentInfo.getMessage());
 

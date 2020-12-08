@@ -32,6 +32,8 @@ import javax.ejb.Startup;
 import javax.ejb.Timeout;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Date;
@@ -83,6 +85,7 @@ public class CollectPayments {
 		paymentManager.addPaymentStatusLog(newStatus);
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void processPayment(Payment payment) {
 		try {
 			TransactionOrder principalTransactionOrder = transactionOrderManager.getTransaction(payment.getId(), TransactionType.PRINCIPAL_AMOUNT);
@@ -123,7 +126,7 @@ public class CollectPayments {
 					setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
 				}
 				else {
-					if (payment.getStatus() != PaymentStatus.PENDING) {
+					if (payment.getStatus() != PaymentStatus.COLLECT_PENDING) {
 						setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_PENDING);
 					}
 				}
