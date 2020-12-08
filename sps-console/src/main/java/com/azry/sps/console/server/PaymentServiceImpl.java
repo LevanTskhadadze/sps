@@ -2,6 +2,8 @@ package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.payment.Payment;
+import com.azry.sps.common.model.payment.PaymentStatus;
+import com.azry.sps.common.model.payment.PaymentStatusLog;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
@@ -22,6 +24,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet("sps/servlet/payment")
@@ -71,5 +74,19 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 		List<Payment> paymentList = PaymentDTO.toEntities(payments);
 		paymentManager.addPayments(paymentList);
 		transactionOrderManager.addTransactions(payments.get(0).getSourceAccountBan(), paymentList);
+	}
+
+	@Override
+	public PaymentStatusDTO retryPayment(long paymentId) {
+		paymentManager.changePaymentStatus(paymentId, PaymentStatus.PENDING);
+
+		PaymentStatusLog log = new PaymentStatusLog();
+		log.setPaymentId(paymentId);
+		log.setStatus(PaymentStatus.PENDING);
+		log.setStatusTime(new Date());
+		log.setStatusMessage("ხელახალი მცდელობა");
+
+		paymentManager.addPaymentStatusLog(log);
+		return PaymentStatusDTO.PENDING;
 	}
 }

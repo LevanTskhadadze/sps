@@ -28,4 +28,6 @@ public interface PaymentManager {
 	void updatePayment(Payment payment);
 
 	void addPaymentStatusLog(PaymentStatusLog paymentStatusLog);
+
+    void changePaymentStatus(long paymentId, PaymentStatus status);
 }

@@ -149,4 +149,12 @@ public class PaymentManagerBean implements PaymentManager {
 	public void addPaymentStatusLog(PaymentStatusLog paymentStatusLog) {
 		em.persist(paymentStatusLog);
 	}
+
+	@Override
+	public void changePaymentStatus(long paymentId, PaymentStatus status) {
+		Payment payment = em.find(Payment.class, paymentId);
+		payment.setStatus(status);
+
+		em.merge(payment);
+	}
 }

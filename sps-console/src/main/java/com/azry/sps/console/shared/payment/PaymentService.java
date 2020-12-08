@@ -20,4 +20,6 @@ public interface PaymentService extends RemoteService {
 	PaymentInfoDTO getPaymentInfo(PaymentDTO paymentDTO);
 
 	void addPayments(List<PaymentDTO> payments);
+
+	PaymentStatusDTO retryPayment(long paymentId);
 }

@@ -184,7 +184,14 @@ public class PaymentTable {
 
 				.clickHandler(new GridClickHandler<PaymentDTO>() {
 					@Override
-					public void onClick(Cell.Context context, final PaymentDTO paymentDTO) {
+					public void onClick(final Cell.Context context, final PaymentDTO paymentDTO) {
+						ServicesFactory.getPaymentService().retryPayment(paymentDTO.getId(), new ServiceCallback<PaymentStatusDTO>() {
+							@Override
+							public void onServiceSuccess(PaymentStatusDTO result) {
+								paymentDTO.setStatus(result);
+								store.update(paymentDTO);
+							}
+						});
 					}
 				})
 				.build()
