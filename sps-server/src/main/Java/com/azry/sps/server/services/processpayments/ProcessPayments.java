@@ -110,7 +110,7 @@ public class ProcessPayments {
 			paymentStatusLog.setPaymentId(payment.getId());
 			paymentStatusLog.setStatus(PaymentStatus.REJECTED);
 			paymentStatusLog.setStatusMessage("Unexpected Error Payment Id: " + payment.getId());
-			log.error("Unexpected Error Payment Id: " + payment.getId(), ex);
+			log.error("Unexpected error occurred during Payment processing. Payment Id: " + payment.getId(), ex);
 		} finally {
 			paymentManager.updatePayment(payment);
 			paymentManager.addPaymentStatusLog(paymentStatusLog);
