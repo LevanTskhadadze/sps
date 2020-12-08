@@ -67,9 +67,9 @@ public class ProviderIntegrationServiceBean implements ProviderIntegrationServic
 			return getProxy().getAbonent(new AbonentRequest("gateway-" + serviceCode, abonentCode));
 	}
 
-	public PayResponse pay(String serviceCode, long agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException {
+	public PayResponse pay(String serviceCode, String agentPaymentId, String abonentCode, BigDecimal amount) throws SpIntegrationException, SpConnectivityException {
 			Response response = getProxy().pay(new PaymentDTO("gateway-" + serviceCode,
-				String.valueOf(agentPaymentId),
+				agentPaymentId,
 				abonentCode,
 				amount));
 			if (response.getStatusInfo().equals(Response.Status.BAD_REQUEST)) {
