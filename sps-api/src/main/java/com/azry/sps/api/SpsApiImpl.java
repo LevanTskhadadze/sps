@@ -17,7 +17,6 @@ import com.azry.sps.api.model.getpaymentlist.GetPaymentListRequest;
 import com.azry.sps.api.model.getpaymentlist.GetPaymentListResponse;
 import com.azry.sps.api.model.getservicegroups.GetServiceGroupsResponse;
 import com.azry.sps.api.model.getservicegroups.ServiceGroupDTO;
-import com.azry.sps.fi.model.exception.FiExceptionMessages;
 import com.azry.sps.api.model.pay.PayRequest;
 import com.azry.sps.api.model.pay.PaymentStatusDTO;
 import com.azry.sps.api.model.removepaymentlistentry.RemovePaymentListEntryRequest;
@@ -29,21 +28,17 @@ import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.payment.PaymentStatus;
 import com.azry.sps.common.model.paymentlist.PaymentList;
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
-import com.azry.sps.api.dto.GetInfoRequest;
-import com.azry.sps.api.dto.GetInfoResponse;
-import com.azry.sps.api.dto.GetInfoStatus;
 import com.azry.sps.common.model.service.Service;
-import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.common.model.service.ServiceChannelInfo;
 import com.azry.sps.common.model.transaction.TransactionOrder;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
 import com.azry.sps.fi.model.exception.FiException;
+import com.azry.sps.fi.model.exception.FiExceptionMessages;
 import com.azry.sps.fi.service.BankIntegrationService;
-import com.azry.sps.integration.sp.ServiceProviderIntegrationService;
+import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
 import com.azry.sps.integration.sp.exception.SpConnectivityException;
-import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
 import com.azry.sps.server.services.payment.PaymentManager;
@@ -110,12 +105,14 @@ public class SpsApiImpl implements SpsApi{
 
 
 		try {
-			AbonentInfo abonentInfo = serviceProviderIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
+			AbonentInfo abonentInfo = null;
+			abonentInfo = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
+
 			response.setDebt(abonentInfo.getDebt());
 			response.setInfoMessage(abonentInfo.getMessage());
 
 			return response;
-		} catch (SpIntegrationException ex) {
+		} catch (SpConnectivityException ex) {
 			throw new SpsApiException("Can not connect to service provider.");
 		}
 

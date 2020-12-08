@@ -12,8 +12,8 @@ import com.azry.sps.integration.sp.exception.SpIntegrationException;
 import com.azry.sps.server.services.payment.PaymentManager;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.azry.sps.systemparameters.model.SystemParameterType;
-import com.azry.sps.systemparameters.model.sysparam.Parameter;
-import com.azry.sps.systemparameters.model.sysparam.SysParam;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
