@@ -5,7 +5,7 @@ import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
 import com.azry.sps.console.shared.paymentlist.PaymentListService;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
-import com.azry.sps.fi.model.exception.FiException;
+import com.azry.sps.fi.model.exception.FIException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ public class BankIntegrationServiceImpl extends RemoteServiceServlet implements 
 	public ClientDTO getClientWithAccount(String personalNumber) throws SPSConsoleException {
 		try {
 			return ClientDTO.bankClientToDTO(bi.getClientWithAccount(personalNumber));
-		} catch (FiException ex) {
+		} catch (FIException ex) {
 			throw new SPSConsoleException(ex.getCode());
 		} catch (FIConnectivityException ex) {
 			throw new SPSConsoleException("bankConnectionError");

@@ -1,27 +1,27 @@
 package com.azry.sps.fi.model.exception;
 
 import com.azry.sps.fi.bankws.BankServiceException_Exception;
-import lombok.Getter;
+import lombok.Data;
 
 import javax.ejb.ApplicationException;
 
 @ApplicationException
-@Getter
-public class FiException extends Exception {
+@Data
+public class FIException extends Exception {
 
 	String code;
 
-	public FiException() {}
+	public FIException() {}
 
-	public FiException(String message) {
+	public FIException(String message) {
 		super(message);
 	}
 
-	public FiException(String message, Throwable throwable) {
+	public FIException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
 
-	public FiException(BankServiceException_Exception bankServiceException) {
+	public FIException(BankServiceException_Exception bankServiceException) {
 		super(bankServiceException.getFaultInfo().getMessage(), bankServiceException.getCause());
 		this.code = bankServiceException.getFaultInfo().getCode();
 	}

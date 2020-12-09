@@ -8,7 +8,7 @@ import com.azry.sps.common.model.payment.PaymentStatusLog;
 import com.azry.sps.common.model.transaction.TransactionOrder;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
-import com.azry.sps.fi.model.exception.FiException;
+import com.azry.sps.fi.model.exception.FIException;
 import com.azry.sps.fi.model.transaction.FiTransaction;
 import com.azry.sps.fi.model.transaction.FiTransactionRequest;
 import com.azry.sps.fi.model.transaction.FiTransactionResponse;
@@ -112,7 +112,7 @@ public class CollectPayments {
 
 			transactionOrderManager.changeTransactions(Arrays.asList(principalTransactionOrder, clCommissionTransactionOrder));
 			setPayment(payment, "", PaymentStatus.COLLECTED);
-		} catch (FiException ex) {
+		} catch (FIException ex) {
 			setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
 		} catch (FIConnectivityException ex) {
 			Channel channel = channelManager.getChannel(payment.getChannelId());

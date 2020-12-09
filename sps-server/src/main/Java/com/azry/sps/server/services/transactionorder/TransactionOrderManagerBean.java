@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Stateless
@@ -21,10 +22,6 @@ public class TransactionOrderManagerBean implements TransactionOrderManager {
 
 	@Inject
 	ServiceManager serviceManager;
-
-//	@Inject
-//	@SysParam(type = SystemParameterType.STRING, code = "clientCommissionDestinationAccount")
-//	private Parameter<Integer> clientCommissionDestinationAccount;
 
 	@Override
 	public TransactionOrder getTransaction(long paymentId, TransactionType type) {
@@ -66,16 +63,18 @@ public class TransactionOrderManagerBean implements TransactionOrderManager {
 			principalTransactionOrder.setPurpose("Service Payment");
 			principalTransactionOrder.setType(TransactionType.PRINCIPAL_AMOUNT);
 
-			TransactionOrder clientCommissionTransactionOrder = new TransactionOrder();
-			clientCommissionTransactionOrder.setSourceAccountBAN(sourceAccountBan);
-			clientCommissionTransactionOrder.setPaymentId(payment.getId());
-			clientCommissionTransactionOrder.setAmount(payment.getClCommission());
-			clientCommissionTransactionOrder.setDestinationAccountBAN(service.getProviderAccountIBAN());
-			clientCommissionTransactionOrder.setPurpose("Commission Payment");
-			clientCommissionTransactionOrder.setType(TransactionType.CLIENT_COMMISSION_AMOUNT);
-
 			em.persist(principalTransactionOrder);
-			em.persist(clientCommissionTransactionOrder);
+
+			if (payment.getClCommission().compareTo(BigDecimal.ZERO) > 0) {
+				TransactionOrder clientCommissionTransactionOrder = new TransactionOrder();
+				clientCommissionTransactionOrder.setSourceAccountBAN(sourceAccountBan);
+				clientCommissionTransactionOrder.setPaymentId(payment.getId());
+				clientCommissionTransactionOrder.setAmount(payment.getClCommission());
+				clientCommissionTransactionOrder.setDestinationAccountBAN(service.getProviderAccountIBAN());
+				clientCommissionTransactionOrder.setPurpose("Commission Payment");
+				clientCommissionTransactionOrder.setType(TransactionType.CLIENT_COMMISSION_AMOUNT);
+				em.persist(clientCommissionTransactionOrder);
+			}
 		}
 	}
 }

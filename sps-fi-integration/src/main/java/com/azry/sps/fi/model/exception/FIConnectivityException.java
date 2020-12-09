@@ -1,8 +1,11 @@
 package com.azry.sps.fi.model.exception;
 
+import lombok.Data;
+
 import javax.ejb.ApplicationException;
 
 @ApplicationException
+@Data
 public class FIConnectivityException extends Exception {
 
 

@@ -1,5 +1,6 @@
 package com.azry.sps.server.services.processpayments;
 
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.payment.PaymentStatus;
 import com.azry.sps.common.model.payment.PaymentStatusLog;
@@ -18,6 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Timeout;
@@ -27,13 +31,18 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Singleton(name = "ProcessPayments")
 @Startup
+@ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 @Slf4j
 public class ProcessPayments {
+
+	@EJB
+	ProcessPayments self;
 
 	@Inject
 	private PaymentManager paymentManager;
@@ -55,65 +64,90 @@ public class ProcessPayments {
 	@SysParam(type = SystemParameterType.INTEGER, code = "maxPaymentPendingHours", defaultValue = "48")
 	private Parameter<Integer> maxPaymentPendingHours;
 
+	List<Long> paymentsBeingProcessed = new ArrayList<>();
+
 	@PostConstruct
 	public void startup() {
-		timerService.createIntervalTimer(50000, processPaymentsInterval.getValue() * 1000, new TimerConfig(null, false));
+		if (isProcessPaymentEnabled()) {
+			timerService.createIntervalTimer(50000, processPaymentsInterval.getValue() * 1000, new TimerConfig(null, false));
+		}
 	}
 
 	@Timeout
 	private void processPayments() {
 		List<Payment> payments = paymentManager.getCollectedAndPendingPayments();
 		for (Payment payment : payments) {
-			processPayment(payment);
+			try {
+				self.processPayment(payment);
+			} catch (Exception ex) {
+				setPaymentStatus(payment, PaymentStatus.REJECTED,
+					"Unexpected error occurred during Payment processing. Payment Id: " + payment.getId());
+				log.error("Unexpected error occurred during Payment processing. Payment Id: " + payment.getId(), ex);
+			}
 		}
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	private void processPayment(Payment payment) {
+	public void processPayment(Payment payment) {
 		Service service = serviceManager.getService(payment.getServiceId());
-		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
 		try {
 			PayResponse payResponse = bankIntegrationService.pay(service.getServicePayCode(),
 				String.valueOf(payment.getId()),
 				payment.getAbonentCode(),
 				payment.getAmount());
 			if (payResponse.getStatus().equals(SpResponseStatus.SUCCESS)) {
-				payment.setStatus(PaymentStatus.PERFORMED);
-				paymentStatusLog.setPaymentId(payment.getId());
-				paymentStatusLog.setStatus(PaymentStatus.PERFORMED);
+				setPaymentStatus(payment, PaymentStatus.PERFORMED, null);
 			} else if (payResponse.getStatus().equals(SpResponseStatus.REJECT)) {
-				payment.setStatus(PaymentStatus.REJECTED);
-				paymentStatusLog.setPaymentId(payment.getId());
-				paymentStatusLog.setStatus(PaymentStatus.REJECTED);
-				paymentStatusLog.setStatusMessage(payResponse.getMessage());
+				setPaymentStatus(payment, PaymentStatus.REJECTED, payResponse.getMessage());
 			}
 		} catch (SpIntegrationException ex) {
-			payment.setStatus(PaymentStatus.REJECTED);
-			paymentStatusLog.setPaymentId(payment.getId());
-			paymentStatusLog.setStatus(PaymentStatus.REJECTED);
-			paymentStatusLog.setStatusMessage(ex.getMessage());
+			setPaymentStatus(payment, PaymentStatus.REJECTED, ex.getMessage());
+			log.error("Payment Rejected. Id: " + payment.getId() ,ex);
 		} catch (SpConnectivityException ex) {
 			Date currentDateTime = new Date();
 			if (currentDateTime.before(Date.from(payment.getCreateTime().toInstant().plus(Duration.ofHours(maxPaymentPendingHours.getValue()))))) {
-				payment.setStatus(PaymentStatus.PENDING);
-				paymentStatusLog.setPaymentId(payment.getId());
-				paymentStatusLog.setStatus(PaymentStatus.PENDING);
-				paymentStatusLog.setStatusMessage(ex.getMessage());
+				setPaymentStatus(payment, PaymentStatus.PENDING, ex.getMessage());
+				log.error("Payment Pending. Id: " + payment.getId() ,ex);
 			} else {
-				payment.setStatus(PaymentStatus.REJECTED);
-				paymentStatusLog.setPaymentId(payment.getId());
-				paymentStatusLog.setStatus(PaymentStatus.REJECTED);
-				paymentStatusLog.setStatusMessage("Payment rejected. Max pending time elapsed");
+				setPaymentStatus(payment, PaymentStatus.REJECTED, "Payment rejected. Max pending time elapsed");
+				log.error("Payment Rejected. Id: " + payment.getId() ,ex);
 			}
-		} catch (Exception ex) {
-			payment.setStatus(PaymentStatus.REJECTED);
-			paymentStatusLog.setPaymentId(payment.getId());
-			paymentStatusLog.setStatus(PaymentStatus.REJECTED);
-			paymentStatusLog.setStatusMessage("Unexpected Error Payment Id: " + payment.getId());
-			log.error("Unexpected error occurred during Payment processing. Payment Id: " + payment.getId(), ex);
-		} finally {
-			paymentManager.updatePayment(payment);
-			paymentManager.addPaymentStatusLog(paymentStatusLog);
 		}
 	}
+
+	public void retryPayment(Payment payment) throws SPSException {
+		if (!paymentsBeingProcessed.contains(payment.getId())) {
+			try {
+				paymentsBeingProcessed.add(payment.getId());
+				processPayment(payment);
+			} catch (Exception ex) {
+				setPaymentStatus(payment, PaymentStatus.REJECTED,
+					"Unexpected error occurred during Payment processing. Payment Id: " + payment.getId());
+				log.error("Unexpected error occurred during Payment processing. Payment Id: " + payment.getId(), ex);
+			} finally {
+				paymentsBeingProcessed.remove(payment.getId());
+			}
+		} else {
+			throw new SPSException("Payment is already being processed.");
+		}
+	}
+
+	private void setPaymentStatus(Payment payment, PaymentStatus paymentStatus, String statusLogMessage) {
+		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
+		payment.setStatus(paymentStatus);
+		paymentStatusLog.setPaymentId(payment.getId());
+		paymentStatusLog.setStatus(paymentStatus);
+		if (statusLogMessage != null) {
+			paymentStatusLog.setStatusMessage(statusLogMessage);
+		}
+		paymentManager.updatePayment(payment);
+		paymentManager.addPaymentStatusLog(paymentStatusLog);
+	}
+
+	private boolean isProcessPaymentEnabled() {
+		String value = System.getProperty("StartProcessPayment");
+		return Boolean.parseBoolean(value);
+	}
 }
+
+

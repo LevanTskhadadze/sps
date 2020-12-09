@@ -33,7 +33,7 @@ import com.azry.sps.common.model.service.ServiceChannelInfo;
 import com.azry.sps.common.model.transaction.TransactionOrder;
 import com.azry.sps.common.model.transaction.TransactionType;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
-import com.azry.sps.fi.model.exception.FiException;
+import com.azry.sps.fi.model.exception.FIException;
 import com.azry.sps.fi.service.BankIntegrationService;
 import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
@@ -193,7 +193,7 @@ public class SpsApiImpl implements SpsApi{
 
 		try {
 			payment.setClient(bankIntegrationService.getClientWithAccount(request.getPersonalNumber()).toClient());
-		} catch (FiException ex) {
+		} catch (FIException ex) {
 			throw new SpsApiException("Error while interacting with bank: " + ex.getMessage());
 		} catch (FIConnectivityException ex) {
 			throw new SpsApiException("Could not connect to bank.");
@@ -280,7 +280,7 @@ public class SpsApiImpl implements SpsApi{
 			paymentList = new PaymentList();
 			try {
 				paymentList.setClient(bankIntegrationService.getClientWithAccount(request.getPersonalNumber()).toClient());
-			} catch (FiException ex) {
+			} catch (FIException ex) {
 			throw new SpsApiException("Error while interacting with bank: " + ex.getMessage());
 			} catch (FIConnectivityException ex) {
 				throw new SpsApiException("Could not connect to bank.");

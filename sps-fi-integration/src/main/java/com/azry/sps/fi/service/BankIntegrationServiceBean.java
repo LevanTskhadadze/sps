@@ -7,7 +7,7 @@ import com.azry.sps.fi.bankws.BankServiceImplService;
 import com.azry.sps.fi.inteceptor.FIExceptionInterceptor;
 import com.azry.sps.fi.model.BankClient;
 import com.azry.sps.fi.model.exception.FIConnectivityException;
-import com.azry.sps.fi.model.exception.FiException;
+import com.azry.sps.fi.model.exception.FIException;
 import com.azry.sps.fi.model.transaction.FiTransactionRequest;
 import com.azry.sps.fi.model.transaction.FiTransactionResponse;
 
@@ -21,22 +21,22 @@ public class BankIntegrationServiceBean implements BankIntegrationService {
 	BankServiceImplService service = new BankServiceImplService();
 	BankService bankService = service.getBankServiceImplPort();
 
-	public BankClient getClientWithAccount(String personalNumber) throws FiException, FIConnectivityException {
+	public BankClient getClientWithAccount(String personalNumber) throws FIException, FIConnectivityException {
 		try  {
 			BankClient client = new BankClient(bankService.findClient(personalNumber));
 			client.mapClientAccounts(bankService.getClientAccounts(client.getId()));
 			return client;
 		} catch (BankServiceException_Exception ex) {
-			throw new FiException(ex);
+			throw new FIException(ex);
 		}
 	}
 
 	@Override
-	public FiTransactionResponse processTransactions(FiTransactionRequest request) throws FiException, FIConnectivityException {
+	public FiTransactionResponse processTransactions(FiTransactionRequest request) throws FIException, FIConnectivityException {
 		try {
 			return new FiTransactionResponse(bankService.processTransactions(request.toTransactionRequest()));
 		} catch (BankServiceException_Exception ex) {
-			throw new FiException(ex);
+			throw new FIException(ex);
 		}
 	}
 }
