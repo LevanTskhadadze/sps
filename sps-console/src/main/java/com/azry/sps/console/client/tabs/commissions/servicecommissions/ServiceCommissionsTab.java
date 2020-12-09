@@ -22,18 +22,14 @@ import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
 import com.azry.sps.console.shared.dto.commission.servicecommission.ServiceCommissionsDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.Cell;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -72,8 +68,6 @@ public class ServiceCommissionsTab extends Composite {
 			return String.valueOf(dto.getId());
 		}
 	});
-
-	Store.StoreSortInfo<ServiceCommissionsDTO> storeSortInfo;
 
 	private PagingLoader<PagingLoadConfig, PagingLoadResult<ServiceCommissionsDTO>> loader;
 
@@ -230,23 +224,6 @@ public class ServiceCommissionsTab extends Composite {
 		loader = new PagingLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ServiceCommissionsDTO, PagingLoadResult<ServiceCommissionsDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceCommissionsDTO, Long>() {
-			@Override
-			public Long getValue(ServiceCommissionsDTO dto) {
-				return dto.getPriority();
-			}
-
-			@Override
-			public void setValue(ServiceCommissionsDTO o, Long o2) { }
-
-			@Override
-			public String getPath() {
-				return null;
-			}
-		}, SortDir.ASC);
-
-		gridStore.addSortInfo(storeSortInfo);
-
 		List<Integer> pageSize = new ArrayList<>();
 		Collections.addAll(pageSize, 50, 100, 500, 1000);
 
@@ -260,17 +237,9 @@ public class ServiceCommissionsTab extends Composite {
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
 		grid.getView().setStripeRows(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
-		grid.addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent attachEvent) {
-				if (attachEvent.isAttached()) {
-					loader.load();
-				}
-			}
-		});
+		loader.load();
 	}
 
 
@@ -291,7 +260,6 @@ public class ServiceCommissionsTab extends Composite {
 
 		columns.add(new ZColumnConfig.Builder<ServiceCommissionsDTO, String>()
 			.width(250)
-//			.fixed()
 			.valueProvider(new ZStringProvider<ServiceCommissionsDTO>() {
 				@Override
 				public String getProperty(ServiceCommissionsDTO dto) {
@@ -380,7 +348,6 @@ public class ServiceCommissionsTab extends Composite {
 								@Override
 								public void onSave(ServiceCommissionsDTO dto) {
 									gridStore.update(dto);
-									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}

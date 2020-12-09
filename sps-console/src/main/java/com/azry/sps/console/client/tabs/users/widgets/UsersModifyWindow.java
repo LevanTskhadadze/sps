@@ -257,7 +257,6 @@ public class UsersModifyWindow extends ZWindow {
 				public void onServiceSuccess(SystemUserDTO newDTO) {
 					dto = newDTO;
 					store.update(dto);
-					store.applySort(false);
 				}
 			});
 		return true;

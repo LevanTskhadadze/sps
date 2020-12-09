@@ -18,16 +18,12 @@ import com.azry.sps.console.shared.dto.usergroup.UserGroupDTO;
 import com.azry.sps.console.shared.dto.users.SystemUserDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class UsersTable {
@@ -41,23 +37,7 @@ public class UsersTable {
 		}
 	});
 
-	static Store.StoreSortInfo<SystemUserDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<SystemUserDTO, Date>() {
-		@Override
-		public Date getValue(SystemUserDTO dto) {
-			return dto.getLastUpdateTime();
-		}
-
-		@Override
-		public void setValue(SystemUserDTO o, Date o2) { }
-
-		@Override
-		public String getPath() {
-			return null;
-		}
-	}, SortDir.DESC);
-
 	public static ListStore<SystemUserDTO> getListStore() {
-		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 

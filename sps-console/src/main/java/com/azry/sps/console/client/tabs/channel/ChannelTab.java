@@ -26,13 +26,10 @@ import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
@@ -67,8 +64,6 @@ public class ChannelTab extends Composite {
 			return String.valueOf(dto.getId());
 		}
 	});
-
-	private Store.StoreSortInfo<ChannelDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<ChannelDTO>> loader;
 
@@ -195,29 +190,11 @@ public class ChannelTab extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ChannelDTO, ListLoadResult<ChannelDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ChannelDTO, String>() {
-			@Override
-			public String getValue(ChannelDTO dto) {
-				return dto.getName().toLowerCase();
-			}
-
-			@Override
-			public void setValue(ChannelDTO o, String o2) { }
-
-			@Override
-			public String getPath() {
-				return null;
-			}
-		}, SortDir.ASC);
-
-		gridStore.addSortInfo(storeSortInfo);
-
 		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ChannelDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
 		grid.getView().setStripeRows(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 
 		grid.setLoader(loader);
 		new QuickTip(grid);
@@ -365,7 +342,6 @@ public class ChannelTab extends Composite {
 								@Override
 								public void onSave(ChannelDTO dto) {
 									gridStore.update(dto);
-									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}

@@ -27,13 +27,10 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.LoadResultListStoreBinding;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
@@ -74,8 +71,6 @@ public class ClientCommissionsTab extends Composite {
 			return String.valueOf(dto.getId());
 		}
 	});
-
-	Store.StoreSortInfo<ClientCommissionsDTO> storeSortInfo;
 
 	private PagingLoader<PagingLoadConfig, PagingLoadResult<ClientCommissionsDTO>> loader;
 
@@ -210,12 +205,11 @@ public class ClientCommissionsTab extends Composite {
 			})
 			.build();
 
-		//			.visible(isManage)
 		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))
 			.appearance(new Css3ButtonCellAppearance<String>())
-//			.visible(isManage)
+			.visible(isManage)
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
@@ -296,23 +290,6 @@ public class ClientCommissionsTab extends Composite {
 		loader = new PagingLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<PagingLoadConfig, ClientCommissionsDTO, PagingLoadResult<ClientCommissionsDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ClientCommissionsDTO, Long>() {
-			@Override
-			public Long getValue(ClientCommissionsDTO dto) {
-				return dto.getPriority();
-			}
-
-			@Override
-			public void setValue(ClientCommissionsDTO o, Long o2) { }
-
-			@Override
-			public String getPath() {
-				return null;
-			}
-		}, SortDir.ASC);
-
-		gridStore.addSortInfo(storeSortInfo);
-
 		List<Integer> pageSize = new ArrayList<>();
 		Collections.addAll(pageSize, 50, 100, 500, 1000);
 
@@ -326,7 +303,6 @@ public class ClientCommissionsTab extends Composite {
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
 		grid.getView().setStripeRows(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
 		loader.load();
@@ -450,7 +426,6 @@ public class ClientCommissionsTab extends Composite {
 								@Override
 								public void onSave(ClientCommissionsDTO dto) {
 									gridStore.update(dto);
-									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}

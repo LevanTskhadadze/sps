@@ -84,7 +84,6 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 			clientCommissionsDTO = new ClientCommissionsDTO();
 		}
 
-
 		add(container, new MarginData(0));
 
 		initButtons(actionMode);

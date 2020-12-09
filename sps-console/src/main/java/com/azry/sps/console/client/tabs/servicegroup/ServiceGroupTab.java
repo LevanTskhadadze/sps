@@ -20,12 +20,9 @@ import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
@@ -51,7 +48,6 @@ public class ServiceGroupTab extends Composite {
 	private ZToolBar toolBar;
 
 	private ZTextField name;
-
 
 	private final ListStore<ServiceGroupDTO> gridStore = new ListStore<>(new ModelKeyProvider<ServiceGroupDTO>() {
 		@Override
@@ -158,30 +154,11 @@ public class ServiceGroupTab extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, ServiceGroupDTO, ListLoadResult<ServiceGroupDTO>>(gridStore));
 
-		Store.StoreSortInfo<ServiceGroupDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceGroupDTO, Long>() {
-			@Override
-			public Long getValue(ServiceGroupDTO groupDTO) {
-				return groupDTO.getPriority();
-			}
-
-			@Override
-			public void setValue(ServiceGroupDTO o, Long o2) {
-			}
-
-			@Override
-			public String getPath() {
-				return null;
-			}
-		}, SortDir.ASC);
-
-		gridStore.addSortInfo(storeSortInfo);
-
 		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<ServiceGroupDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
 		grid.getView().setStripeRows(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 		grid.setLoader(loader);
 		new QuickTip(grid);
 		loader.load();
@@ -265,7 +242,6 @@ public class ServiceGroupTab extends Composite {
 								@Override
 								public void onSave(ServiceGroupDTO dto) {
 									gridStore.update(dto);
-									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}

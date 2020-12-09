@@ -29,13 +29,10 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.sencha.gxt.cell.core.client.form.ComboBoxCell;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.client.loader.RpcProxy;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.data.shared.loader.ListLoadConfig;
 import com.sencha.gxt.data.shared.loader.ListLoadResult;
 import com.sencha.gxt.data.shared.loader.ListLoadResultBean;
@@ -51,7 +48,6 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class UserGroupTab extends Composite {
@@ -78,8 +74,6 @@ public class UserGroupTab extends Composite {
 	});
 
 	private final List<Boolean> booleans = new ArrayList<>();
-
-	private Store.StoreSortInfo<UserGroupDTO> storeSortInfo;
 
 	private ListLoader<ListLoadConfig, ListLoadResult<UserGroupDTO>> loader;
 
@@ -241,29 +235,11 @@ public class UserGroupTab extends Composite {
 		loader = new ListLoader<>(proxy);
 		loader.addLoadHandler(new LoadResultListStoreBinding<ListLoadConfig, UserGroupDTO, ListLoadResult<UserGroupDTO>>(gridStore));
 
-		storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<UserGroupDTO, Date>() {
-			@Override
-			public Date getValue(UserGroupDTO groupDTO) {
-				return groupDTO.getLastUpdateTime();
-			}
-
-			@Override
-			public void setValue(UserGroupDTO o, Date o2) { }
-
-			@Override
-			public String getPath() {
-				return null;
-			}
-		}, SortDir.DESC);
-
-		gridStore.addSortInfo(storeSortInfo);
-
 		grid = new ZGrid<>(gridStore, getColumns(), new ZGridView<UserGroupDTO>());
 		grid.getView().setColumnLines(true);
 		grid.getView().setAutoFill(true);
 		grid.getView().setForceFit(true);
 		grid.getView().setStripeRows(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 
 		grid.setLoader(loader);
 		new QuickTip(grid);
@@ -411,7 +387,6 @@ public class UserGroupTab extends Composite {
 								@Override
 								public void onSave(UserGroupDTO dto) {
 									gridStore.update(dto);
-									gridStore.applySort(false);
 								}
 							}.showInCenter();
 						}

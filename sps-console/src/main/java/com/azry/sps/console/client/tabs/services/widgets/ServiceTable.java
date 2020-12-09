@@ -20,11 +20,8 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
-import com.sencha.gxt.data.shared.SortDir;
-import com.sencha.gxt.data.shared.Store;
 import com.sencha.gxt.widget.core.client.grid.ColumnConfig;
 import com.sencha.gxt.widget.core.client.grid.ColumnModel;
 
@@ -42,24 +39,7 @@ public class ServiceTable {
 		}
 	});
 
-	static Store.StoreSortInfo<ServiceDTO> storeSortInfo = new Store.StoreSortInfo<>(new ValueProvider<ServiceDTO, String>() {
-		@Override
-		public String getValue(ServiceDTO dto) {
-			return dto.getName().toLowerCase();
-		}
-
-		@Override
-		public void setValue(ServiceDTO o, String o2) { }
-
-		@Override
-		public String getPath() {
-			return null;
-		}
-	}, SortDir.ASC);
-
-
 	public static ListStore<ServiceDTO> getListStore() {
-		store.addSortInfo(storeSortInfo);
 		return store;
 	}
 

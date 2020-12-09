@@ -72,7 +72,6 @@ public abstract class  IconEditWindow extends ZWindow {
 						store.update(result);
 						hide();
 
-
 						if (event.getResults().contains("\"status\": \"OK\"")) {
 							onSave();
 							hide();
@@ -88,10 +87,6 @@ public abstract class  IconEditWindow extends ZWindow {
 							}
 					}
 				});
-/*				JavaScriptObject response = JsonUtils.safeEval(event.getResults());
-
-/*
-				}*/
 			}
 		});
 		formPanel.add(vlc);

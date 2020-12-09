@@ -54,7 +54,7 @@ public class UserGroupManagerBean implements UserGroupManager {
 		}
 
 
-		TypedQuery<UserGroup> query = em.createQuery(sql, UserGroup.class);
+		TypedQuery<UserGroup> query = em.createQuery(sql + "ORDER BY g.lastUpdateTime DESC", UserGroup.class);
 
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());

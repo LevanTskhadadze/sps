@@ -29,7 +29,7 @@ public abstract class UserGroupWindow extends ZWindow {
 	private final Tree<PermissionTreeModel, String> tree;
 
 	public UserGroupWindow(UserGroupDTO dto, ActionMode actionMode) {
-		super(Mes.get("ofUserGroup") + " " + Mes.get("ActionMode_" + actionMode), 600, 500, false);
+		super(Mes.get("ofUserGroup") + " " + Mes.get(actionMode.name().toLowerCase()), 600, 500, false);
 		tree = PermissionTree.createTree();
 		userGroupDTO = dto;
 		initFields();

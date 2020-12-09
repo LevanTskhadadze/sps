@@ -34,7 +34,7 @@ public class ServiceGroupManagerBean implements ServiceGroupManager {
 			params.put("name", "%" + name.toLowerCase() + "%");
 		}
 
-		TypedQuery<ServiceGroup> query = em.createQuery(sql, ServiceGroup.class);
+		TypedQuery<ServiceGroup> query = em.createQuery(sql + "ORDER BY g.priority", ServiceGroup.class);
 
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());

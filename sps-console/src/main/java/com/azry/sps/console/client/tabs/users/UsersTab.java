@@ -183,7 +183,6 @@ public class UsersTab extends Composite {
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
-		grid.getView().getHeader().setDisableSortIcon(true);
 		content.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
 
 	}
