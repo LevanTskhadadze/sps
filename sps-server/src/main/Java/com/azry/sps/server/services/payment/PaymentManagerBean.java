@@ -147,23 +147,26 @@ public class PaymentManagerBean implements PaymentManager {
 	@Override
 	public Payment addPayment(Payment payment, String sourceAccountIBAN) {
 		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
+		Payment paymentEntity = null;
 		if (!payment.getClCommission().equals(BigDecimal.ZERO) || clientAccountIBAN.getValue() == null) {
 			payment.setStatus(PaymentStatus.COLLECT_REJECTED);
 			payment.setStatusMessage("Client account is not configured for client Commission. " +
 				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
-			paymentStatusLog.setPaymentId(payment.getId());
+			paymentEntity = em.merge(payment);
+			paymentStatusLog.setPaymentId(paymentEntity.getId());
 			paymentStatusLog.setStatus(PaymentStatus.COLLECT_REJECTED);
 			paymentStatusLog.setStatusMessage("Client account is not configured for client Commission. " +
 				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
 			em.persist(paymentStatusLog);
 		} else {
 			payment.setStatus(PaymentStatus.CREATED);
-			paymentStatusLog.setPaymentId(payment.getId());
+			paymentEntity = em.merge(payment);
+			paymentStatusLog.setPaymentId(paymentEntity.getId());
 			paymentStatusLog.setStatus(PaymentStatus.CREATED);
 			em.persist(paymentStatusLog);
-			transactionOrderManager.addTransaction(sourceAccountIBAN, clientAccountIBAN.getValue(), payment);
+			transactionOrderManager.addTransaction(sourceAccountIBAN, clientAccountIBAN.getValue(), paymentEntity);
 		}
-		return em.merge(payment);
+		return paymentEntity;
 	}
 
 	@Override

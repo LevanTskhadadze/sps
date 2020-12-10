@@ -13,7 +13,6 @@ import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.bankclient.AccountDTO;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
-import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
@@ -166,7 +165,6 @@ public class PaymentListTable extends Composite {
 							payment.setAbonentCode(entry.getPaymentListEntryDTO().getAbonentCode());
 							payment.setAmount(entry.getPaymentAmount());
 							payment.setClCommission(entry.getCommission());
-							payment.setStatus(PaymentStatusDTO.CREATED);
 							payment.setClient(clientDTO);
 							payment.setSourceAccountBan(clientAccountsComboBox.getValue().getIban());
 
