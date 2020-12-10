@@ -7,11 +7,9 @@ import com.azry.gxt.client.zcomp.ZGrid;
 import com.azry.gxt.client.zcomp.ZGridView;
 import com.azry.gxt.client.zcomp.ZStringProvider;
 import com.azry.gxt.client.zcomp.ZWindow;
-import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
-import com.azry.sps.console.client.utils.ServiceCallback;
+import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
-import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -34,7 +32,7 @@ import com.sencha.gxt.widget.core.client.tips.QuickTip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreatedPaymentWindow extends ZWindow {
+public class CreatedPaymentsWindow extends ZWindow {
 
 	private static final String WINDOW_BOTTOM_BORDER_STYLE = "1px solid #3291D6";
 
@@ -54,9 +52,8 @@ public class CreatedPaymentWindow extends ZWindow {
 	List<PaymentDTO> payments;
 
 	ZButton closeB;
-	String serviceName;
 
-	public CreatedPaymentWindow(List<PaymentDTO> payments) {
+	public CreatedPaymentsWindow(List<PaymentDTO> payments) {
 		super(Mes.get("paymentsInfo"), 800, 500, false);
 		this.payments = payments;
 		initGrid();
@@ -121,14 +118,7 @@ public class CreatedPaymentWindow extends ZWindow {
 			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
 				public String getProperty(PaymentDTO dto) {
-					ServicesFactory.getServiceTabService().getService(dto.getServiceId(),
-						new ServiceCallback<ServiceDTO>(CreatedPaymentWindow.this) {
-						@Override
-						public void onServiceSuccess(ServiceDTO result) {
-							serviceName = result.getName();
-						}
-					});
-					return serviceName;
+					return dto.getServiceDTO().getName();
 				}
 			})
 			.header(Mes.get("service"))
@@ -152,7 +142,7 @@ public class CreatedPaymentWindow extends ZWindow {
 			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
 				public String getProperty(PaymentDTO dto) {
-					return String.valueOf(dto.getAmount());
+					return NumberFormatUtils.format(dto.getAmount());
 				}
 			})
 			.build());
@@ -164,7 +154,7 @@ public class CreatedPaymentWindow extends ZWindow {
 			.valueProvider(new ZStringProvider<PaymentDTO>() {
 				@Override
 				public String getProperty(PaymentDTO dto) {
-					return String.valueOf(dto.getClCommission());
+					return NumberFormatUtils.format(dto.getClCommission());
 				}
 			})
 			.build());

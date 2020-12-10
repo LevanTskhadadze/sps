@@ -3,6 +3,7 @@ package com.azry.sps.console.shared.dto.payment;
 import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.payment.PaymentStatus;
 import com.azry.sps.console.shared.dto.bankclient.ClientDTO;
+import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.Data;
@@ -53,6 +54,8 @@ public class PaymentDTO implements IsSerializable {
 	private String sourceAccountBan;
 
 	private ClientDTO client;
+
+	private ServiceDTO serviceDTO;
 
 	public long getId() {
 		return id;
@@ -164,6 +167,14 @@ public class PaymentDTO implements IsSerializable {
 
 	public void setSourceAccountBan(String sourceAccountBan) {
 		this.sourceAccountBan = sourceAccountBan;
+	}
+
+	public ServiceDTO getServiceDTO() {
+		return serviceDTO;
+	}
+
+	public void setServiceDTO(ServiceDTO serviceDTO) {
+		this.serviceDTO = serviceDTO;
 	}
 
 	@GwtIncompatible

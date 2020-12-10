@@ -297,12 +297,16 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		BigDecimal min = minCommission.getCurrentValue();
 		BigDecimal max = maxCommission.getCurrentValue();
 		BigDecimal curr = commission.getCurrentValue();
-		if (min != null && max != null && min.compareTo(max) > 0) {
+		if (rateType.getValue().equals(CommissionRateTypeDTO.FIXED)
+			&& (min != null && max != null)
+			&& min.compareTo(max) > 0) {
 			minCommission.markInvalid(Mes.get("invalidAmountMinMaxValues"));
 			return false;
 		}
 
-		if (min != null && curr != null && min.compareTo(curr) > 0) {
+		if (rateType.getValue().equals(CommissionRateTypeDTO.FIXED)
+			&& (min != null && curr != null)
+			&& min.compareTo(curr) > 0) {
 			minCommission.markInvalid(Mes.get("invalidCommissionMaxValue"));
 			return false;
 		}

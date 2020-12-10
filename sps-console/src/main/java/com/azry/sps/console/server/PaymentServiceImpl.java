@@ -72,7 +72,11 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 	@Override
 	public List<PaymentDTO> addPayments(List<PaymentDTO> payments) {
 			List<Payment> paymentList = PaymentDTO.toEntities(payments);
-			return PaymentDTO.toDTOs(paymentManager.addPayments(paymentList, payments.get(0).getSourceAccountBan()));
+			List<PaymentDTO> paymentDTOs = PaymentDTO.toDTOs(paymentManager.addPayments(paymentList, payments.get(0).getSourceAccountBan()));
+		for (PaymentDTO paymentDTO : paymentDTOs) {
+			paymentDTO.setServiceDTO(ServiceDTO.toDTO(serviceManager.getService(paymentDTO.getServiceId())));
+		}
+			return paymentDTOs;
 	}
 
 	@Override
@@ -83,7 +87,7 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 		log.setPaymentId(paymentId);
 		log.setStatus(PaymentStatus.PENDING);
 		log.setStatusTime(new Date());
-		log.setStatusMessage("ხელახალი მცდელობა");
+		log.setStatusMessage("Retry Payment");
 
 		paymentManager.addPaymentStatusLog(log);
 		return PaymentStatusDTO.PENDING;
