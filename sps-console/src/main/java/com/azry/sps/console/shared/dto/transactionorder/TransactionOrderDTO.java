@@ -17,9 +17,9 @@ public class TransactionOrderDTO implements IsSerializable {
 
 	private long paymentId;
 
-	private String sourceAccountBAN;
+	private String sourceAccountIBAN;
 
-	private String destinationAccountBAN;
+	private String destinationAccountIBAN;
 
 	private String purpose;
 
@@ -51,20 +51,20 @@ public class TransactionOrderDTO implements IsSerializable {
 		this.paymentId = paymentId;
 	}
 
-	public String getSourceAccountBAN() {
-		return sourceAccountBAN;
+	public String getSourceAccountIBAN() {
+		return sourceAccountIBAN;
 	}
 
-	public void setSourceAccountBAN(String sourceAccountBAN) {
-		this.sourceAccountBAN = sourceAccountBAN;
+	public void setSourceAccountIBAN(String sourceAccountIBAN) {
+		this.sourceAccountIBAN = sourceAccountIBAN;
 	}
 
-	public String getDestinationAccountBAN() {
-		return destinationAccountBAN;
+	public String getDestinationAccountIBAN() {
+		return destinationAccountIBAN;
 	}
 
-	public void setDestinationAccountBAN(String destinationAccountBAN) {
-		this.destinationAccountBAN = destinationAccountBAN;
+	public void setDestinationAccountIBAN(String destinationAccountIBAN) {
+		this.destinationAccountIBAN = destinationAccountIBAN;
 	}
 
 	public String getPurpose() {
@@ -111,8 +111,8 @@ public class TransactionOrderDTO implements IsSerializable {
 		dto.setId(entity.getId());
 		dto.setFild(entity.getFild());
 		dto.setPaymentId(entity.getPaymentId());
-		dto.setSourceAccountBAN(entity.getSourceAccountBAN());
-		dto.setDestinationAccountBAN(entity.getDestinationAccountBAN());
+		dto.setSourceAccountIBAN(entity.getSourceAccountIBAN());
+		dto.setDestinationAccountIBAN(entity.getDestinationAccountIBAN());
 		dto.setPurpose(entity.getPurpose());
 		dto.setAmount(entity.getAmount());
 		dto.setType(TypeToDTO(entity.getType()));

@@ -69,7 +69,7 @@ public class ProcessPayments {
 	@PostConstruct
 	public void startup() {
 		if (isProcessPaymentEnabled()) {
-			timerService.createIntervalTimer(50000, processPaymentsInterval.getValue() * 1000, new TimerConfig(null, false));
+			timerService.createIntervalTimer(30000, processPaymentsInterval.getValue() * 1000, new TimerConfig(null, false));
 		}
 	}
 
@@ -90,6 +90,9 @@ public class ProcessPayments {
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void processPayment(Payment payment) {
 		Service service = serviceManager.getService(payment.getServiceId());
+		if (service == null) {
+			setPaymentStatus(payment, PaymentStatus.REJECTED, "Payment rejected. Service not found");
+		}
 		try {
 			PayResponse payResponse = bankIntegrationService.pay(service.getServicePayCode(),
 				String.valueOf(payment.getId()),
@@ -132,13 +135,14 @@ public class ProcessPayments {
 		}
 	}
 
-	private void setPaymentStatus(Payment payment, PaymentStatus paymentStatus, String statusLogMessage) {
+	private void setPaymentStatus(Payment payment, PaymentStatus paymentStatus, String statusMessage) {
 		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
 		payment.setStatus(paymentStatus);
 		paymentStatusLog.setPaymentId(payment.getId());
 		paymentStatusLog.setStatus(paymentStatus);
-		if (statusLogMessage != null) {
-			paymentStatusLog.setStatusMessage(statusLogMessage);
+		if (statusMessage != null) {
+			payment.setStatusMessage(statusMessage);
+			paymentStatusLog.setStatusMessage(statusMessage);
 		}
 		paymentManager.updatePayment(payment);
 		paymentManager.addPaymentStatusLog(paymentStatusLog);

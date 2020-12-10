@@ -69,7 +69,7 @@ public class CollectPayments {
 
 	@PostConstruct
 	public void startup() {
-		timerService.createIntervalTimer(0, 30 * 1000, new TimerConfig(null, false));
+		timerService.createIntervalTimer(15000, 30 * 1000, new TimerConfig(null, false));
 	}
 
 	private void setPayment(Payment payment, String message, PaymentStatus status) {

@@ -22,7 +22,7 @@ public class FIException extends Exception {
 	}
 
 	public FIException(BankServiceException_Exception bankServiceException) {
-		super(bankServiceException.getFaultInfo().getMessage(), bankServiceException.getCause());
+		super(bankServiceException.getMessage(), bankServiceException.getCause());
 		this.code = bankServiceException.getFaultInfo().getCode();
 	}
 }

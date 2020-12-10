@@ -100,8 +100,8 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.enable(false)
 			.build();
 
-		if (dto.getSourceAccountBAN() != null) {
-			senderField.setValue(dto.getSourceAccountBAN());
+		if (dto.getSourceAccountIBAN() != null) {
+			senderField.setValue(dto.getSourceAccountIBAN());
 		}
 		return senderField;
 	}
@@ -111,8 +111,8 @@ public class PaymentTransactionsTab extends VerticalLayoutContainer {
 			.width(FIELD_WIDTH)
 			.enable(false)
 			.build();
-		if (dto.getDestinationAccountBAN() != null) {
-			recipientField.setValue(dto.getDestinationAccountBAN());
+		if (dto.getDestinationAccountIBAN() != null) {
+			recipientField.setValue(dto.getDestinationAccountIBAN());
 		}
 		return recipientField;
 	}

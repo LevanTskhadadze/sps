@@ -173,10 +173,10 @@ public class PaymentListTable extends Composite {
 							paymentList.add(payment);
 						}
 					}
-					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<Void>(this) {
+					ServicesFactory.getPaymentService().addPayments(paymentList, new ServiceCallback<List<PaymentDTO>>(this) {
 						@Override
-						public void onServiceSuccess(Void result) {
-							new CreatedPaymentWindow(paymentList).showInCenter();
+						public void onServiceSuccess(List<PaymentDTO> result) {
+							new CreatedPaymentWindow(result).showInCenter();
 							for (RowEntry entry : tableRows) {
 								entry.clearAmountF();
 								entry.updateCommissionValue();

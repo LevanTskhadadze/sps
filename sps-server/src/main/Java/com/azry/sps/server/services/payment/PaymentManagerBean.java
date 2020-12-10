@@ -4,11 +4,18 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.payment.Payment;
 import com.azry.sps.common.model.payment.PaymentStatus;
 import com.azry.sps.common.model.payment.PaymentStatusLog;
+import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
+import com.azry.sps.systemparameters.model.SystemParameterType;
+import com.azry.sps.systemparameters.sysparam.Parameter;
+import com.azry.sps.systemparameters.sysparam.SysParam;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +27,12 @@ public class PaymentManagerBean implements PaymentManager {
 	@PersistenceContext
 	EntityManager em;
 
+	@Inject
+	TransactionOrderManager transactionOrderManager;
+
+	@Inject
+	@SysParam(type = SystemParameterType.STRING, code = "clientAccountIBAN")
+	private Parameter<String> clientAccountIBAN;
 
 	@Override
 	public ListResult<Payment> getPayments(int offset, int limit, PaymentParams params, List<PaymentStatus> statuses) {
@@ -105,7 +118,8 @@ public class PaymentManagerBean implements PaymentManager {
 
 	@Override
 	public List<Payment> getCollectedAndPendingPayments() {
-		return em.createQuery("SELECT p FROM Payment p WHERE p.status = :collected or p.status = :pending", Payment.class)
+		return em.createQuery("SELECT p FROM Payment p WHERE p.status = :collected or p.status = :pending",
+			Payment.class)
 			.setParameter("collected", PaymentStatus.COLLECTED)
 			.setParameter("pending", PaymentStatus.PENDING)
 			.getResultList();
@@ -114,17 +128,42 @@ public class PaymentManagerBean implements PaymentManager {
 	@Override
 	public List<PaymentStatusLog> getChanges(long id) {
 		TypedQuery<PaymentStatusLog> query =
-			em.createQuery("SELECT p FROM PaymentStatusLog p WHERE p.paymentId = :id ORDER BY p.statusTime ASC ", PaymentStatusLog.class)
+			em.createQuery("SELECT p FROM PaymentStatusLog p WHERE p.paymentId = :id ORDER BY p.statusTime ASC ",
+				PaymentStatusLog.class)
 				.setParameter("id", id);
 
 		return query.getResultList();
 	}
 
 	@Override
-	public void addPayments(List<Payment> payments) {
+	public List<Payment> addPayments(List<Payment> payments, String sourceAccountIBAN) {
+		List<Payment> paymentList = new ArrayList<>();
 		for (Payment payment : payments) {
-			em.persist(payment);
+			paymentList.add(addPayment(payment, sourceAccountIBAN));
 		}
+		return paymentList;
+	}
+
+	@Override
+	public Payment addPayment(Payment payment, String sourceAccountIBAN) {
+		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
+		if (!payment.getClCommission().equals(BigDecimal.ZERO) || clientAccountIBAN.getValue() == null) {
+			payment.setStatus(PaymentStatus.COLLECT_REJECTED);
+			payment.setStatusMessage("Client account is not configured for client Commission. " +
+				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
+			paymentStatusLog.setPaymentId(payment.getId());
+			paymentStatusLog.setStatus(PaymentStatus.COLLECT_REJECTED);
+			paymentStatusLog.setStatusMessage("Client account is not configured for client Commission. " +
+				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
+			em.persist(paymentStatusLog);
+		} else {
+			payment.setStatus(PaymentStatus.CREATED);
+			paymentStatusLog.setPaymentId(payment.getId());
+			paymentStatusLog.setStatus(PaymentStatus.CREATED);
+			em.persist(paymentStatusLog);
+			transactionOrderManager.addTransaction(sourceAccountIBAN, clientAccountIBAN.getValue(), payment);
+		}
+		return em.merge(payment);
 	}
 
 	@Override

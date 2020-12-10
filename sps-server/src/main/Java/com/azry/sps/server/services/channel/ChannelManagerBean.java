@@ -4,7 +4,6 @@ import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.channels.Channel;
 import com.azry.sps.common.model.commission.ClientCommissions;
-import com.azry.sps.common.model.service.Service;
 import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
@@ -58,18 +57,6 @@ public class ChannelManagerBean implements ChannelManager {
 
 	@Override
 	public void deleteChannel(long id) throws SPSException {
-		long count = em.createQuery("SELECT COUNT(p) FROM Payment p WHERE p.channelId = :id", Long.class)
-			.setParameter("id", id)
-			.getSingleResult();
-		if (count > 0) {
-			throw new SPSException("channelAlreadyUsedInPayments");
-		}
-
-		for (Service service : cachingService.getAllServices()) {
-			service.getChannels().removeIf(channelInfo -> channelInfo.getChannelId() == id);
-			}
-		updateCacheEvent.fire(new UpdateCacheEvent(Service.class.getSimpleName()));
-
 		for (ClientCommissions clientCommission : cachingService.getAllClientCommissions()) {
 			List<String> channelIds = new ArrayList<>(Arrays.asList(clientCommission.getChannelsIds().split(",")));
 			channelIds.removeIf(channelId -> channelId.equals(String.valueOf(id)));

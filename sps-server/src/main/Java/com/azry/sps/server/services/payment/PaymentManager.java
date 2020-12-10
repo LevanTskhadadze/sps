@@ -21,9 +21,11 @@ public interface PaymentManager {
 
 	List<PaymentStatusLog> getChanges(long id);
 
-	void addPayments(List<Payment> payments);
+	List<Payment> addPayments(List<com.azry.sps.common.model.payment.Payment> payments, String sourceAccountIBAN);
 
 	Payment addPayment(Payment payment);
+
+	Payment addPayment(Payment payment, String sourceAccountIBAN);
 
 	void updatePayment(Payment payment);
 

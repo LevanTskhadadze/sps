@@ -17,6 +17,7 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.FormatDate;
 import com.azry.sps.console.client.utils.Mes;
+import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
@@ -355,8 +356,7 @@ public class ClientCommissionsTab extends Composite {
 			.valueProvider(new ZStringProvider<ClientCommissionsDTO>() {
 				@Override
 				public String getProperty(ClientCommissionsDTO dto) {
-					String pSign = dto.getRateType() == CommissionRateTypeDTO.PERCENT ? "%" : "";
-					return dto.getMinCommission() == null ? Mes.get("notDefined") : (dto.getMinCommission() + pSign);
+					return dto.getMinCommission() == null ? Mes.get("notDefined") : NumberFormatUtils.format(dto.getMinCommission());
 				}
 			})
 			.build());
@@ -368,8 +368,7 @@ public class ClientCommissionsTab extends Composite {
 			.valueProvider(new ZStringProvider<ClientCommissionsDTO>() {
 				@Override
 				public String getProperty(ClientCommissionsDTO dto) {
-					String pSign = dto.getRateType() == CommissionRateTypeDTO.PERCENT ? "%" : "";
-					return dto.getMaxCommission() == null ? Mes.get("notDefined") : (dto.getMaxCommission() + pSign);
+					return dto.getMaxCommission() == null ? Mes.get("notDefined") : NumberFormatUtils.format(dto.getMaxCommission());
 				}
 			})
 			.build());

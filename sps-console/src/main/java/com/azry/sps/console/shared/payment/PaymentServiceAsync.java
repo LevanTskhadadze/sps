@@ -16,7 +16,7 @@ public interface PaymentServiceAsync {
 
 	void getPaymentInfo(PaymentDTO paymentDTO, AsyncCallback<PaymentInfoDTO> callback);
 
-	void addPayments(List<PaymentDTO> payments, AsyncCallback<Void> async);
+	void addPayments(List<PaymentDTO> payments, AsyncCallback<List<PaymentDTO>> async);
 
 	void retryPayment(long paymentId, AsyncCallback<PaymentStatusDTO> callback);
 }

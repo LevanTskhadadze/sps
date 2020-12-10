@@ -305,9 +305,15 @@ public class RowEntry {
 				paymentListTable.incrementReadyPaymentEntryCount();
 			}
 			commissionVerified = true;
+			if (clientCommissionsDTO.getMinCommission() != null
+				&& commission.compareTo(clientCommissionsDTO.getMinCommission()) < 0) {
+				commission = clientCommissionsDTO.getMinCommission();
+			} else if (clientCommissionsDTO.getMaxCommission() != null
+				&& commission.compareTo(clientCommissionsDTO.getMaxCommission()) > 0) {
+				commission = clientCommissionsDTO.getMaxCommission();
+			}
 			return NumberFormatUtils.format(commission);
-		}
-		else {
+		} else {
 			commissionVerified = false;
 			return NumberFormatUtils.format(BigDecimal.ZERO);
 		}

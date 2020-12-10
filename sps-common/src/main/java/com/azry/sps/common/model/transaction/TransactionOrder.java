@@ -25,10 +25,10 @@ public class TransactionOrder {
 	private long paymentId;
 
 	@Column(length = 100)
-	private String sourceAccountBAN;
+	private String sourceAccountIBAN;
 
 	@Column(length = 100)
-	private String destinationAccountBAN;
+	private String destinationAccountIBAN;
 
 	@Column(length = 50)
 	private String purpose;

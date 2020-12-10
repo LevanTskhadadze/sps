@@ -16,5 +16,7 @@ public interface TransactionOrderManager {
 
 	void addTransaction(TransactionOrder transaction);
 
-	void addTransactions(String sourceAccountBan, List<Payment> payments);
+	void addTransaction(String sourceAccountIBAN, String clientAccountIBAN, Payment payment);
+
+	void addTransactions(String sourceAccountBan, String clientAccountIban, List<Payment> payments);
 }

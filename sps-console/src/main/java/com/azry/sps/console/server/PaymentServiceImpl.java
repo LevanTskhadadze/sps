@@ -70,10 +70,9 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 	}
 
 	@Override
-	public void addPayments(List<PaymentDTO> payments) {
-		List<Payment> paymentList = PaymentDTO.toEntities(payments);
-		paymentManager.addPayments(paymentList);
-		transactionOrderManager.addTransactions(payments.get(0).getSourceAccountBan(), paymentList);
+	public List<PaymentDTO> addPayments(List<PaymentDTO> payments) {
+			List<Payment> paymentList = PaymentDTO.toEntities(payments);
+			return PaymentDTO.toDTOs(paymentManager.addPayments(paymentList, payments.get(0).getSourceAccountBan()));
 	}
 
 	@Override

@@ -28,8 +28,8 @@ public class FiTransaction {
 
 	public FiTransaction(TransactionOrder transactionOrder, String personalNumber) {
 		setTransactionId(String.valueOf(transactionOrder.getId()));
-		setSourceAccount(transactionOrder.getSourceAccountBAN());
-		setDestinationAccount(transactionOrder.getDestinationAccountBAN());
+		setSourceAccount(transactionOrder.getSourceAccountIBAN());
+		setDestinationAccount(transactionOrder.getDestinationAccountIBAN());
 		setAmount(transactionOrder.getAmount());
 		setPurpose(transactionOrder.getPurpose());
 		if (getPurpose() == null) {

@@ -85,13 +85,6 @@ public class ServiceManagerBean implements ServiceManager {
 
 	@Override
 	public void removeService(long id) throws SPSException {
-		long count = em.createQuery("SELECT COUNT(p) FROM Payment p WHERE p.serviceId = :id", Long.class)
-			.setParameter("id", id)
-			.getSingleResult();
-		if (count > 0) {
-			throw new SPSException("serviceAlreadyUsedInPayments");
-		}
-
 		for (ClientCommissions clientCommission : cachingService.getAllClientCommissions()) {
 			List<String> serviceIds = new ArrayList<>(Arrays.asList(clientCommission.getServicesIds().split(",")));
 			serviceIds.removeIf(serviceId -> serviceId.equals(String.valueOf(id)));
@@ -152,7 +145,6 @@ public class ServiceManagerBean implements ServiceManager {
 	@Override
 	public Service getService(long id) {
 		return cachingService.getService(id);
-//		return em.find(ServiceEntity.class, id).getService();
 	}
 
 	@Override

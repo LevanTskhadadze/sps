@@ -203,8 +203,8 @@ public class SpsApiImpl implements SpsApi{
 
 		TransactionOrder principalTransaction = new TransactionOrder();
 		principalTransaction.setAmount(request.getAmount());
-		principalTransaction.setSourceAccountBAN(request.getClientAccountBAN());
-		principalTransaction.setDestinationAccountBAN(svc.getProviderAccountIBAN());
+		principalTransaction.setSourceAccountIBAN(request.getClientAccountBAN());
+		principalTransaction.setDestinationAccountIBAN(svc.getProviderAccountIBAN());
 		principalTransaction.setType(TransactionType.PRINCIPAL_AMOUNT);
 		principalTransaction.setPaymentId(payment.getId());
 		principalTransaction.setPurpose(request.getPurpose());
@@ -212,8 +212,8 @@ public class SpsApiImpl implements SpsApi{
 
 		TransactionOrder commissionTransaction = new TransactionOrder();
 		commissionTransaction.setAmount(clCommissionAmount);
-		commissionTransaction.setSourceAccountBAN(request.getClientAccountBAN());
-		commissionTransaction.setDestinationAccountBAN(svc.getProviderAccountIBAN());
+		commissionTransaction.setSourceAccountIBAN(request.getClientAccountBAN());
+		commissionTransaction.setDestinationAccountIBAN(svc.getProviderAccountIBAN());
 		commissionTransaction.setAmount(request.getAmount());
 		commissionTransaction.setType(TransactionType.CLIENT_COMMISSION_AMOUNT);
 		commissionTransaction.setPaymentId(payment.getId());
