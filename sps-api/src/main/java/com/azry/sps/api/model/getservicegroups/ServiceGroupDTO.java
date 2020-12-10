@@ -7,14 +7,12 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(name = "ServiceGroupDTO", propOrder = {"id", "name", "priority"})
+@XmlType(name = "ServiceGroup", propOrder = {"id", "name"})
 public class ServiceGroupDTO {
 
 	private long id;
 
 	private String name;
-
-	private long priority;
 
 	@XmlElement(name = "id")
 	public long getId() {
@@ -34,21 +32,12 @@ public class ServiceGroupDTO {
 		this.name = name;
 	}
 
-	@XmlElement(name = "priority")
-	public long getPriority() {
-		return priority;
-	}
-
-	public void setPriority(long priority) {
-		this.priority = priority;
-	}
 
 	public static ServiceGroupDTO entityToInfo(ServiceGroup entity) {
 		ServiceGroupDTO info = new ServiceGroupDTO();
 
 		info.setId(entity.getId());
 		info.setName(entity.getName());
-		info.setPriority(entity.getPriority());
 
 		return info;
 	}

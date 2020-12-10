@@ -54,4 +54,6 @@ public interface CachedConfigurationService {
 	ListResult<ServiceCommissions> getFilteredServiceCommissions(String serviceId, int offset, int limit);
 
 	ServiceCommissions getCommissionForService(String serviceId);
+
+    List<Service> getServicesByChannelId(Long channelId);
 }

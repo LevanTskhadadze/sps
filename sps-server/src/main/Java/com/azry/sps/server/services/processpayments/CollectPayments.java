@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Timeout;
@@ -47,6 +48,9 @@ public class CollectPayments {
 	private static final List<PaymentStatus> TARGET_STATUSES = Arrays.asList(PaymentStatus.CREATED, PaymentStatus.COLLECT_PENDING);
 
 	private final Logger log = LoggerFactory.getLogger(CollectPayments.class);
+
+	@EJB
+	CollectPayments self;
 
 	@Inject
 	@SysParam(code = "paymentWaitingTime", type = SystemParameterType.INTEGER)
@@ -72,7 +76,7 @@ public class CollectPayments {
 		timerService.createIntervalTimer(15000, 30 * 1000, new TimerConfig(null, false));
 	}
 
-	private void setPayment(Payment payment, String message, PaymentStatus status) {
+	private void setPaymentStatus(Payment payment, String message, PaymentStatus status) {
 		payment.setStatus(status);
 		PaymentStatusLog newStatus = new PaymentStatusLog();
 
@@ -92,7 +96,7 @@ public class CollectPayments {
 			TransactionOrder clCommissionTransactionOrder = transactionOrderManager.getTransaction(payment.getId(), TransactionType.CLIENT_COMMISSION_AMOUNT);
 
 			if (principalTransactionOrder == null) {
-				setPayment(payment, "Transaction not found", PaymentStatus.COLLECT_REJECTED);
+				setPaymentStatus(payment, "Transaction not found", PaymentStatus.COLLECT_REJECTED);
 				return;
 			}
 
@@ -111,23 +115,21 @@ public class CollectPayments {
 			}
 
 			transactionOrderManager.changeTransactions(Arrays.asList(principalTransactionOrder, clCommissionTransactionOrder));
-			setPayment(payment, "", PaymentStatus.COLLECTED);
+			setPaymentStatus(payment, null, PaymentStatus.COLLECTED);
 		} catch (FIException ex) {
-			setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
+			setPaymentStatus(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
 		} catch (FIConnectivityException ex) {
 			Channel channel = channelManager.getChannel(payment.getChannelId());
 			if (channel.getFiServiceUnavailabilityAction() == FiServiceUnavailabilityAction.REJECT_IMMEDIATELY) {
-				setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
-			}
-			else {
+				setPaymentStatus(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
+			} else {
 				long diffInHours = (new Date().getTime() - payment.getCreateTime().getTime()) / 1000 / 60 / 60;
 
 				if (diffInHours >= paymentWaitingTime.getValue()) {
-					setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
-				}
-				else {
+					setPaymentStatus(payment, ex.getMessage(), PaymentStatus.COLLECT_REJECTED);
+				} else {
 					if (payment.getStatus() != PaymentStatus.COLLECT_PENDING) {
-						setPayment(payment, ex.getMessage(), PaymentStatus.COLLECT_PENDING);
+						setPaymentStatus(payment, ex.getMessage(), PaymentStatus.COLLECT_PENDING);
 					}
 				}
 			}
@@ -137,16 +139,16 @@ public class CollectPayments {
 	@Timeout
 	public void process() {
 		log.info("Processing the first stage of payments...");
-		synchronized (Payment.class) {
-			List<Payment> payments = paymentManager.getPayments(0, Integer.MAX_VALUE, new PaymentParams(), TARGET_STATUSES)
-				.getResultList();
+		List<Payment> payments = paymentManager.getPayments(0, Integer.MAX_VALUE, new PaymentParams(), TARGET_STATUSES)
+			.getResultList();
 
-			for (Payment payment : payments) {
-				try {
-					processPayment(payment);
-				} catch (Exception ex) {
-					log.info("Unexpected exception occurred while processing the first stage of payments:" + ex.getMessage());
-				}
+		for (Payment payment : payments) {
+			try {
+				self.processPayment(payment);
+			} catch (Exception ex) {
+				log.info("Unexpected exception occurred while processing the first stage of payments:" + ex.getMessage());
+				setPaymentStatus(payment, "unexpected exception", PaymentStatus.COLLECT_REJECTED);
+
 			}
 		}
 	}

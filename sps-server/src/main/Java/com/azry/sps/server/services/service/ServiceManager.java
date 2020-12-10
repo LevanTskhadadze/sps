@@ -34,4 +34,6 @@ public interface ServiceManager {
     Service getService(long id);
 
     Service getServiceByPaymentCode(String paymentCode);
+
+    List<Service> getServicesByChannelId(Long channelId);
 }

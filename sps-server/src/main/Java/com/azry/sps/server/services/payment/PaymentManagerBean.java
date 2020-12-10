@@ -15,6 +15,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
@@ -115,9 +116,13 @@ public class PaymentManagerBean implements PaymentManager {
 
 	@Override
 	public Payment getPaymentByAgentId(String agentPaymentId) {
-		return em.createQuery("SELECT p FROM Payment p WHERE p.agentPaymentId = :paymentId", Payment.class)
-			.setParameter("paymentId", agentPaymentId)
-			.getSingleResult();
+		try {
+			return em.createQuery("SELECT p FROM Payment p WHERE p.agentPaymentId = :paymentId", Payment.class)
+				.setParameter("paymentId", agentPaymentId)
+				.getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	@Override

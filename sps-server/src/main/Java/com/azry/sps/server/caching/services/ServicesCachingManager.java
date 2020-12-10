@@ -89,11 +89,7 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 	public List<Service> getAllActiveServices() {
 		List<Service> activeServices = getList();
 
-		for (Service service : new ArrayList<>(activeServices)) {
-			if (!service.isActive()) {
-				activeServices.remove(service);
-			}
-		}
+		activeServices.removeIf(service -> !service.isActive());
 		return activeServices;
 	}
 
@@ -103,11 +99,7 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		}
 		List<Service> filteredServices = getList();
 
-		for (Service service : new ArrayList<>(filteredServices)) {
-			if (!groupId.equals(service.getGroupId()) || !service.isActive()) {
-				filteredServices.remove(service);
-			}
-		}
+		filteredServices.removeIf(service -> !groupId.equals(service.getGroupId()) || !service.isActive());
 		return filteredServices;
 	}
 
@@ -178,5 +170,27 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		for (Long id : toBeDeletedIds) {
 			cachedServices.remove(id);
 		}
+	}
+
+	public List<Service> getServicesByChannelId(Long channelId) {
+		List<Service> allServices = getAllServices();
+		List<Service> services = new ArrayList<>();
+		for (Service service : allServices) {
+			if (service.isAllChannels()) {
+				services.add(service);
+				continue;
+			}
+
+			for (ServiceChannelInfo info : service.getChannels()) {
+				if (info.getChannelId() == channelId) {
+					if (info.isActive()) {
+						services.add(service);
+					}
+					break;
+				}
+			}
+		}
+
+		return services;
 	}
 }

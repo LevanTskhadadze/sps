@@ -106,7 +106,7 @@ public class ServiceModifyWindow extends ZWindow {
 		formContainer.add(constructForm(), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 
 		tabPanel.add(formContainer, Mes.get("serviceInfo"));
-		tabPanel.add(channelContainer, Mes.get("serviceInfo"));
+		tabPanel.add(channelContainer, Mes.get("channels"));
 	}
 
 	private FlexTable constructForm() {

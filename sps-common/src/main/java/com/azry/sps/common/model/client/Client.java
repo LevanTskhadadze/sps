@@ -23,4 +23,13 @@ public class Client {
 
 	@Column(length = 100)
 	private String birthPlace;
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Client)) {
+			return false;
+		}
+
+		return personalNumber.equals(((Client) object).getPersonalNumber());
+	}
 }
