@@ -276,7 +276,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 			@Override
 			public void onFailure(Throwable th) {
 				abonenCodeInfo.setStyleName("abonent-info-connection-error");
-				abonenCodeInfo.setValue(Mes.get("noProviderConnection"));
+				abonenCodeInfo.setValue(Mes.get("spConnectionFailed"));
 			}
 		});
 

@@ -8,8 +8,11 @@ import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
 import com.azry.sps.systemparameters.model.SystemParameterType;
 import com.azry.sps.systemparameters.sysparam.Parameter;
 import com.azry.sps.systemparameters.sysparam.SysParam;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Stateless
+@Slf4j
 public class PaymentManagerBean implements PaymentManager {
 
 	@PersistenceContext
@@ -139,33 +143,45 @@ public class PaymentManagerBean implements PaymentManager {
 	public List<Payment> addPayments(List<Payment> payments, String sourceAccountIBAN) {
 		List<Payment> paymentList = new ArrayList<>();
 		for (Payment payment : payments) {
-			paymentList.add(addPayment(payment, sourceAccountIBAN));
+			try {
+				paymentList.add(addPayment(payment, sourceAccountIBAN));
+			} catch (Exception ex) {
+				Payment paymentEntity = setPayment(payment, PaymentStatus.COLLECT_REJECTED,
+					"Unexpected exception during payment creation.");
+				paymentEntity = em.merge(paymentEntity);
+				paymentList.add(paymentEntity);
+				log.error("Unexpected exception during payment creation. Payment id: " + paymentEntity.getId(), ex);
+			}
 		}
 		return paymentList;
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public Payment addPayment(Payment payment, String sourceAccountIBAN) {
-		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
-		Payment paymentEntity = null;
+		Payment paymentEntity;
 		if (!payment.getClCommission().equals(BigDecimal.ZERO) && clientAccountIBAN.getValue() == null) {
-			payment.setStatus(PaymentStatus.COLLECT_REJECTED);
-			payment.setStatusMessage("Client account is not configured for client Commission. " +
-				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
-			paymentEntity = em.merge(payment);
-			paymentStatusLog.setPaymentId(paymentEntity.getId());
-			paymentStatusLog.setStatus(PaymentStatus.COLLECT_REJECTED);
-			paymentStatusLog.setStatusMessage("Client account is not configured for client Commission. " +
-				"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
-			em.persist(paymentStatusLog);
+			paymentEntity = setPayment(payment, PaymentStatus.COLLECT_REJECTED,
+				"Client account is not configured for client Commission. " +
+					"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");
 		} else {
-			payment.setStatus(PaymentStatus.CREATED);
-			paymentEntity = em.merge(payment);
-			paymentStatusLog.setPaymentId(paymentEntity.getId());
-			paymentStatusLog.setStatus(PaymentStatus.CREATED);
-			em.persist(paymentStatusLog);
+			paymentEntity = setPayment(payment, PaymentStatus.CREATED, null);
 			transactionOrderManager.addTransaction(sourceAccountIBAN, clientAccountIBAN.getValue(), paymentEntity);
 		}
+		return paymentEntity;
+	}
+
+	private Payment setPayment(Payment payment, PaymentStatus paymentStatus, String statusMessage) {
+		PaymentStatusLog paymentStatusLog = new PaymentStatusLog();
+		payment.setStatus(paymentStatus);
+		paymentStatusLog.setStatus(paymentStatus);
+		if (statusMessage != null) {
+			payment.setStatusMessage(statusMessage);
+			paymentStatusLog.setStatusMessage(statusMessage);
+		}
+		Payment paymentEntity = em.merge(payment);
+		paymentStatusLog.setPaymentId(paymentEntity.getId());
+		em.persist(paymentStatusLog);
 		return paymentEntity;
 	}
 

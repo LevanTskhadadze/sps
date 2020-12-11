@@ -87,7 +87,7 @@ public class RowEntry {
 			new ServiceCallback<AbonentInfoDTO>(false) {
 			@Override
 			public void onFailure(Throwable throwable) {
-				setAbonentCells(Mes.get("noProviderConnection"), "?", "payment-table-connection-error", ALIGN_CENTER, false);
+				setAbonentCells(Mes.get("spConnectionFailed"), "?", "payment-table-connection-error", ALIGN_CENTER, false);
 				amountF.disable();
 				loaded = false;
 			}
