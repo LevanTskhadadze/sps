@@ -7,6 +7,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.sencha.gxt.data.shared.loader.PagingLoadConfig;
 import com.sencha.gxt.data.shared.loader.PagingLoadResult;
 
+import java.math.BigDecimal;
+
 @RemoteServiceRelativePath("servlet/ClientCommissions")
 public interface ClientCommissionsService extends RemoteService {
 
@@ -15,6 +17,8 @@ public interface ClientCommissionsService extends RemoteService {
 	ClientCommissionsDTO getClientCommissionByServiceId(long serviceId);
 
 	ClientCommissionsDTO updateClientCommissions(ClientCommissionsDTO clientCommissions) throws SPSConsoleException;
+
+	BigDecimal calculateCommission(long serviceId, BigDecimal principal);
 
 	void deleteClientCommissions(long id);
 }

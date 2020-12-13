@@ -180,6 +180,7 @@ public class PaymentListTable extends Composite {
 								entry.updateCommissionValue();
 								entry.setCommissionVerified(false);
 							}
+							readyPaymentEntryCount = 0;
 							payB.disable();
 							setAggregatesValues();
 						}

@@ -14,6 +14,7 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
+import java.math.BigDecimal;
 
 @WebServlet("sps/servlet/ClientCommissions")
 public class ClientCommissionsServiceImpl extends RemoteServiceServlet implements ClientCommissionsService {
@@ -40,6 +41,11 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 		catch (SPSException ex) {
 			throw new SPSConsoleException(ex);
 		}
+	}
+
+	@Override
+	public BigDecimal calculateCommission(long serviceId, BigDecimal principal) {
+		return clientCommissionsManager.calculateCommission(serviceId, principal);
 	}
 
 	@Override

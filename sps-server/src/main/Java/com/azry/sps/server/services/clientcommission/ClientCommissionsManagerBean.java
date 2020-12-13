@@ -4,6 +4,7 @@ import com.azry.sps.common.ListResult;
 import com.azry.sps.common.events.UpdateCacheEvent;
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
+import com.azry.sps.common.model.commission.CommissionRateType;
 import com.azry.sps.server.caching.CachedConfigurationService;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Stateless
 public class ClientCommissionsManagerBean implements ClientCommissionsManager {
@@ -59,6 +62,28 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 			em.remove(clientCommissions);
 			UpdateCache();
 		}
+	}
+
+	public BigDecimal calculateCommission(long serviceId, BigDecimal principal) {
+		BigDecimal commission;
+		ClientCommissions clientCommissions = cachedConfigurationService.getClientCommissionByServiceId(String.valueOf(serviceId));
+		if (clientCommissions == null) {
+			return null;
+		}
+		if (clientCommissions.getRateType().equals(CommissionRateType.FIXED)) {
+			commission = clientCommissions.getCommission();
+		} else {
+			commission = principal.multiply(clientCommissions.getCommission()).divide(new BigDecimal(100));
+			commission = commission.setScale(2, RoundingMode.UP);
+		}
+		if (clientCommissions.getMinCommission() != null
+			&& commission.compareTo(clientCommissions.getMinCommission()) < 0) {
+			commission = clientCommissions.getMinCommission();
+		} else if (clientCommissions.getMaxCommission() != null
+			&& commission.compareTo(clientCommissions.getMaxCommission()) > 0) {
+			commission = clientCommissions.getMaxCommission();
+		}
+		return commission;
 	}
 
 	private void UpdateCache() {

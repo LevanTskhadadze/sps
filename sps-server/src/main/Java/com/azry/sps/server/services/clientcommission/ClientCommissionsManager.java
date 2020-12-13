@@ -5,6 +5,7 @@ import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.commission.ClientCommissions;
 
 import javax.ejb.Local;
+import java.math.BigDecimal;
 
 @Local
 public interface ClientCommissionsManager {
@@ -16,6 +17,8 @@ public interface ClientCommissionsManager {
 	ClientCommissions getClientCommission(long serviceId, long channelId);
 
 	ClientCommissions updateClientCommissions(ClientCommissions clientCommissions) throws SPSException;
+
+	BigDecimal calculateCommission(long serviceId, BigDecimal principal);
 
 	void deleteClientCommissions(long id);
 }

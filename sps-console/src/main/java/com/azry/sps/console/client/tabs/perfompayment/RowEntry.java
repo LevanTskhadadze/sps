@@ -7,8 +7,6 @@ import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.NumberFormatUtils;
 import com.azry.sps.console.client.utils.ServiceCallback;
-import com.azry.sps.console.shared.dto.commission.CommissionRateTypeDTO;
-import com.azry.sps.console.shared.dto.commission.clientcommission.ClientCommissionsDTO;
 import com.azry.sps.console.shared.dto.paymentList.PaymentListEntryDTO;
 import com.azry.sps.console.shared.dto.providerintegration.AbonentInfoDTO;
 import com.azry.sps.console.shared.dto.providerintegration.GetInfoStatusDTO;
@@ -28,7 +26,6 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.NumberPropertyEditor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
 import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_LEFT;
@@ -49,7 +46,6 @@ public class RowEntry {
 
 	private final PaymentListEntryDTO paymentListEntryDTO;
 	private ServiceDTO serviceDTO;
-	private ClientCommissionsDTO clientCommissionsDTO;
 	private final PaymentListTable paymentListTable;
 
 
@@ -99,17 +95,11 @@ public class RowEntry {
 				updateRow(abonentInfoDTO.getStatus());
 			}
 		});
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDTO.getId(),
-			new ServiceCallback<ClientCommissionsDTO>(false) {
+		ServicesFactory.getClientCommissionsService().calculateCommission(serviceDTO.getId(), amountF.getValue(),
+			new ServiceCallback<BigDecimal>(false) {
 			@Override
-			public void onServiceSuccess(ClientCommissionsDTO dto) {
-				if (dto == null) {
-					setCommissionCell(getCommissionCellErrorWidget(), "payment-table-loaded-not-found", ALIGN_CENTER, false);
-					amountF.disable();
-				} else {
-					clientCommissionsDTO = dto;
-					setCommissionCell(new Label(NumberFormatUtils.format(commission)), "payment-table-loaded", ALIGN_RIGHT, false);
-				}
+			public void onServiceSuccess(BigDecimal commission) {
+				onCommissionLoad(commission);
 			}
 		});
 	}
@@ -195,20 +185,23 @@ public class RowEntry {
 	}
 
 	private void onAmountFValueChange() {
-		commissionVerified = false;
+		if (isCommissionVerified()) {
+			paymentListTable.decrementReadyPaymentEntryCount();
+		}
 		if (amountF.getCurrentValue() == null || NumberFormatUtils.equalsWithFormat(amountF.getCurrentValue(), BigDecimal.ZERO)) {
 			setCommissionCell(new Label(NumberFormatUtils.format(BigDecimal.ZERO)), "payment-table-loaded", ALIGN_RIGHT, false);
 			paymentListTable.updateAggregateCommission();
 			paymentListTable.updateAggregatePaymentAmount();
-			paymentListTable.decrementReadyPaymentEntryCount();
 			if (paymentListTable.getReadyPaymentEntryCount() == 0) {
 				paymentListTable.getPayB().disable();
+				paymentListTable.updateAggregateTotalAmount();
 			}
 		} else {
 			setCommissionCell(new Label("?"), "payment-table-loading", ALIGN_CENTER, false);
 			paymentListTable.getPayB().disable();
 			paymentListTable.updateAggregatePaymentAmount();
 		}
+		commissionVerified = false;
 	}
 
 	private void buildDeleteButton() {
@@ -264,58 +257,42 @@ public class RowEntry {
 	}
 
 	public void updateCommissionValue() {
-		ServicesFactory.getClientCommissionsService().getClientCommissionByServiceId(serviceDTO.getId(),
-			new ServiceCallback<ClientCommissionsDTO>(false) {
+		ServicesFactory.getClientCommissionsService().calculateCommission(serviceDTO.getId(), amountF.getValue(),
+			new ServiceCallback<BigDecimal>(false) {
 			@Override
-			public void onServiceSuccess(ClientCommissionsDTO dto) {
-				if (dto == null) {
-					if (isCommissionVerified()) {
-						commissionVerified = false;
-						commission = BigDecimal.ZERO;
-						paymentListTable.decrementReadyPaymentEntryCount();
-						if (paymentListTable.getReadyPaymentEntryCount() == 0 ) {
-							paymentListTable.getPayB().disable();
-						}
-					}
-					setCommissionCell(getCommissionCellErrorWidget(), "payment-table-loaded-not-found", ALIGN_CENTER, false);
-					amountF.setValue(BigDecimal.ZERO);
-					paymentListTable.updateAggregatePaymentAmount();
-					paymentListTable.updateAggregateCommission();
-					amountF.disable();
-				} else {
-					clientCommissionsDTO = dto;
-					amountF.enable();
-					setCommissionCell(new Label(calculateCommission()), "payment-table-loaded", ALIGN_RIGHT, false);
-					paymentListTable.updateAggregateCommission();
-					paymentListTable.updateAggregateTotalAmount();
-				}
+			public void onServiceSuccess(BigDecimal commission) {
+				onCommissionLoad(commission);
 			}
 		});
 	}
 
-
-	private String calculateCommission() {
-		if (amountF.getValue().compareTo(BigDecimal.ZERO) > 0) {
-			if (clientCommissionsDTO.getRateType() == CommissionRateTypeDTO.FIXED) {
-				commission = clientCommissionsDTO.getCommission();
-			} else {
-				commission = amountF.getValue().multiply(clientCommissionsDTO.getCommission().divide(new BigDecimal(100), RoundingMode.UP));
+	private void onCommissionLoad(BigDecimal commission) {
+		if (commission == null) {
+			setCommissionCell(getCommissionCellErrorWidget(), "payment-table-loaded-not-found", ALIGN_CENTER, false);
+			amountF.disable();
+			if (isCommissionVerified()) {
+				commissionVerified = false;
+				setCommission(BigDecimal.ZERO);
+				paymentListTable.decrementReadyPaymentEntryCount();
+				if (paymentListTable.getReadyPaymentEntryCount() == 0 ) {
+					paymentListTable.getPayB().disable();
+				}
 			}
-			if (!isCommissionVerified()) {
-				paymentListTable.incrementReadyPaymentEntryCount();
-			}
-			commissionVerified = true;
-			if (clientCommissionsDTO.getMinCommission() != null
-				&& commission.compareTo(clientCommissionsDTO.getMinCommission()) < 0) {
-				commission = clientCommissionsDTO.getMinCommission();
-			} else if (clientCommissionsDTO.getMaxCommission() != null
-				&& commission.compareTo(clientCommissionsDTO.getMaxCommission()) > 0) {
-				commission = clientCommissionsDTO.getMaxCommission();
-			}
-			return NumberFormatUtils.format(commission);
+			amountF.setValue(BigDecimal.ZERO);
+			paymentListTable.updateAggregatePaymentAmount();
+			paymentListTable.updateAggregateCommission();
 		} else {
-			commissionVerified = false;
-			return NumberFormatUtils.format(BigDecimal.ZERO);
+			setCommission(commission);
+			setCommissionCell(new Label(NumberFormatUtils.format(commission)), "payment-table-loaded", ALIGN_RIGHT, false);
+			if (commission.compareTo(BigDecimal.ZERO) > 0) {
+				if (!isCommissionVerified()) {
+					paymentListTable.incrementReadyPaymentEntryCount();
+				}
+				commissionVerified = true;
+			}
+			amountF.enable();
+			paymentListTable.updateAggregateCommission();
+			paymentListTable.updateAggregateTotalAmount();
 		}
 	}
 
@@ -350,6 +327,10 @@ public class RowEntry {
 	public void clearAmountF() {
 		amountF.setValue(BigDecimal.ZERO);
 		amountF.removeToolTip();
+	}
+
+	public void setCommission(BigDecimal commission) {
+		this.commission = commission;
 	}
 
 	public int getRow() {
