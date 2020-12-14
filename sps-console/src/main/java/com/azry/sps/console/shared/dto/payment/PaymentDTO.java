@@ -248,7 +248,7 @@ public class PaymentDTO implements IsSerializable {
 	@GwtIncompatible
 	public static List<Payment> toEntities(List<PaymentDTO> paymentDTOS) {
 		List<Payment> entities = new ArrayList<>();
-		if(paymentDTOS == null) return entities;
+		if (paymentDTOS == null) return entities;
 
 		for(PaymentDTO dto : paymentDTOS) {
 			entities.add(toEntity(dto));
@@ -260,7 +260,7 @@ public class PaymentDTO implements IsSerializable {
 	@GwtIncompatible
 	public static List<PaymentStatus> convertDTOToStatuses(List<PaymentStatusDTO> dtos) {
 		List<PaymentStatus> entities = new ArrayList<>();
-		if(dtos == null) return entities;
+		if (dtos == null) return entities;
 
 		for(PaymentStatusDTO dto : dtos) {
 			entities.add(convertDtoToStatus(dto));

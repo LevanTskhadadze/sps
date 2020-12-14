@@ -57,9 +57,7 @@ public class PermissionTree {
 		for (PermissionsDTO permission : PermissionsDTO.values()) {
 			if (permissionMap.containsKey(permission.getPermissionType())) {
 				permissionMap.get(permission.getPermissionType()).add(permission);
-			}
-
-			else {
+			} else {
 				List<PermissionsDTO> permissions = new ArrayList<>();
 				permissions.add(permission);
 				permissionMap.put(permission.getPermissionType(), permissions);

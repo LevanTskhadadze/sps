@@ -210,8 +210,7 @@ public class PaymentListTable extends Composite {
 		addTableHeader();
 		if (paymentListDTO != null && !paymentListDTO.getEntries().isEmpty()) {
 			addPaymentList(paymentListDTO);
-		}
-		else {
+		} else {
 			addEmptyRow();
 		}
 		setAggregatesValues();
@@ -233,8 +232,7 @@ public class PaymentListTable extends Composite {
 		if (paymentListTable.getRowCount() == 1) {
 			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), null, "empty-table", ALIGN_LEFT, false);
 			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));
-		}
-		else {
+		} else {
 			paymentListTable.insertRow(1);
 			TableUtils.setCell(paymentListTable, 1, 0, new Label(Mes.get("emptyTableText")), null, "empty-table", ALIGN_LEFT, false);
 			paymentListTable.getFlexCellFormatter().setColSpan(1, 0, paymentListTable.getCellCount(0));

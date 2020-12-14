@@ -29,8 +29,7 @@ public class ErrorHandlerImpl implements ErrorHandler {
 			SPSConsoleException ve = (SPSConsoleException) th;
 			sendToServer(th);
 			showValidationInfo(Mes.get(ve.getMessage()));
-		}
-		else {
+		} else {
 			if (th instanceof StatusCodeException) {
 				int statusCode = ((StatusCodeException) th).getStatusCode();
 				GWT.log("Exception statusCode = " + statusCode, th);

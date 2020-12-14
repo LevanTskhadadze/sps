@@ -105,4 +105,16 @@ public class PayRequest implements Serializable {
 			&& channelId != null
 			&& clientAccountBAN != null;
 	}
+
+	@Override
+	public String toString() {
+		return 	"Agent payment ID: " + agentPaymentId +
+				"\nAbonent code: " + abonentCode +
+				"\nPersonal number: " + personalNumber +
+				"\nAmount: " + amount +
+				"\nService ID: " + serviceId +
+				"\nChannel ID: " + channelId +
+				"\nClient account BAN: " + clientAccountBAN +
+				"\nClient commission: " + clientCommission;
+	}
 }

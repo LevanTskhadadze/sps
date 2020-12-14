@@ -77,7 +77,7 @@ public class UsersTab extends Composite {
 				params.put("name", nameField.getCurrentValue());
 				params.put("email", emailField.getCurrentValue());
 				params.put("active", activeComboBox.getCurrentValue());
-				if(groupComboBox.getCurrentValue() != null) {
+				if (groupComboBox.getCurrentValue() != null) {
 					params.put("groups", groupComboBox.getCurrentValue().getName());
 				}
 

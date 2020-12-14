@@ -11,7 +11,7 @@ public class GetInfoRequest implements Serializable {
 
 	private Long serviceId;
 
-	@XmlElement(name = "abonentCode")
+	@XmlElement(name = "abonentCode", required = true)
 	public String getAbonentCode() {
 		return abonentCode;
 	}
@@ -20,7 +20,7 @@ public class GetInfoRequest implements Serializable {
 		this.abonentCode = abonentCode;
 	}
 
-	@XmlElement(name = "serviceId")
+	@XmlElement(name = "serviceId", required = true)
 	public Long getServiceId() {
 		return serviceId;
 	}
@@ -31,5 +31,11 @@ public class GetInfoRequest implements Serializable {
 
 	public boolean isValid() {
 		return abonentCode != null && serviceId != null;
+	}
+
+	@Override
+	public String toString() {
+		return "Abonent code: " + abonentCode +
+			"\nService ID: " + serviceId;
 	}
 }

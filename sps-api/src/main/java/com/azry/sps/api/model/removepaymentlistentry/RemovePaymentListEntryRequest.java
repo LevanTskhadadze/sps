@@ -9,7 +9,7 @@ public class RemovePaymentListEntryRequest implements Serializable {
 
 	Long id;
 
-	@XmlElement(name = "id")
+	@XmlElement(name = "id", required = true)
 	public Long getId() {
 		return id;
 	}
@@ -20,5 +20,10 @@ public class RemovePaymentListEntryRequest implements Serializable {
 
 	public boolean isValid() {
 		return id != null;
+	}
+
+	@Override
+	public String toString() {
+		return "ID: " + id;
 	}
 }

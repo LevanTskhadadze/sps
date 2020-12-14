@@ -4,7 +4,6 @@ package com.azry.sps.server.caching.services;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceChannelInfo;
-import com.azry.sps.common.model.service.ServiceColumnNames;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.server.caching.CachingService;
 import org.apache.commons.lang3.StringUtils;
@@ -63,16 +62,16 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		List<Service> filteredServices = getList();
 
 		for (Service service : new ArrayList<>(filteredServices)) {
-			if (service.getName() != null && filter.get(ServiceColumnNames.NAME.getName()) != null) {
-				String name = filter.get(ServiceColumnNames.NAME.getName());
+			if (service.getName() != null && filter.get("name") != null) {
+				String name = filter.get("name");
 				if (StringUtils.isEmpty(service.getName()) || !service.getName().toLowerCase().contains(name.toLowerCase())) {
 					filteredServices.remove(service);
 					continue;
 				}
 			}
 
-			if (filter.get(ServiceColumnNames.ACTIVE.getName()) != null
-						&& service.isActive() != filter.get(ServiceColumnNames.ACTIVE.getName()).equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus())) {
+			if (filter.get("active") != null
+						&& service.isActive() != filter.get("active").equals("1")) {
 				filteredServices.remove(service);
 			}
 		}

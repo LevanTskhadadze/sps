@@ -50,14 +50,15 @@ import org.jboss.ws.api.annotation.WebContext;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.jws.WebService;
 import javax.persistence.NonUniqueResultException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Stateless
+@Interceptors(SpsApiInterceptor.class)
 @WebService(endpointInterface = "com.azry.sps.api.SpsApi", targetNamespace = Namespace.TN, portName = "SpsApiPort", serviceName = "SpsApiService")
 @WebContext(contextRoot = "/sps-integration-api", urlPattern = "/sps-api")
 public class SpsApiImpl implements SpsApi{
@@ -109,7 +110,7 @@ public class SpsApiImpl implements SpsApi{
 			AbonentInfo abonentInfo = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
 
 			response.setDebt(abonentInfo.getDebt());
-			response.setInfoMessage(abonentInfo.getMessage());
+			response.setInfoMessage(abonentInfo.getAbonentInfo());
 
 			return response;
 		} catch (SpConnectivityException ex) {
@@ -140,8 +141,7 @@ public class SpsApiImpl implements SpsApi{
 		} else {
 			if (svcCommission.getRateType() == CommissionRateType.PERCENT) {
 				svcCommissionAmount = BigDecimal.valueOf(svcCommission.getCommission().floatValue() * request.getAmount().floatValue() / 100);
-			}
-			else {
+			} else {
 				svcCommissionAmount = svcCommission.getCommission();
 			}
 		}
@@ -182,15 +182,12 @@ public class SpsApiImpl implements SpsApi{
 		if (oldPayment != null) {
 			if (equalPayments(payment, oldPayment)) {
 				return;
-			}
-			else {
+			} else {
 				throw new SpsApiException("Payment ID is not unique.");
 			}
 		}
 
-		payment = paymentManager.addPayment(payment);
-
-		transactionOrderManager.addTransactions(request.getClientAccountBAN(), Collections.singletonList(payment));
+		paymentManager.addPayment(payment, request.getClientAccountBAN());
 
 	}
 
@@ -288,7 +285,7 @@ public class SpsApiImpl implements SpsApi{
 
 	@Override
 	public GetServicesResponse getServices(GetServicesRequest request) throws SpsApiException {
-		if(!request.isValid()) {
+		if (!request.isValid()) {
 			throw new SpsApiException("Invalid request.");
 		}
 
@@ -344,8 +341,7 @@ public class SpsApiImpl implements SpsApi{
 		if (commission.getCommission() == null) {
 			if (commission.getMinCommission() == null) {
 				clCommissionAmount = new BigDecimal(0);
-			}
-			else {
+			} else {
 				clCommissionAmount = BigDecimal.valueOf(commission.getMinCommission().floatValue());
 			}
 			response.setClientCommission(clCommissionAmount);
@@ -354,8 +350,7 @@ public class SpsApiImpl implements SpsApi{
 
 		if (commission.getRateType() == CommissionRateType.PERCENT) {
 			clCommissionAmount = BigDecimal.valueOf(commission.getCommission().floatValue() * request.getAmount().floatValue() / 100);
-		}
-		else {
+		} else {
 			clCommissionAmount = commission.getCommission();
 		}
 

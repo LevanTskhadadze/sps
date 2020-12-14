@@ -128,7 +128,7 @@ public class ServiceChannelWindow extends Composite {
 		boolean valid = true;
 		for(ChannelInfoRow row : rows) {
 			//logger.log(Level.SEVERE, "!!!");
-			if(row.getMinAmountField().getValue() != null &&
+			if (row.getMinAmountField().getValue() != null &&
 				row.getMaxAmountField().getValue() != null &&
 				row.getMinAmountField().getValue().compareTo(row.getMaxAmountField().getValue()) > 0) {
 					row.getMinAmountField().markInvalid(Mes.get("invalidAmountMinMaxValues"));

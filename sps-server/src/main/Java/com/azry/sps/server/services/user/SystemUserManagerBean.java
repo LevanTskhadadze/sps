@@ -117,7 +117,7 @@ public class SystemUserManagerBean implements SystemUserManager {
 	public void changeActivation(long id, long version) throws SPSException {
 
 		SystemUser user = em.find(SystemUser.class, id);
-		if(user.getVersion() != version) throw new SPSException("optimisticLockException");
+		if (user.getVersion() != version) throw new SPSException("optimisticLockException");
 		user.setActive(!user.isActive());
 		em.persist(user);
 
@@ -134,7 +134,7 @@ public class SystemUserManagerBean implements SystemUserManager {
 	@Override
 	public SystemUser editRow(SystemUser user) throws SPSException {
 		try {
-			if(user.getId() > 0 && user.getPassword() == null || user.getPassword().equals("")) {
+			if (user.getId() > 0 && user.getPassword() == null || user.getPassword().equals("")) {
 				user.setPassword(em.find(SystemUser.class, user.getId()).getPassword());
 			}
 

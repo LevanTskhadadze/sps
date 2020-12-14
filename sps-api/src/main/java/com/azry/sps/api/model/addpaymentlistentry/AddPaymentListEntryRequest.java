@@ -11,7 +11,7 @@ public class AddPaymentListEntryRequest implements Serializable {
 
 	PaymentListEntryDTO paymentListEntry;
 
-	@XmlElement(name = "personalNumber")
+	@XmlElement(name = "personalNumber", required = true)
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
@@ -20,7 +20,7 @@ public class AddPaymentListEntryRequest implements Serializable {
 		this.personalNumber = personalNumber;
 	}
 
-	@XmlElement(name = "paymentListEntry")
+	@XmlElement(name = "paymentListEntry", required = true)
 	public PaymentListEntryDTO getPaymentListEntry() {
 		return paymentListEntry;
 	}
@@ -31,5 +31,11 @@ public class AddPaymentListEntryRequest implements Serializable {
 
 	public boolean isValid() {
 		return personalNumber != null && paymentListEntry != null;
+	}
+
+	@Override
+	public String toString() {
+		return "Personal number: " + personalNumber +
+			"\nPayment list entry:\n" + paymentListEntry.toString();
 	}
 }

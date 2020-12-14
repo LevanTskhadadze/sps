@@ -21,4 +21,9 @@ public class GetServicesRequest implements Serializable {
 	public boolean isValid() {
 		return channelId != null;
 	}
+
+	@Override
+	public String toString() {
+		return "Channel ID: " + channelId;
+	}
 }

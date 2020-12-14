@@ -79,8 +79,7 @@ public abstract class ClientCommissionsWindow extends ZWindow implements DualLis
 		if (dto != null) {
 			clientCommissionsDTO = dto;
 			setFieldValues();
-		}
-		else {
+		} else {
 			clientCommissionsDTO = new ClientCommissionsDTO();
 		}
 

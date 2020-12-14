@@ -36,7 +36,7 @@ public class ConsoleEntryPoint implements EntryPoint {
 	private SystemUserDTO user;
 
 	private HTML getFooter(){
-		HTML footerText = new HTML("This is a footer");
+		HTML footerText = new HTML(Mes.get("footer"));
 		footerText.setStyleName("FText");
 		return footerText;
 	}

@@ -30,25 +30,25 @@ import java.rmi.RemoteException;
 public interface SpsApi extends java.rmi.Remote {
 
 	@WebMethod(action = Namespace.TN + "/getInfo")
-	GetInfoResponse getInfo(@WebParam(name = "getInfoRequest", targetNamespace = Namespace.TN) GetInfoRequest request) throws SpsApiException, RemoteException;
+	GetInfoResponse getInfo(@WebParam(name = "getInfoRequest", targetNamespace = Namespace.TN)@XmlElement(required = true) GetInfoRequest request) throws SpsApiException, RemoteException;
 
 	@WebMethod(action = Namespace.TN + "/pay")
-	void pay(@WebParam(name = "payRequest", targetNamespace = Namespace.TN) PayRequest request) throws SpsApiException, RemoteException;
+	void pay(@WebParam(name = "payRequest", targetNamespace = Namespace.TN)@XmlElement(required = true) PayRequest request) throws SpsApiException, RemoteException;
 
 	@WebMethod(action = Namespace.TN + "/getPaymentInfo")
-	GetPaymentInfoResponse getPaymentInfo(@WebParam(name = "getPaymentInfoRequest", targetNamespace = Namespace.TN) GetPaymentInfoRequest request) throws SpsApiException, RemoteException;
+	GetPaymentInfoResponse getPaymentInfo(@WebParam(name = "getPaymentInfoRequest", targetNamespace = Namespace.TN)@XmlElement(required = true) GetPaymentInfoRequest request) throws SpsApiException, RemoteException;
 
 	@WebMethod(action = Namespace.TN + "/getPaymentListEntry")
-	GetPaymentListResponse getPaymentList(@WebParam(name = "getPaymentListRequest",  targetNamespace = Namespace.TN) GetPaymentListRequest getPaymentListRequest) throws SpsApiException, RemoteException;
+	GetPaymentListResponse getPaymentList(@WebParam(name = "getPaymentListRequest",  targetNamespace = Namespace.TN)@XmlElement(required = true) GetPaymentListRequest getPaymentListRequest) throws SpsApiException, RemoteException;
 
 	@WebMethod(action = Namespace.TN + "/getPaymentListEntry")
-	AddPaymentListEntryResponse addPaymentListEntry(@WebParam(name = "addPaymentListEntryRequest", targetNamespace = Namespace.TN) AddPaymentListEntryRequest request) throws SpsApiException, RemoteException;
+	AddPaymentListEntryResponse addPaymentListEntry(@WebParam(name = "addPaymentListEntryRequest", targetNamespace = Namespace.TN)@XmlElement(required = true) AddPaymentListEntryRequest request) throws SpsApiException, RemoteException;
 
 	@WebMethod(action = Namespace.TN + "/removePaymentListEntry")
-	void removePaymentListEntry(@WebParam(name = "removePaymentListEntryRequest",  targetNamespace = Namespace.TN) RemovePaymentListEntryRequest request) throws RemoteException, SpsApiException;
+	void removePaymentListEntry(@WebParam(name = "removePaymentListEntryRequest",  targetNamespace = Namespace.TN)@XmlElement(required = true) RemovePaymentListEntryRequest request) throws RemoteException, SpsApiException;
 
 	@WebMethod(action = Namespace.TN + "/getServices")
-	GetServicesResponse getServices(@WebParam(name = "getServicesRequest", targetNamespace = Namespace.TN)GetServicesRequest request) throws RemoteException, SpsApiException;
+	GetServicesResponse getServices(@WebParam(name = "getServicesRequest", targetNamespace = Namespace.TN)@XmlElement(required = true) GetServicesRequest request) throws RemoteException, SpsApiException;
 
 	@WebMethod(action = Namespace.TN + "/getServiceGroups")
 	GetServiceGroupsResponse getServiceGroups() throws RemoteException;

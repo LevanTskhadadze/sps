@@ -42,8 +42,7 @@ public class TabBuilder {
 				if (serviceGroupPage != null) {
 					if (serviceGroupPage.getTitle().equals("closed")) {
 						serviceGroupPage = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(serviceGroupPage);
 						menu.hide();
 						return;
@@ -77,10 +76,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (systemParameterTab != null) {
-					if(systemParameterTab.getTitle().equals("closed")) {
+					if (systemParameterTab.getTitle().equals("closed")) {
 						systemParameterTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(systemParameterTab);
 						menu.hide();
 						return;
@@ -114,10 +112,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (usersTab != null) {
-					if(usersTab.getTitle().equals("closed")) {
+					if (usersTab.getTitle().equals("closed")) {
 						usersTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(usersTab);
 						menu.hide();
 						return;
@@ -159,10 +156,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (userGroupTab != null) {
-					if(userGroupTab.getTitle().equals("closed")) {
+					if (userGroupTab.getTitle().equals("closed")) {
 						userGroupTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(userGroupTab);
 						menu.hide();
 						return;
@@ -196,10 +192,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (channelTab != null) {
-					if(channelTab.getTitle().equals("closed")) {
+					if (channelTab.getTitle().equals("closed")) {
 						channelTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(channelTab);
 						menu.hide();
 						return;
@@ -232,10 +227,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (servicesTab != null) {
-					if(servicesTab.getTitle().equals("closed")) {
+					if (servicesTab.getTitle().equals("closed")) {
 						servicesTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(servicesTab);
 						menu.hide();
 						return;
@@ -269,10 +263,9 @@ public class TabBuilder {
 			@Override
 			public void onClick(ClickEvent clickEvent) {
 				if (clientCommissionsTab != null) {
-					if(clientCommissionsTab.getTitle().equals("closed")) {
+					if (clientCommissionsTab.getTitle().equals("closed")) {
 						clientCommissionsTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(clientCommissionsTab);
 						menu.hide();
 						return;
@@ -308,8 +301,7 @@ public class TabBuilder {
 				if (serviceCommissionsTab != null) {
 					if (serviceCommissionsTab.getTitle().equals("closed")) {
 						serviceCommissionsTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(serviceCommissionsTab);
 						menu.hide();
 						return;
@@ -345,8 +337,7 @@ public class TabBuilder {
 				if (performPaymentsTab != null) {
 					if (performPaymentsTab.getTitle().equals("closed")) {
 						performPaymentsTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(performPaymentsTab);
 						menu.hide();
 						return;
@@ -383,8 +374,7 @@ public class TabBuilder {
 				if (paymentTab != null) {
 					if (paymentTab.getTitle().equals("closed")) {
 						paymentTab = null;
-					}
-					else {
+					} else {
 						centerPanel.setActiveWidget(paymentTab);
 						menu.hide();
 						return;

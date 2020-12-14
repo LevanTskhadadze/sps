@@ -10,16 +10,16 @@ import java.util.List;
 @XmlType(name = "ServiceGroup", propOrder = {"id", "name"})
 public class ServiceGroupDTO {
 
-	private long id;
+	private Long id;
 
 	private String name;
 
 	@XmlElement(name = "id")
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -33,15 +33,13 @@ public class PaymentInfoTab extends VerticalLayoutContainer {
 
 		if (channelDTO == null) {
 			this.channelDTO = new ChannelDTO();
-		}
-		else {
+		} else {
 			this.channelDTO = channelDTO;
 		}
 
 		if (serviceDTO == null) {
 			this.serviceDTO = new ServiceDTO();
-		}
-		else {
+		} else {
 			this.serviceDTO = serviceDTO;
 		}
 

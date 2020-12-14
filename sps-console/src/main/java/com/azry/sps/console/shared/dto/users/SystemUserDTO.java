@@ -101,7 +101,7 @@ public class SystemUserDTO extends ConfigurableDTO {
 			ex.printStackTrace();
 		}
 		dto.setName(systemUser.getName());
-		if(!safe)dto.setPassword(systemUser.getPassword());
+		if (!safe)dto.setPassword(systemUser.getPassword());
 		dto.setVersion(systemUser.getVersion());
 		dto.setCreateTime(systemUser.getCreateTime());
 		dto.setLastUpdateTime(systemUser.getLastUpdateTime());

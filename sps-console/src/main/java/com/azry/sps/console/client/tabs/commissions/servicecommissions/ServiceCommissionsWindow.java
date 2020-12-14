@@ -76,8 +76,7 @@ public abstract class ServiceCommissionsWindow extends ZWindow implements DualLi
 		if (dto != null) {
 			serviceCommissionsDTO = dto;
 			setFieldValues();
-		}
-		else {
+		} else {
 			serviceCommissionsDTO = new ServiceCommissionsDTO();
 		}
 

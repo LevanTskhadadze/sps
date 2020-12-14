@@ -18,7 +18,7 @@ public class SystemParameterManagerBean implements SystemParameterManager {
 
 	@Override
 	public List<SystemParameter> getSystemParameters(Map<String, String> params) {
-		if(params == null) params = new HashMap<>();
+		if (params == null) params = new HashMap<>();
 
 		StringBuilder str = new StringBuilder("SELECT sp FROM SystemParameter sp WHERE 1 = 1 ");
 		Map<String, Object> values = new HashMap<>();

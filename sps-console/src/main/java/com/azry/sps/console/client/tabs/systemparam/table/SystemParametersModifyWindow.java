@@ -57,8 +57,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
-		}
-		else {
+		} else {
 			this.dto = new SystemParameterDTO();
 			this.dto.setType(SystemParameterDTOType.STRING);
 			this.dto.setDescription("");
@@ -304,7 +303,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 						codeField.markInvalid("invalid");
 						validation = false;
 					}
-					if(!validation) return;
+					if (!validation) return;
 					if (redactMode) {
 						doRedact();
 					}

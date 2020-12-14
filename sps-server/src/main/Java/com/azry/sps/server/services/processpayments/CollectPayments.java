@@ -138,7 +138,6 @@ public class CollectPayments {
 
 	@Timeout
 	public void process() {
-		log.info("Processing the first stage of payments...");
 		List<Payment> payments = paymentManager.getPayments(0, Integer.MAX_VALUE, new PaymentParams(), TARGET_STATUSES)
 			.getResultList();
 

@@ -44,4 +44,11 @@ public class CalculateClientCommissionRequest implements Serializable {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
+	@Override
+	public String toString() {
+		return "Service ID: " + serviceId +
+			"\nChannel ID: " + channelId +
+			"Amount: " + amount;
+	}
 }
