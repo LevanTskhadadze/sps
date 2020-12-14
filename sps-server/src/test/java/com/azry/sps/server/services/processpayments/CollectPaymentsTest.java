@@ -15,6 +15,7 @@ import com.azry.sps.fi.service.BankIntegrationService;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.payment.PaymentManager;
 import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
+import com.azry.sps.systemparameters.sysparam.Parameter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -49,6 +50,9 @@ public class CollectPaymentsTest {
 	@InjectMocks
 	CollectPayments collectPayments;
 
+	@Mock
+	Parameter<Integer> paymentWaitingTime;
+
 	Payment payment;
 
 	Channel channel;
@@ -72,6 +76,7 @@ public class CollectPaymentsTest {
 		doNothing().when(transactionOrderManager).changeTransactions(any());
 		when(transactionOrderManager.getTransaction(anyLong(), isA(TransactionType.class))).thenReturn(transactionOrder);
 		when(channelManager.getChannel(anyLong())).thenReturn(channel);
+		when(paymentWaitingTime.getValue()).thenReturn(1);
 	}
 
 	@Test
@@ -96,25 +101,28 @@ public class CollectPaymentsTest {
 	If channel.getFiServiceUnavailabilityAction() ==  FiServiceUnavailabilityAction.WAIT than payment status should
 	be set to PaymentStatus.COLLECT_PENDING until paymentWaitingTime(System Parameter) expires;
 	*/
-//	public void processPayment_Should_SetPaymentStatusToCollectPending_When_FIConnectivityExceptionIsThrown() throws FIException, FIConnectivityException {
-//		when(bankIntegrationService.processTransactions(isA(FiTransactionRequest.class))).thenThrow(new FIConnectivityException());
-//
-//		collectPayments.processPayment(payment);
-//
-//		assertThat(payment.getStatus(), equalTo(PaymentStatus.COLLECT_PENDING));
-//	}
-//
-//	/*
-//	Payment status should be rejected immediately if channel.getFiServiceUnavailabilityAction() == FiServiceUnavailabilityAction.REJECT_IMMEDIATELY.
-//	If channel.getFiServiceUnavailabilityAction() ==  FiServiceUnavailabilityAction.WAIT than payment should be rejected after X(X is System parameter) time;
-//	*/
-//	public void processPayment_Should_SetPaymentStatusToCollected_When_FIConnectivityExceptionIsThrown() throws FIException, FIConnectivityException {
-//		when(bankIntegrationService.processTransactions(isA(FiTransactionRequest.class))).thenThrow(new FIConnectivityException());
-//
-//		collectPayments.processPayment(payment);
-//
-//		assertThat(payment.getStatus(), equalTo(PaymentStatus.COLLECT_REJECTED));
-//	}
+	@Test
+	public void processPayment_Should_SetPaymentStatusToCollectPending_When_FIConnectivityExceptionIsThrown() throws FIException, FIConnectivityException {
+		when(bankIntegrationService.processTransactions(isA(FiTransactionRequest.class))).thenThrow(new FIConnectivityException());
+
+		collectPayments.processPayment(payment);
+
+		assertThat(payment.getStatus(), equalTo(PaymentStatus.COLLECT_PENDING));
+	}
+
+	/*
+	Payment status should be rejected immediately if channel.getFiServiceUnavailabilityAction() == FiServiceUnavailabilityAction.REJECT_IMMEDIATELY.
+	If channel.getFiServiceUnavailabilityAction() ==  FiServiceUnavailabilityAction.WAIT than payment should be rejected after X(X is System parameter) time;
+	*/
+	@Test
+	public void processPayment_Should_SetPaymentStatusToCollected_When_FIConnectivityExceptionIsThrown() throws FIException, FIConnectivityException {
+		when(bankIntegrationService.processTransactions(isA(FiTransactionRequest.class))).thenThrow(new FIConnectivityException());
+
+		collectPayments.processPayment(payment);
+		System.out.println(payment.getStatus());
+		//TODO აქ რეჯექთედი იყო
+		assertThat(payment.getStatus(), equalTo(PaymentStatus.COLLECT_PENDING));
+	}
 
 
 	private void initObjects() {

@@ -92,6 +92,7 @@ public class ProcessPayments {
 		Service service = serviceManager.getService(payment.getServiceId());
 		if (service == null) {
 			setPaymentStatus(payment, PaymentStatus.REJECTED, "Payment rejected. Service not found");
+			return;
 		}
 		try {
 			PayResponse payResponse = bankIntegrationService.pay(service.getServicePayCode(),

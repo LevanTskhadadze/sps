@@ -22,7 +22,6 @@ import com.azry.sps.api.model.pay.PayRequest;
 import com.azry.sps.api.model.pay.PaymentStatusDTO;
 import com.azry.sps.api.model.removepaymentlistentry.RemovePaymentListEntryRequest;
 import com.azry.sps.common.model.channels.Channel;
-import com.azry.sps.common.model.commission.ClientCommissions;
 import com.azry.sps.common.model.commission.CommissionRateType;
 import com.azry.sps.common.model.commission.ServiceCommissions;
 import com.azry.sps.common.model.groups.ServiceGroup;
@@ -328,41 +327,9 @@ public class SpsApiImpl implements SpsApi{
 
 		checkChannelForService(svc, channel.getId());
 
-		ClientCommissions commission = clientCommissionsManager.getClientCommission(request.getServiceId(), request.getChannelId());
-		BigDecimal clCommissionAmount;
+		BigDecimal clCommissionAmount = clientCommissionsManager.calculateCommission(request.getServiceId(), request.getChannelId(), request.getAmount());
 		CalculateClientCommissionResponse response = new CalculateClientCommissionResponse();
 
-		if (commission == null) {
-			clCommissionAmount = BigDecimal.valueOf(0);
-			response.setClientCommission(clCommissionAmount);
-			return response;
-		}
-
-		if (commission.getCommission() == null) {
-			if (commission.getMinCommission() == null) {
-				clCommissionAmount = new BigDecimal(0);
-			} else {
-				clCommissionAmount = BigDecimal.valueOf(commission.getMinCommission().floatValue());
-			}
-			response.setClientCommission(clCommissionAmount);
-			return response;
-		}
-
-		if (commission.getRateType() == CommissionRateType.PERCENT) {
-			clCommissionAmount = BigDecimal.valueOf(commission.getCommission().floatValue() * request.getAmount().floatValue() / 100);
-		} else {
-			clCommissionAmount = commission.getCommission();
-		}
-
-		if (commission.getMinCommission() != null) {
-			if (compareBigDecimals(clCommissionAmount, commission.getMinCommission(), 2) > 0) {
-				clCommissionAmount = BigDecimal.valueOf(commission.getMinCommission().floatValue());
-			}
-
-			if (compareBigDecimals(clCommissionAmount, commission.getMaxCommission(), 2) < 0) {
-				clCommissionAmount = BigDecimal.valueOf(commission.getMaxCommission().floatValue());
-			}
-		}
 		response.setClientCommission(clCommissionAmount);
 
 		return response;

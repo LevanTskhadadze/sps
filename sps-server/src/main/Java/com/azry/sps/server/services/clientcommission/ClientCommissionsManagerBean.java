@@ -64,9 +64,14 @@ public class ClientCommissionsManagerBean implements ClientCommissionsManager {
 		}
 	}
 
-	public BigDecimal calculateCommission(long serviceId, BigDecimal principal) {
+	public BigDecimal calculateCommission(long serviceId, Long channelId, BigDecimal principal) {
 		BigDecimal commission;
-		ClientCommissions clientCommissions = cachedConfigurationService.getClientCommissionByServiceId(String.valueOf(serviceId));
+		ClientCommissions clientCommissions;
+		if (channelId == null) {
+			clientCommissions = cachedConfigurationService.getClientCommissionByServiceId(String.valueOf(serviceId));
+		} else {
+			clientCommissions = cachedConfigurationService.getClientCommission(String.valueOf(serviceId), String.valueOf(channelId));
+		}
 		if (clientCommissions == null) {
 			return null;
 		}
