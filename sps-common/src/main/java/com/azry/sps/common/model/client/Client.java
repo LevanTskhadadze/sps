@@ -24,8 +24,10 @@ public class Client {
 	@Column(length = 100)
 	private String birthPlace;
 
+	//TODO შესამოწმებელია
 	@Override
 	public boolean equals(Object object) {
+		if (object == this) return true;
 		if (!(object instanceof Client)) {
 			return false;
 		}

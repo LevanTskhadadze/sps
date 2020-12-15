@@ -188,7 +188,7 @@ public class UsersTab extends Composite {
 	}
 
 	private ZToolBar getToolbar() {
-		ZToolBar toolbar = new ZToolBar();
+		ZToolBar toolbar = new ZToolBar(1, -1);
 		toolbar.setEnableOverflow(false);
 		toolbar.add(usernameField);
 		toolbar.add(nameField);
@@ -202,10 +202,6 @@ public class UsersTab extends Composite {
 
 		toolbar.add(getAddButton());
 
-		toolbar.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setHeight(2, Style.Unit.EM);
-		toolbar.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
 		return toolbar;
 	}
 

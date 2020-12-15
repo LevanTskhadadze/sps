@@ -21,6 +21,8 @@ public interface SystemUserManager {
 
 	void remove(long id);
 
-	SystemUser editRow(SystemUser user) throws SPSException;
+	SystemUser updateUser(SystemUser user) throws SPSException;
+
+	SystemUser addUser(SystemUser user) throws SPSException;
 
 }

@@ -254,8 +254,8 @@ public class UsersModifyWindow extends ZWindow {
 
 				@Override
 				public void onServiceSuccess(SystemUserDTO newDTO) {
-					dto = newDTO;
-					store.update(dto);
+					store.update(newDTO);
+					hide();
 				}
 			});
 		return true;
@@ -273,14 +273,16 @@ public class UsersModifyWindow extends ZWindow {
 		dto.setGroups(userGroupTab.getAllSelectedGroups());
 		dto.setLastUpdateTime(new Date());
 		dto.setCreateTime(new Date());
+		dto.setActive(true);
 
 		ServicesFactory.getUserTabService().addParameter(
 			dto,
 			new ServiceCallback<SystemUserDTO>(this) {
 
 				@Override
-				public void onServiceSuccess(SystemUserDTO SystemUserDTO) {
-					store.add(SystemUserDTO);
+				public void onServiceSuccess(SystemUserDTO systemUserDTO) {
+					store.add(0, systemUserDTO);
+					hide();
 				}
 			});
 
@@ -303,7 +305,7 @@ public class UsersModifyWindow extends ZWindow {
 						if (!doAdd()) return;
 					}
 
-					hide();
+
 				}
 			})
 			.build();
@@ -316,4 +318,5 @@ public class UsersModifyWindow extends ZWindow {
 		passwordField.disable();
 		repeatPasswordField.disable();
 	}
+
 }
