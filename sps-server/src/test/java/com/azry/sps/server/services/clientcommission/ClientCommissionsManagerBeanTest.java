@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.contains;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class ClientCommissionsManagerBeanTest {
@@ -35,7 +35,7 @@ public class ClientCommissionsManagerBeanTest {
 		amount = new BigDecimal(50);
 		commission = new BigDecimal(0);
 		MockitoAnnotations.initMocks(this);
-		when(cachedConfigurationService.getClientCommissionByServiceId(contains("1"))).thenReturn(clientCommissions);
+		when(cachedConfigurationService.getClientCommissionByServiceId(anyString())).thenReturn(clientCommissions);
 	}
 
 
