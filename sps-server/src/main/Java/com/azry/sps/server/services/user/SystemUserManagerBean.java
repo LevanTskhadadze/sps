@@ -4,6 +4,7 @@ package com.azry.sps.server.services.user;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.users.SystemUser;
+import com.azry.sps.common.model.users.UserGroup;
 import com.azry.sps.server.security.SPSPrincipal;
 import com.azry.sps.server.utils.EncryptionUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +32,26 @@ public class SystemUserManagerBean implements SystemUserManager {
 	@Resource
 	private SessionContext ctx;
 
+
 	@Override
 	public SystemUser authenticate(String username, String inputPassword) {
 		SystemUser selectedUser = findSystemUser(username);
-		if (selectedUser != null && !passwordsMatch(inputPassword, selectedUser)) {
+		if (selectedUser == null) {
+			return null;
+		}
+
+		if (!passwordsMatch(inputPassword, selectedUser) || !selectedUser.isActive()) {
 			selectedUser = null;
 		}
-		return selectedUser;
+
+
+		for (UserGroup group : selectedUser.getGroups()) {
+			if (group.getPermissions().isEmpty()) {
+				continue;
+			}
+			return selectedUser;
+		}
+		return null;
 	}
 
 	@Override

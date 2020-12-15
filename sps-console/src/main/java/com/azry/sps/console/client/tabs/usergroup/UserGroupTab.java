@@ -192,7 +192,7 @@ public class UserGroupTab extends Composite {
 					new UserGroupWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(UserGroupDTO dto) {
-							gridStore.add(dto);
+							gridStore.add(0, dto);
 						}
 					}.showInCenter();
 				}

@@ -115,7 +115,7 @@ public class ServiceGroupTab extends Composite {
 					new ServiceGroupWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(ServiceGroupDTO dto) {
-							gridStore.add(dto);
+							gridStore.add(0, dto);
 						}
 					}.showInCenter();
 				}
