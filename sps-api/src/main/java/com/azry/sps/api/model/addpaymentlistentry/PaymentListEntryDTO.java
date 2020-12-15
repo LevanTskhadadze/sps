@@ -3,32 +3,37 @@ package com.azry.sps.api.model.addpaymentlistentry;
 import com.azry.sps.common.model.paymentlist.PaymentListEntry;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(name = "PaymentListEntry", propOrder = {"serviceId", "abonentCode"})
 public class PaymentListEntryDTO {
 
-	private long id;
+	private Long id;
 
-	private long serviceId;
+	private Long serviceId;
 
 	private String abonentCode;
 
+	@XmlTransient
+	public Long getId() {
+		return id;
+	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	@XmlElement(name = "serviceId")
-	public long getServiceId() {
+	@XmlElement(name = "serviceId", required = true)
+	public Long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(long serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
 	}
 
-	@XmlElement(name = "abonentCode")
+	@XmlElement(name = "abonentCode", required = true)
 	public String getAbonentCode() {
 		return abonentCode;
 	}
@@ -54,4 +59,10 @@ public class PaymentListEntryDTO {
 		return entry;
 	}
 
+	@Override
+	public String toString() {
+		return "ID: " + id +
+			"\nService ID: " + serviceId +
+			"\nAbonent code: " + abonentCode + "\n";
+	}
 }

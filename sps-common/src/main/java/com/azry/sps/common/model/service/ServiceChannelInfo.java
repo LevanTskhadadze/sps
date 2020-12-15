@@ -20,7 +20,7 @@ public class ServiceChannelInfo {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof ServiceChannelInfo)) return false;
+		if (!(obj instanceof ServiceChannelInfo)) return false;
 
 		return channelId  == ((ServiceChannelInfo) obj).getChannelId();
 	}

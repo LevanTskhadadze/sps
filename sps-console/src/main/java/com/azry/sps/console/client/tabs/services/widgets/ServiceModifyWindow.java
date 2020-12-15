@@ -64,8 +64,7 @@ public class ServiceModifyWindow extends ZWindow {
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
-		}
-		else {
+		} else {
 			this.dto = new ServiceDTO();
 			this.dto.setName("");
 			this.dto.setActive(false);
@@ -106,7 +105,7 @@ public class ServiceModifyWindow extends ZWindow {
 		formContainer.add(constructForm(), new VerticalLayoutContainer.VerticalLayoutData(1, -1));
 
 		tabPanel.add(formContainer, Mes.get("serviceInfo"));
-		tabPanel.add(channelContainer, Mes.get("serviceInfo"));
+		tabPanel.add(channelContainer, Mes.get("channels"));
 	}
 
 	private FlexTable constructForm() {
@@ -310,7 +309,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 	}
 	private boolean doRedact() {
-		if(!validate()) return false;
+		if (!validate()) return false;
 
 		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
 
@@ -329,7 +328,7 @@ public class ServiceModifyWindow extends ZWindow {
 	}
 
 	private boolean doAdd() {
-		if(!validate()) {
+		if (!validate()) {
 			return false;
 		}
 
@@ -359,10 +358,10 @@ public class ServiceModifyWindow extends ZWindow {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (redactMode) {
-						if(!doRedact()) return;
+						if (!doRedact()) return;
 					}
 					else{
-						if(!doAdd()) return;
+						if (!doAdd()) return;
 					}
 
 					hide();

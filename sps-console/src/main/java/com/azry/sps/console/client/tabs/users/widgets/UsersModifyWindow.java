@@ -66,8 +66,7 @@ public class UsersModifyWindow extends ZWindow {
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
-		}
-		else {
+		} else {
 			this.dto = new SystemUserDTO();
 			this.dto.setPassword("");
 			this.dto.setName("");
@@ -203,24 +202,24 @@ public class UsersModifyWindow extends ZWindow {
 
 	private boolean validate() {
 		boolean good = true;
-		if(usernameField.getCurrentValue() == null || usernameField.getCurrentValue().equals("")) {
+		if (usernameField.getCurrentValue() == null || usernameField.getCurrentValue().equals("")) {
 			good = false;
 			usernameField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(nameField.getCurrentValue() == null || nameField.getCurrentValue().equals("")) {
+		if (nameField.getCurrentValue() == null || nameField.getCurrentValue().equals("")) {
 			good = false;
 			nameField.markInvalid(Mes.get("requiredField"));
 		}
 
-		if(!redactMode){
-			if(passwordField.getCurrentValue() == null || passwordField.getCurrentValue().equals("")) {
+		if (!redactMode){
+			if (passwordField.getCurrentValue() == null || passwordField.getCurrentValue().equals("")) {
 				good = false;
 				passwordField.markInvalid(Mes.get("requiredField"));
 			}
 		}
 
-		if(passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")
+		if (passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")
 			&& !passwordField.getCurrentValue().equals(repeatPasswordField.getCurrentValue())) {
 			good = false;
 			repeatPasswordField.markInvalid(Mes.get("passwordMismatch"));
@@ -236,14 +235,14 @@ public class UsersModifyWindow extends ZWindow {
 		return good & groupTabValid;
 	}
 	private boolean doRedact() {
-		if(!validate()) return false;
+		if (!validate()) return false;
 
 		dto.setName(nameField.getCurrentValue());
 		dto.setUsername(usernameField.getCurrentValue());
-		if(passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")) {
+		if (passwordField.getCurrentValue() != null && !passwordField.getCurrentValue().equals("")) {
 			dto.setPassword(passwordField.getCurrentValue());
 		}
-		if(emailField.getCurrentValue() != null && !emailField.getCurrentValue().equals("")) {
+		if (emailField.getCurrentValue() != null && !emailField.getCurrentValue().equals("")) {
 			dto.setEmail(emailField.getCurrentValue());
 		}
 
@@ -263,7 +262,7 @@ public class UsersModifyWindow extends ZWindow {
 	}
 
 	private boolean doAdd() {
-		if(!validate()) {
+		if (!validate()) {
 			return false;
 		}
 		dto = new SystemUserDTO();
@@ -298,10 +297,10 @@ public class UsersModifyWindow extends ZWindow {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
 					if (redactMode) {
-						if(!doRedact()) return;
+						if (!doRedact()) return;
 					}
 					else{
-						if(!doAdd()) return;
+						if (!doAdd()) return;
 					}
 
 					hide();

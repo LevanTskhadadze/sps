@@ -40,7 +40,7 @@ public class SPSLoginModule extends UsernamePasswordLoginModule {
 		Group callerPrincipal = new SimpleGroup("CallerPrincipal");
 		if (user != null) {
 			try {
-				if(!user.getGroups().isEmpty()) {
+				if (!user.getGroups().isEmpty()) {
 					for (UserGroup userGroup : user.getGroups()) {
 						for (String permission : userGroup.getPermissions().split(",")) {
 							group.addMember(super.createIdentity(permission));

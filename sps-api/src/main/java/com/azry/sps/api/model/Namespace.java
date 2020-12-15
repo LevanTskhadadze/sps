@@ -1,5 +1,5 @@
 package com.azry.sps.api.model;
 
 public class Namespace {
-	public static final String TN = "http://localhost:8080/sps-integration-api/sps-api";
+	public static final String TN = "com.sps.api";
 }

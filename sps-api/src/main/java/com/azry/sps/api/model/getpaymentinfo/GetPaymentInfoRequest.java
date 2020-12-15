@@ -9,7 +9,7 @@ public class GetPaymentInfoRequest implements Serializable {
 
 	String agentPaymentId;
 
-	@XmlElement(name = "paymentId")
+	@XmlElement(name = "paymentId", required = true)
 	public String getAgentPaymentId() {
 		return agentPaymentId;
 	}
@@ -20,5 +20,10 @@ public class GetPaymentInfoRequest implements Serializable {
 
 	public boolean isValid() {
 		return agentPaymentId != null;
+	}
+
+	@Override
+	public String toString() {
+		return "Agent payment ID: " + agentPaymentId;
 	}
 }

@@ -63,7 +63,7 @@ public class UserGroupTab extends FlexTable {
 			CheckBox curr = new CheckBox();
 			checkBoxes.add(curr);
 
-			if(initialGroups.contains(dto)) {
+			if (initialGroups.contains(dto)) {
 				curr.setValue(true);
 			}
 
@@ -75,7 +75,7 @@ public class UserGroupTab extends FlexTable {
 
 	public boolean validate() {
 		for (CheckBox box : checkBoxes){
-			if(box.getValue()) return true;
+			if (box.getValue()) return true;
 		}
 		return false;
 	}
@@ -83,7 +83,7 @@ public class UserGroupTab extends FlexTable {
 	public List<UserGroupDTO> getAllSelectedGroups(){
 		List<UserGroupDTO> res = new ArrayList<>();
 		for (int i = 0; i < checkBoxes.size(); i ++){
-			if(checkBoxes.get(i).getValue()) {
+			if (checkBoxes.get(i).getValue()) {
 				res.add(groups.get(i));
 			}
 		}

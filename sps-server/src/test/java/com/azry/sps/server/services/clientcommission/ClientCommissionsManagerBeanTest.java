@@ -44,7 +44,7 @@ public class ClientCommissionsManagerBeanTest {
 		clientCommissions.setRateType(CommissionRateType.PERCENT);
 		clientCommissions.setCommission(new BigDecimal(10));
 
-		commission = clientCommissionsManager.calculateCommission(1, amount);
+		commission = clientCommissionsManager.calculateCommission(1, null, amount);
 
 		assertThat(commission, equalTo(new BigDecimal(5).setScale(2)));
 	}
@@ -54,7 +54,7 @@ public class ClientCommissionsManagerBeanTest {
 		clientCommissions.setRateType(CommissionRateType.FIXED);
 		clientCommissions.setCommission(new BigDecimal(10));
 
-		commission = clientCommissionsManager.calculateCommission(1, amount);
+		commission = clientCommissionsManager.calculateCommission(1, null, amount);
 
 		assertThat(commission, equalTo(new BigDecimal(10)));
 	}
@@ -65,7 +65,7 @@ public class ClientCommissionsManagerBeanTest {
 		clientCommissions.setCommission(new BigDecimal(100));
 		clientCommissions.setMaxCommission(new BigDecimal(5));
 
-		commission = clientCommissionsManager.calculateCommission(1, amount);
+		commission = clientCommissionsManager.calculateCommission(1, null, amount);
 
 		assertThat(commission, equalTo(new BigDecimal(5)));
 	}
@@ -76,7 +76,7 @@ public class ClientCommissionsManagerBeanTest {
 		clientCommissions.setCommission(new BigDecimal(1));
 		clientCommissions.setMinCommission(new BigDecimal(10));
 
-		commission = clientCommissionsManager.calculateCommission(1, amount);
+		commission = clientCommissionsManager.calculateCommission(1, null, amount);
 
 		assertThat(commission, equalTo(new BigDecimal(10)));
 	}

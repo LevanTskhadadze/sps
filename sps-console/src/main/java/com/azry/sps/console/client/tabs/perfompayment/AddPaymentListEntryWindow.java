@@ -266,8 +266,7 @@ public abstract class AddPaymentListEntryWindow extends ZWindow {
 
 					abonenCodeInfo.setValue(result.getAbonentInfo());
 					saveB.enable();
-				}
-				else {
+				} else {
 					abonenCodeInfo.setStyleName("abonent-info-failure");
 					abonenCodeInfo.setValue(Mes.get("abonentNotFound"));
 				}

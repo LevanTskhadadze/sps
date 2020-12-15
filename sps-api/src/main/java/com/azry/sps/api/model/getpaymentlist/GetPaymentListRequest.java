@@ -9,7 +9,7 @@ public class GetPaymentListRequest implements Serializable {
 
 	String personalNumber;
 
-	@XmlElement(name = "personalNumber")
+	@XmlElement(name = "personalNumber", required = true)
 	public String getPersonalNumber() {
 		return personalNumber;
 	}
@@ -20,5 +20,10 @@ public class GetPaymentListRequest implements Serializable {
 
 	public boolean isValid() {
 		return personalNumber != null;
+	}
+
+	@Override
+	public String toString() {
+		return "Persona number: " + personalNumber;
 	}
 }

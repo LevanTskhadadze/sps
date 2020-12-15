@@ -9,8 +9,7 @@ public enum FiTransactionType {
 	public static FiTransactionType toFiTransactionType(TransactionType type) {
 		if (type == TransactionType.CLIENT_COMMISSION_AMOUNT) {
 			return COMMISSION;
-		}
-		else {
+		} else {
 			return PRINCIPAL;
 		}
 	}

@@ -84,7 +84,7 @@ public class UsersTable {
 					@Override
 					public String getProperty(SystemUserDTO systemUserDTO) {
 						String res = systemUserDTO.getEmail();
-						if(res == null) res = "";
+						if (res == null) res = "";
 						return res;
 					}
 				})
@@ -193,7 +193,7 @@ public class UsersTable {
 			.fixed()
 			.build());
 
-		if(isManage) {
+		if (isManage) {
 			columns.add(new ZColumnConfig.Builder<SystemUserDTO, String>()
 				.width(32)
 				.cell(new ZIconButtonCell.Builder<SystemUserDTO, String>()

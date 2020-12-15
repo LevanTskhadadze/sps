@@ -37,9 +37,7 @@ public class UserGroupManagerBean implements UserGroupManager {
 
 		else if (isActive) {
 			sql += "WHERE g.active = TRUE ";
-		}
-
-		else {
+		} else {
 			sql += "WHERE g.active = FALSE ";
 		}
 
@@ -52,7 +50,6 @@ public class UserGroupManagerBean implements UserGroupManager {
 			sql += "AND LOWER(g.permissions) like :permission ";
 			params.put("permission", "%" + permission.name().toLowerCase() + "%");
 		}
-
 
 		TypedQuery<UserGroup> query = em.createQuery(sql + "ORDER BY g.lastUpdateTime DESC", UserGroup.class);
 

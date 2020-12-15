@@ -180,7 +180,7 @@ public class ServiceDTO extends ConfigurableDTO implements IsSerializable {
 	@GwtIncompatible
 	public static Service toEntity(ServiceDTO serviceDTO) {
 		Service entity = new Service();
-		if(serviceDTO == null) return entity;
+		if (serviceDTO == null) return entity;
 
 		entity.setId(serviceDTO.getId());
 		entity.setName(serviceDTO.getName());
@@ -204,7 +204,7 @@ public class ServiceDTO extends ConfigurableDTO implements IsSerializable {
 	@GwtIncompatible
 	public static List<Service> toEntities(List<ServiceDTO> serviceDTOs) {
 		List<Service> entities = new ArrayList<>();
-		if(serviceDTOs == null) return entities;
+		if (serviceDTOs == null) return entities;
 
 		for(ServiceDTO dto : serviceDTOs) {
 			entities.add(toEntity(dto));

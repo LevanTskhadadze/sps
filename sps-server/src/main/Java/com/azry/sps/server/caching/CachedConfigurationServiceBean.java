@@ -130,6 +130,12 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getServiceByServicePayCode(servicePayCode);
 	}
 
+
+	@Override
+	public List<Service> getServicesByChannelId(Long channelId) {
+		return ((ServicesCachingManager) cacheMap.get(CachedDataType.SERVICES.getClassSimpleName())).getServicesByChannelId(channelId);
+	}
+
 	@Override
 	public ClientCommissions getClientCommission(long clientCommission) {
 		return ((ClientCommissionsCachingManager)cacheMap.get(CachedDataType.CLIENT_COMMISSIONS.getClassSimpleName())).get(clientCommission);
@@ -191,4 +197,5 @@ public class CachedConfigurationServiceBean implements CachedConfigurationServic
 		return ((ServiceCommissionsCachingManager) cacheMap.get(CachedDataType.SERVICE_COMMISSIONS.getClassSimpleName()))
 			.getCommissionForService(serviceId);
 	}
+
 }

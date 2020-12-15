@@ -56,7 +56,7 @@ public class ServiceChannelInfoDTO implements IsSerializable {
 	@GwtIncompatible
 	public static ServiceChannelInfoDTO toDto(ServiceChannelInfo serviceChannelInfo) {
 		ServiceChannelInfoDTO dto = new ServiceChannelInfoDTO();
-		if(serviceChannelInfo == null) return dto;
+		if (serviceChannelInfo == null) return dto;
 		dto.setChannelId(serviceChannelInfo.getChannelId());
 		dto.setMinAmount(serviceChannelInfo.getMinAmount());
 		dto.setMaxAmount(serviceChannelInfo.getMaxAmount());
@@ -68,7 +68,7 @@ public class ServiceChannelInfoDTO implements IsSerializable {
 	@GwtIncompatible
 	public static List<ServiceChannelInfoDTO> toDtos(List<ServiceChannelInfo> serviceChannelInfoList) {
 		List<ServiceChannelInfoDTO> dtos = new ArrayList<>();
-		if(serviceChannelInfoList == null) return dtos;
+		if (serviceChannelInfoList == null) return dtos;
 		for(ServiceChannelInfo service : serviceChannelInfoList) {
 			dtos.add(toDto(service));
 		}
@@ -92,7 +92,7 @@ public class ServiceChannelInfoDTO implements IsSerializable {
 	@GwtIncompatible
 	public static List<ServiceChannelInfo> toEntities(List<ServiceChannelInfoDTO> serviceChannelInfoDtoList) {
 		List<ServiceChannelInfo> entities = new ArrayList<>();
-		if(serviceChannelInfoDtoList == null) return entities;
+		if (serviceChannelInfoDtoList == null) return entities;
 		for(ServiceChannelInfoDTO dto : serviceChannelInfoDtoList) {
 			entities.add(toEntity(dto));
 		}
@@ -102,7 +102,7 @@ public class ServiceChannelInfoDTO implements IsSerializable {
 
 	@Override
 	public boolean equals(Object obj){
-		if(!(obj instanceof ServiceChannelInfoDTO)) return false;
+		if (!(obj instanceof ServiceChannelInfoDTO)) return false;
 		return ((ServiceChannelInfoDTO) obj).getChannelId() == getChannelId();
 	}
 }

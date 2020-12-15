@@ -4,7 +4,6 @@ package com.azry.sps.server.caching.services;
 import com.azry.sps.common.ListResult;
 import com.azry.sps.common.model.service.Service;
 import com.azry.sps.common.model.service.ServiceChannelInfo;
-import com.azry.sps.common.model.service.ServiceColumnNames;
 import com.azry.sps.common.model.service.ServiceEntity;
 import com.azry.sps.server.caching.CachingService;
 import org.apache.commons.lang3.StringUtils;
@@ -63,16 +62,16 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		List<Service> filteredServices = getList();
 
 		for (Service service : new ArrayList<>(filteredServices)) {
-			if (service.getName() != null && filter.get(ServiceColumnNames.NAME.getName()) != null) {
-				String name = filter.get(ServiceColumnNames.NAME.getName());
+			if (service.getName() != null && filter.get("name") != null) {
+				String name = filter.get("name");
 				if (StringUtils.isEmpty(service.getName()) || !service.getName().toLowerCase().contains(name.toLowerCase())) {
 					filteredServices.remove(service);
 					continue;
 				}
 			}
 
-			if (filter.get(ServiceColumnNames.ACTIVE.getName()) != null
-						&& service.isActive() != filter.get(ServiceColumnNames.ACTIVE.getName()).equals(ServiceColumnNames.ActivationStatus.ACTIVE.getStatus())) {
+			if (filter.get("active") != null
+						&& service.isActive() != filter.get("active").equals("1")) {
 				filteredServices.remove(service);
 			}
 		}
@@ -89,11 +88,7 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 	public List<Service> getAllActiveServices() {
 		List<Service> activeServices = getList();
 
-		for (Service service : new ArrayList<>(activeServices)) {
-			if (!service.isActive()) {
-				activeServices.remove(service);
-			}
-		}
+		activeServices.removeIf(service -> !service.isActive());
 		return activeServices;
 	}
 
@@ -103,11 +98,7 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		}
 		List<Service> filteredServices = getList();
 
-		for (Service service : new ArrayList<>(filteredServices)) {
-			if (!groupId.equals(service.getGroupId()) || !service.isActive()) {
-				filteredServices.remove(service);
-			}
-		}
+		filteredServices.removeIf(service -> !groupId.equals(service.getGroupId()) || !service.isActive());
 		return filteredServices;
 	}
 
@@ -178,5 +169,27 @@ public class ServicesCachingManager implements CachingService<Service, Long> {
 		for (Long id : toBeDeletedIds) {
 			cachedServices.remove(id);
 		}
+	}
+
+	public List<Service> getServicesByChannelId(Long channelId) {
+		List<Service> allServices = getAllServices();
+		List<Service> services = new ArrayList<>();
+		for (Service service : allServices) {
+			if (service.isAllChannels()) {
+				services.add(service);
+				continue;
+			}
+
+			for (ServiceChannelInfo info : service.getChannels()) {
+				if (info.getChannelId() == channelId) {
+					if (info.isActive()) {
+						services.add(service);
+					}
+					break;
+				}
+			}
+		}
+
+		return services;
 	}
 }

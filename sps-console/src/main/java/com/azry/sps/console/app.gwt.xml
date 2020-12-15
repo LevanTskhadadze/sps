@@ -25,9 +25,7 @@
 	<replace-with class="com.sencha.gxt.theme.neptune.client.base.menu.Css3MenuItemAppearance">
 		<when-type-is class="com.sencha.gxt.widget.core.client.menu.Item.ItemAppearance"/>
 	</replace-with>
-
-
-	<!-- Specify the app entry point class. -->
+<!-- Specify the app entry point class. -->
 	<entry-point class='com.azry.sps.console.client.ConsoleEntryPoint'/>
 
 	<!-- Specify the paths for translatable code -->

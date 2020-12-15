@@ -124,8 +124,7 @@ public class RowEntry {
 		if (serviceDTO.isActive()) {
 			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDTO), null,  null, ALIGN_LEFT, false);
 			amountF.enable();
-		}
-		else {
+		} else {
 			TableUtils.setCell(table, row, 0, new ServiceCellWidget(serviceDTO), null,  "payment-table-connection-error", ALIGN_LEFT, false);
 			amountF.disable();
 		}
@@ -230,8 +229,7 @@ public class RowEntry {
 					paymentListTable.getPaymentListDTO().getEntries().remove(paymentListEntryDTO);
 					if (paymentListTable.getTableRows().isEmpty()) {
 						paymentListTable.addEmptyRow();
-					}
-					else {
+					} else {
 						for (RowEntry entry: paymentListTable.getTableRows()) {
 							if (entry.getRow() > row) {
 								entry.decrementRow();

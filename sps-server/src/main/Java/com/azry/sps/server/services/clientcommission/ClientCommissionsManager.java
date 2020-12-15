@@ -18,7 +18,7 @@ public interface ClientCommissionsManager {
 
 	ClientCommissions updateClientCommissions(ClientCommissions clientCommissions) throws SPSException;
 
-	BigDecimal calculateCommission(long serviceId, BigDecimal principal);
+	BigDecimal calculateCommission(long serviceId, Long channelId, BigDecimal principal);
 
 	void deleteClientCommissions(long id);
 }

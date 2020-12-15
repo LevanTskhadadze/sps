@@ -76,8 +76,7 @@ public abstract class  IconEditWindow extends ZWindow {
 							onSave();
 							hide();
 							Info.display(Mes.get("note"), Mes.get("iconSuccessfulUpload"));
-						}
-							else {
+						} else {
 								int left = event.getResults().indexOf("info");
 								left = event.getResults().indexOf("\"", left);
 								left = event.getResults().indexOf("\"", left + 1);

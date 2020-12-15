@@ -58,4 +58,5 @@ public class Payment {
 
 	@Embedded
 	private Client client;
+
 }

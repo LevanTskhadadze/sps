@@ -155,4 +155,9 @@ public class ServiceManagerBean implements ServiceManager {
 	private void updateCache() {
 		updateCacheEventEvent.fire(new UpdateCacheEvent(ServiceEntity.class.getSimpleName()));
 	}
+
+	@Override
+	public List<Service> getServicesByChannelId(Long channelId) {
+		return cachingService.getServicesByChannelId(channelId);
+	}
 }
