@@ -40,7 +40,7 @@ public class ClientCommissionsManagerBeanTest {
 
 
 	@Test
-	public void calculateCommissionShouldCalculatePercentWhenRateTypeIsPercent() {
+	public void calculateCommission_Should_CalculatePercent_When_RateTypeIsPercent() {
 		clientCommissions.setRateType(CommissionRateType.PERCENT);
 		clientCommissions.setCommission(new BigDecimal(10));
 
@@ -50,7 +50,7 @@ public class ClientCommissionsManagerBeanTest {
 	}
 
 	@Test
-	public void calculateCommissionShouldCalculateFixedCommissionWhenRateTypeIsPercent() {
+	public void calculateCommission_Should_CalculateFixedCommission_When_RateTypeIsPercent() {
 		clientCommissions.setRateType(CommissionRateType.FIXED);
 		clientCommissions.setCommission(new BigDecimal(10));
 
@@ -60,7 +60,7 @@ public class ClientCommissionsManagerBeanTest {
 	}
 
 	@Test
-	public void calculateCommissionShouldSetCommissionToMaxValueIfCommissionExceedsIt() {
+	public void calculateCommission_Should_SetCommissionToMaxValue_When_CommissionExceedsIt() {
 		clientCommissions.setRateType(CommissionRateType.PERCENT);
 		clientCommissions.setCommission(new BigDecimal(100));
 		clientCommissions.setMaxCommission(new BigDecimal(5));
@@ -71,7 +71,7 @@ public class ClientCommissionsManagerBeanTest {
 	}
 
 	@Test
-	public void calculateCommissionShouldSetCommissionToMinValueIfCommissionIsLess() {
+	public void calculateCommission_Should_SetCommissionToMinValue_When_CommissionIsLess() {
 		clientCommissions.setRateType(CommissionRateType.PERCENT);
 		clientCommissions.setCommission(new BigDecimal(1));
 		clientCommissions.setMinCommission(new BigDecimal(10));
