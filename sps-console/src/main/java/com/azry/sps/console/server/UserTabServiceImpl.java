@@ -45,7 +45,7 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 	@Override
 	public SystemUserDTO editParameter(SystemUserDTO dto) throws SPSConsoleException {
 		try {
-			return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+			return SystemUserDTO.toDTO(userTabManager.updateUser(SystemUserDTO.toEntity(dto)), true);
 		}
 		catch (SPSException ex) {
 			throw new SPSConsoleException(ex);
@@ -55,7 +55,7 @@ public class UserTabServiceImpl extends RemoteServiceServlet implements UserTabS
 	@Override
 	public SystemUserDTO addParameter(SystemUserDTO dto) throws SPSConsoleException {
 		try {
-			return SystemUserDTO.toDTO(userTabManager.editRow(SystemUserDTO.toEntity(dto)), true);
+			return SystemUserDTO.toDTO(userTabManager.addUser(SystemUserDTO.toEntity(dto)), true);
 		}
 		catch (SPSException ex) {
 			throw new SPSConsoleException(ex);

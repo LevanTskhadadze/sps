@@ -1,4 +1,4 @@
-package com.azry.sps.console.client.tabs.systemparam.table;
+package com.azry.sps.console.client.tabs.systemparam.widgets;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
@@ -53,7 +53,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 		super(Mes.get("systemParam") + " " + Mes.get(actionMode.name().toLowerCase()), 490, -1, false);
 		this.store = store;
 		this.actionMode = actionMode;
-
 		if (dto != null) {
 			redactMode = true;
 			this.dto = dto;
@@ -64,15 +63,15 @@ public class SystemParametersModifyWindow extends ZWindow {
 			this.dto.setCode("");
 			this.dto.setValue("");
 		}
-
+		this.setShadow(false);
 		VerticalLayoutContainer mainContainer = new VerticalLayoutContainer();
 
 		ZButton confirmButton = getConfirmButton();
 		ZButton cancelButton = getCancelButton();
 		buttonBar.setMinButtonWidth(75);
 		getButtonBar().getElement().getStyle().setProperty("borderTop", "1px solid #3291D6");
-		addButton(cancelButton);
 		addButton(confirmButton);
+		addButton(cancelButton);
 
 		formContainer.setStyleName("editForm");
 
@@ -87,6 +86,8 @@ public class SystemParametersModifyWindow extends ZWindow {
 		if (ActionMode.VIEW.equals(actionMode)) {
 			disableFields();
 		}
+
+
 	}
 
 	private String getRequiredFieldNotification() {
@@ -109,7 +110,6 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 	private ZTextField getCodeField() {
 		codeField = new ZTextField.Builder()
-			.emptyText(dto.getCode()==null ? "" : dto.getValue())
 			.enable(!redactMode)
 			.width(305)
 			.build();
@@ -236,21 +236,25 @@ public class SystemParametersModifyWindow extends ZWindow {
 			case BOOLEAN:
 				return ((CheckBox)valueField).getValue().toString();
 			case INTEGER:
-				return ((IntegerField)valueField).getCurrentValue().toString();
+				return ((IntegerField)valueField).getCurrentValue() == null ? "" : ((IntegerField)valueField).getCurrentValue().toString();
 			case STRING:
-				return ((TextArea)valueField).getCurrentValue();
+				return ((TextArea)valueField).getCurrentValue() == null ? "" : ((TextArea)valueField).getCurrentValue();
 		}
 		return null;
 	}
 
 	private void markValueField() {
+
+
 		switch (typeField.getCurrentValue()) {
 			case BOOLEAN:
 				return;
 			case INTEGER:
 				((IntegerField)valueField).markInvalid("invalid");
+				break;
 			case STRING:
 				((TextArea)valueField).markInvalid("invalid");
+				break;
 		}
 	}
 
@@ -269,6 +273,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 				@Override
 				public void onServiceSuccess(Void unused) {
 					store.update(dto);
+					hide();
 				}
 			});
 	}
@@ -279,7 +284,8 @@ public class SystemParametersModifyWindow extends ZWindow {
 
 				@Override
 				public void onServiceSuccess(SystemParameterDTO systemParameterDTO) {
-					store.add(systemParameterDTO);
+					store.add(0, systemParameterDTO);
+					hide();
 				}
 			});
 	}
@@ -310,7 +316,7 @@ public class SystemParametersModifyWindow extends ZWindow {
 					else{
 						doAdd();
 					}
-					hide();
+
 				}
 			})
 			.build();

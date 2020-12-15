@@ -53,10 +53,9 @@ public class SystemUserManagerBean implements SystemUserManager {
 		if (params.containsKey("groups") && params.get("groups") != null && !params.get("groups").equals("")) {
 			join = true;
 		}
-		String queryPrefix = "SELECT su FROM SystemUser su ";
-		String countPrefix = "SELECT COUNT(su.id) FROM SystemUser su ";
-		StringBuilder str = new StringBuilder((join ? "INNER JOIN FETCH su.groups UG " : "") +
-			"WHERE 1 = 1");
+		String queryPrefix = "SELECT su FROM SystemUser su LEFT JOIN FETCH su.groups UG ";
+		String countPrefix = "SELECT COUNT(su.id) FROM SystemUser su " + (join ? "INNER JOIN su.groups UG " : "");
+		StringBuilder str = new StringBuilder("WHERE 1 = 1");
 		Map<String, Object> values = new HashMap<>();
 
 		if (params.containsKey("username") && params.get("username") != null && !params.get("username").equals("")) {
@@ -84,8 +83,8 @@ public class SystemUserManagerBean implements SystemUserManager {
 		}
 
 
-
-		TypedQuery<SystemUser> query = em.createQuery(queryPrefix + str.toString() + " ORDER BY su.lastUpdateTime DESC", SystemUser.class);
+		String finalQuery = queryPrefix + str.toString() + " ORDER BY su.lastUpdateTime DESC";
+		TypedQuery<SystemUser> query = em.createQuery(finalQuery, SystemUser.class);
 		Query count = em.createQuery(countPrefix + str.toString());
 		query.setFirstResult(startingIndex);
 		query.setMaxResults(numberToShow);
@@ -107,9 +106,7 @@ public class SystemUserManagerBean implements SystemUserManager {
 
 
 		List<SystemUser> res = query.getResultList();
-		for(SystemUser user : res){
-			user.initialize();
-		}
+
 		return new ListResult<>(res, (int)((long)count.getSingleResult()));
 	}
 
@@ -131,11 +128,36 @@ public class SystemUserManagerBean implements SystemUserManager {
 		}
 	}
 
+
+
 	@Override
-	public SystemUser editRow(SystemUser user) throws SPSException {
+	public SystemUser addUser(SystemUser user) throws SPSException {
 		try {
-			if (user.getId() > 0 && user.getPassword() == null || user.getPassword().equals("")) {
-				user.setPassword(em.find(SystemUser.class, user.getId()).getPassword());
+
+			Long count = em.createQuery("SELECT count (u.id) FROM SystemUser u where u.username = :name", Long.class)
+				.setParameter("name", user.getUsername())
+				.getSingleResult();
+
+			if (count > 0) {
+				throw new SPSException("usernameAlreadyExists");
+			}
+
+			SystemUser newEntity = em.merge(user);
+			newEntity.setVersion(newEntity.getVersion() + 1);
+			return newEntity;
+		}
+		catch (OptimisticLockException ex) {
+			throw new SPSException("optimisticLockException", ex);
+		}
+	}
+
+
+	@Override
+	public SystemUser updateUser(SystemUser user) throws SPSException {
+		try {
+			SystemUser presentUser = em.find(SystemUser.class, user.getId());
+			if (user.getPassword() == null || user.getPassword().equals("")) {
+				user.setPassword(presentUser.getPassword());
 			}
 
 			SystemUser newEntity = em.merge(user);

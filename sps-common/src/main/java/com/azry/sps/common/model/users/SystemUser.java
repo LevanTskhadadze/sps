@@ -2,7 +2,6 @@ package com.azry.sps.common.model.users;
 
 import com.azry.sps.common.model.Configurable;
 import lombok.Data;
-import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,9 +35,5 @@ public class SystemUser extends Configurable {
 	private List<UserGroup> groups;
 
 	private boolean active;
-
-	public void initialize(){
-		Hibernate.initialize(groups);
-	}
 
 }

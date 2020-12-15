@@ -7,8 +7,8 @@ import com.azry.gxt.client.zcomp.ZTextField;
 import com.azry.gxt.client.zcomp.ZToolBar;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.tabs.ActionMode;
-import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersModifyWindow;
-import com.azry.sps.console.client.tabs.systemparam.table.SystemParametersTable;
+import com.azry.sps.console.client.tabs.systemparam.widgets.SystemParametersModifyWindow;
+import com.azry.sps.console.client.tabs.systemparam.widgets.SystemParametersTable;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.systemparameter.SystemParameterDTO;
@@ -63,7 +63,7 @@ public class SystemParameterTab extends Composite {
 	}
 
 	private ZToolBar getToolbar() {
-		ZToolBar toolbar = new ZToolBar();
+		ZToolBar toolbar = new ZToolBar(1, -1);
 
 		toolbar.add(codeField);
 		toolbar.add(valueField);
@@ -85,12 +85,9 @@ public class SystemParameterTab extends Composite {
 			})
 			.build();
 
-		addButton.getElement().getStyle().setColor("white");
 		toolbar.add(addButton);
 
-		toolbar.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
-		toolbar.getElement().getStyle().setHeight(2, Style.Unit.EM);
+		toolbar.getElement().getStyle().setHeight(1.7, Style.Unit.EM);
 		toolbar.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
 		return toolbar;
 	}

@@ -45,7 +45,7 @@ public class ClientCommissionsServiceImpl extends RemoteServiceServlet implement
 
 	@Override
 	public BigDecimal calculateCommission(long serviceId, BigDecimal principal) {
-		return clientCommissionsManager.calculateCommission(serviceId, principal);
+		return clientCommissionsManager.calculateCommission(serviceId, null, principal);
 	}
 
 	@Override
