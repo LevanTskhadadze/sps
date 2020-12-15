@@ -162,7 +162,9 @@ public class PaymentTable {
 					PaymentDTO dto = store.get(context.getIndex());
 					String str = dto.getStatus() == null ?
 						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
-					sb.appendHtmlConstant("<div style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + "</div>");
+					sb.appendHtmlConstant("<div class = \"tooltip\" style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" +
+						str + "  <span class=\"tooltiptext\">"+dto.getStatusMessage()+"</span>\n" +
+						  "</div>");
 				}
 			})
 			.build());

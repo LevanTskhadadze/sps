@@ -35,7 +35,7 @@ public class ServiceChannelWindow extends Composite {
 
 	ActionMode actionMode;
 
-	public ServiceChannelWindow(final List<ServiceChannelInfoDTO> entries, boolean allSelected, ActionMode actionMode){
+	public ServiceChannelWindow(final List<ServiceChannelInfoDTO> entries, final boolean allSelected, ActionMode actionMode){
 		super();
 		this.actionMode = actionMode;
 		container = new VerticalLayoutContainer();
@@ -47,6 +47,7 @@ public class ServiceChannelWindow extends Composite {
 		toolbar.setHeight(40);
 		selectAllButton = new ToggleButton(Mes.get("allChannels"));
 		selectAllButton.setValue(allSelected);
+
 		selectAllButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -68,13 +69,13 @@ public class ServiceChannelWindow extends Composite {
 				@Override
 				public void onServiceSuccess(List<ChannelDTO> result) {
 					addEntries(entries, result);
+					toggleCheckboxes(!allSelected);
 				}
 			});
 		table.getColumnFormatter().setWidth(0, "32px");
 
 		table.getColumnFormatter().setWidth(1, "100%");
 		container.add(table);
-		toggleCheckboxes(!allSelected);
 		initWidget(container);
 	}
 
@@ -98,7 +99,9 @@ public class ServiceChannelWindow extends Composite {
 			if (infos.contains(newInfo)) {
 				newInfo = infos.get(infos.indexOf(newInfo));
 			}
+
 			channelInfos.add(newInfo);
+
 
 			CheckBox activeBox = new CheckBox();
 
@@ -167,11 +170,11 @@ public class ServiceChannelWindow extends Composite {
 
 	private static class ChannelInfoRow {
 
-		private CheckBox activeBox;
+		private final CheckBox activeBox;
 
-		private BigDecimalField minAmountField;
+		private final BigDecimalField minAmountField;
 
-		private BigDecimalField maxAmountField;
+		private final BigDecimalField maxAmountField;
 
 		public ChannelInfoRow(CheckBox activeBox, BigDecimalField minAmountField, BigDecimalField maxAmountField) {
 			this.activeBox = activeBox;

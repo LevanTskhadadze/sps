@@ -180,7 +180,6 @@ public class UserGroupTab extends Composite {
 			})
 			.build();
 
-		//			.visible(isManage)
 		ZButton addButton = new ZButton.Builder()
 			.icon(FAIconsProvider.getIcons().plus())
 			.text(Mes.get("add"))

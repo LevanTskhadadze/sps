@@ -168,7 +168,7 @@ public class ServiceCommissionsTab extends Composite {
 					new ServiceCommissionsWindow(null, serviceDTOs, ActionMode.ADD) {
 						@Override
 						public void onSave(ServiceCommissionsDTO dto) {
-							gridStore.add(dto);
+							gridStore.add(0, dto);
 						}
 					}.showInCenter();
 				}

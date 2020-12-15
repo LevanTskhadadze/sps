@@ -100,9 +100,10 @@ public class ServicesTab extends Composite {
 
 
 	private void assembleContent() {
-		content.add(constructToolbar());
+		content.add(getToolbar());
 
 		grid = new ZGrid<>(ServiceTable.getListStore(), ServiceTable.getMyColumnModel(isManage));
+
 		grid.setColumnResize(false);
 		grid.getView().setForceFit(true);
 		grid.getView().setColumnLines(true);
@@ -110,7 +111,7 @@ public class ServicesTab extends Composite {
 
 	}
 
-	private ZToolBar constructToolbar() {
+	private ZToolBar getToolbar() {
 		nameField = new ZTextField.Builder()
 			.emptyText(Mes.get("serviceNameShort"))
 			.build();
@@ -138,7 +139,7 @@ public class ServicesTab extends Composite {
 			.noSelectionLabel(Mes.get("active") + "/" + Mes.get("inactive"))
 			.build();
 
-		ZToolBar toolBar = new ZToolBar();
+		ZToolBar toolBar = new ZToolBar(1, -1);
 
 		toolBar.add(nameField);
 		toolBar.add(activeComboBox);

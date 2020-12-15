@@ -221,8 +221,8 @@ public class PaymentTab extends Composite {
 	}
 
 	private VerticalLayoutContainer getToolbar() {
-		ZToolBar upperToolbar = new ZToolBar();
-		ZToolBar lowerToolbar = new ZToolBar();
+		ZToolBar upperToolbar = new ZToolBar(1, -1);
+		ZToolBar lowerToolbar = new ZToolBar(1, -1);
 		VerticalLayoutContainer container = new VerticalLayoutContainer();
 		upperToolbar.setEnableOverflow(false);
 

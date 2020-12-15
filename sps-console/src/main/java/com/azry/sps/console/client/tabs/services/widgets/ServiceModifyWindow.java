@@ -10,6 +10,7 @@ import com.azry.sps.console.client.tabs.ActionMode;
 import com.azry.sps.console.client.utils.Mes;
 import com.azry.sps.console.client.utils.ServiceCallback;
 import com.azry.sps.console.shared.dto.servicegroup.ServiceGroupDTO;
+import com.azry.sps.console.shared.dto.services.ServiceChannelInfoDTO;
 import com.azry.sps.console.shared.dto.services.ServiceDTO;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -22,6 +23,7 @@ import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.form.BigDecimalField;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,20 +59,20 @@ public class ServiceModifyWindow extends ZWindow {
 
 	ActionMode actionMode;
 
-	public ServiceModifyWindow(ServiceDTO dto, ListStore<ServiceDTO> store, ActionMode actionMode) {
+	public ServiceModifyWindow(ServiceDTO serviceDTO, ListStore<ServiceDTO> store, ActionMode actionMode) {
 		super(Mes.get("ofService") + " " + Mes.get(actionMode.name().toLowerCase()), 700, 500, false);
 
 		this.actionMode = actionMode;
-		if (dto != null) {
+		if (serviceDTO != null) {
 			redactMode = true;
-			this.dto = dto;
+			this.dto = serviceDTO;
 		} else {
 			this.dto = new ServiceDTO();
 			this.dto.setName("");
 			this.dto.setActive(false);
 			this.dto.setId(0);
 		}
-		channelContainer = new ServiceChannelWindow(this.dto.getChannels(), this.dto.isAllChannels(), actionMode);
+		channelContainer = new ServiceChannelWindow(dto.getChannels(), dto.isAllChannels(), actionMode);
 		tabPanel = new TabPanel();
 
 		this.store = store;
@@ -305,7 +307,14 @@ public class ServiceModifyWindow extends ZWindow {
 		dto.setMaxAmount(maxAmountField.getCurrentValue());
 		dto.setAllChannels(info.isAllChannels());
 		dto.setGroupId(serviceGroupField.getCurrentValue().getId());
-		dto.setChannels(info.getChannels());
+		dto.setChannels(new ArrayList<ServiceChannelInfoDTO>());
+		for (ServiceChannelInfoDTO channelInfo : info.getChannels()) {
+			if (channelInfo.isActive() ||
+				channelInfo.getMaxAmount() != null ||
+				channelInfo.getMinAmount() != null) {
+					dto.getChannels().add(channelInfo);
+			}
+		}
 
 	}
 	private boolean doRedact() {
@@ -320,8 +329,8 @@ public class ServiceModifyWindow extends ZWindow {
 
 				@Override
 				public void onServiceSuccess(ServiceDTO newDTO) {
-					dto = newDTO;
-					store.update(dto);
+					store.update(newDTO);
+					hide();
 				}
 			});
 		return true;
@@ -334,6 +343,7 @@ public class ServiceModifyWindow extends ZWindow {
 
 		ServiceChannelWindow.ChannelInfo info = channelContainer.getChannelInfos();
 		dto = new ServiceDTO();
+		dto.setActive(true);
 		retrieveInfo(dto, info);
 
 		ServicesFactory.getServiceTabService().editService(
@@ -341,7 +351,8 @@ public class ServiceModifyWindow extends ZWindow {
 			new ServiceCallback<ServiceDTO>(this) {
 				@Override
 				public void onServiceSuccess(ServiceDTO ServiceDTO) {
-					store.add(ServiceDTO);
+					store.add(0, ServiceDTO);
+					hide();
 				}
 			});
 
@@ -364,7 +375,6 @@ public class ServiceModifyWindow extends ZWindow {
 						if (!doAdd()) return;
 					}
 
-					hide();
 				}
 			})
 			.build();

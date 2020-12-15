@@ -80,7 +80,7 @@ public class ServiceTable {
 			.build());
 
 		columns.add(new ZColumnConfig.Builder<ServiceDTO, String>()
-			.header(Mes.get("lastUpdateTime"))
+			.headerHtml(Mes.get("lastUpdateTime") + "<i class=\"fa fa-sort\" style = \"padding-left: 3px;\"></i>")
 			.width(100)
 			.valueProvider(new ZStringProvider<ServiceDTO>() {
 				@Override

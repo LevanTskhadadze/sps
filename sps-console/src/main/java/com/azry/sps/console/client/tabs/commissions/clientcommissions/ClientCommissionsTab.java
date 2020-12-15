@@ -217,7 +217,7 @@ public class ClientCommissionsTab extends Composite {
 					new ClientCommissionsWindow(null, serviceDTOs, channelDTOs, ActionMode.ADD) {
 						@Override
 						public void onSave(ClientCommissionsDTO dto) {
-							gridStore.add(dto);
+							gridStore.add(0, dto);
 						}
 					}.showInCenter();
 				}

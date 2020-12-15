@@ -149,7 +149,7 @@ public class ChannelTab extends Composite {
 					new ChannelWindow(null, ActionMode.ADD) {
 						@Override
 						public void onSave(ChannelDTO dto) {
-							gridStore.add(dto);
+							gridStore.add(0, dto);
 						}
 					}.showInCenter();
 				}
