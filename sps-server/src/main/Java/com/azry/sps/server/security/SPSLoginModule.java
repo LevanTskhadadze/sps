@@ -46,13 +46,11 @@ public class SPSLoginModule extends UsernamePasswordLoginModule {
 							group.addMember(super.createIdentity(permission));
 						}
 					}
-					if (!group.members().nextElement().getName().equals("")) {
-						group.addMember(super.createIdentity("ANY_ROLE"));
-						SPSPrincipal principal = (SPSPrincipal) getIdentity();
-						principal.setName(getUsername());
-						principal.setSystemUser(user);
-						callerPrincipal.addMember(principal);
-					}
+					group.addMember(super.createIdentity("ANY_ROLE"));
+					SPSPrincipal principal = (SPSPrincipal) getIdentity();
+					principal.setName(getUsername());
+					principal.setSystemUser(user);
+					callerPrincipal.addMember(principal);
 				}
 			} catch (Exception ex) {
 				log.error("Failed to create principal", ex);

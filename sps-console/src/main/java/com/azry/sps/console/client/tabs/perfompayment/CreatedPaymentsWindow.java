@@ -57,7 +57,7 @@ public class CreatedPaymentsWindow extends ZWindow {
 		super(Mes.get("paymentsInfo"), 800, 500, false);
 		this.payments = payments;
 		initGrid();
-		container.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, -1));
+		container.add(grid, new VerticalLayoutContainer.VerticalLayoutData(1, 1));
 		addBottomHorizontalLine();
 		initButton();
 		add(container, new MarginData(0));

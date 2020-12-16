@@ -12,6 +12,4 @@ public class SpIntegrationException extends Exception {
 		super(message);
 		this.status = status;
 	}
-
-
 }

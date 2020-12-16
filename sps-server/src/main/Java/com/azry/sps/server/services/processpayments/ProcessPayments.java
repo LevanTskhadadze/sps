@@ -31,7 +31,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,8 +62,6 @@ public class ProcessPayments {
 	@Inject
 	@SysParam(type = SystemParameterType.INTEGER, code = "maxPaymentPendingHours", defaultValue = "48")
 	private Parameter<Integer> maxPaymentPendingHours;
-
-	List<Long> paymentsBeingProcessed = new ArrayList<>();
 
 	@PostConstruct
 	public void startup() {
@@ -119,20 +116,20 @@ public class ProcessPayments {
 		}
 	}
 
-	public void retryPayment(Payment payment) throws SPSException {
-		if (!paymentsBeingProcessed.contains(payment.getId())) {
+	public synchronized Payment retryPayment(Payment payment) throws SPSException {
+		Payment paymentEntity = paymentManager.getPayment(payment.getId());
+		if (paymentManager.getPayment(payment.getId()).getStatus().equals(PaymentStatus.REJECTED)) {
 			try {
-				paymentsBeingProcessed.add(payment.getId());
-				processPayment(payment);
+				processPayment(paymentEntity);
 			} catch (Exception ex) {
 				setPaymentStatus(payment, PaymentStatus.REJECTED,
 					"Unexpected error occurred during Payment processing. Payment Id: " + payment.getId());
 				log.error("Unexpected error occurred during Payment processing. Payment Id: " + payment.getId(), ex);
 			} finally {
-				paymentsBeingProcessed.remove(payment.getId());
+				return paymentEntity;
 			}
 		} else {
-			throw new SPSException("Payment is already being processed.");
+			return paymentEntity;
 		}
 	}
 
