@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="MPSDealersService" targetNamespace="com.sps.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="com.sps.api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="MPSDealersService" targetNamespace="com.sps.api" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:tns="com.sps.api" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="com.sps.api" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="com.sps.api">
 <xs:element name="addPaymentListEntry" type="tns:addPaymentListEntry"/>
@@ -63,10 +64,11 @@
 </xs:complexType>
 <xs:complexType name="GetPaymentInfoResponse">
 <xs:sequence>
-<xs:element minOccurs="0" name="agentPaymentId" type="xs:string"/>
+<xs:element minOccurs="0" name="paymentId" type="xs:string"/>
 <xs:element name="serviceId" type="xs:long"/>
 <xs:element name="channelId" type="xs:long"/>
 <xs:element minOccurs="0" name="abonentCode" type="xs:string"/>
+<xs:element minOccurs="0" name="clientPersonalNumber" type="xs:string"/>
 <xs:element minOccurs="0" name="amount" type="xs:decimal"/>
 <xs:element minOccurs="0" name="clCommission" type="xs:decimal"/>
 <xs:element minOccurs="0" name="svcCommission" type="xs:decimal"/>
@@ -88,7 +90,7 @@
 <xs:element name="personalNumber" type="xs:string"/>
 <xs:element name="amount" type="xs:decimal"/>
 <xs:element name="clientAccountBAN" type="xs:string"/>
-<xs:element minOccurs="0" name="clientCommission" type="xs:decimal"/>
+<xs:element name="clientCommission" type="xs:decimal"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="payResponse">
