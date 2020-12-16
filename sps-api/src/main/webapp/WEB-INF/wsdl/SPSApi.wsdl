@@ -63,10 +63,11 @@
 </xs:complexType>
 <xs:complexType name="GetPaymentInfoResponse">
 <xs:sequence>
-<xs:element minOccurs="0" name="agentPaymentId" type="xs:string"/>
+<xs:element minOccurs="0" name="paymentId" type="xs:string"/>
 <xs:element name="serviceId" type="xs:long"/>
 <xs:element name="channelId" type="xs:long"/>
 <xs:element minOccurs="0" name="abonentCode" type="xs:string"/>
+<xs:element minOccurs="0" name="clientPersonalNumber" type="xs:string"/>
 <xs:element minOccurs="0" name="amount" type="xs:decimal"/>
 <xs:element minOccurs="0" name="clCommission" type="xs:decimal"/>
 <xs:element minOccurs="0" name="svcCommission" type="xs:decimal"/>
@@ -88,7 +89,7 @@
 <xs:element name="personalNumber" type="xs:string"/>
 <xs:element name="amount" type="xs:decimal"/>
 <xs:element name="clientAccountBAN" type="xs:string"/>
-<xs:element minOccurs="0" name="clientCommission" type="xs:decimal"/>
+<xs:element name="clientCommission" type="xs:decimal"/>
 </xs:sequence>
 </xs:complexType>
 <xs:complexType name="payResponse">
