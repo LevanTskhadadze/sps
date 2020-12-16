@@ -38,11 +38,6 @@ public class ServiceManagerBean implements ServiceManager {
 	@Inject
 	CachedConfigurationService cachingService;
 
-//	@Override
-//	public List<ServiceEntity> getAllServiceEntities() {
-//		return em.createQuery("SELECT s FROM ServiceEntity s", ServiceEntity.class)
-//			.getResultList();
-//	}
 
 	@Override
 	public List<Service> getAllServices() {

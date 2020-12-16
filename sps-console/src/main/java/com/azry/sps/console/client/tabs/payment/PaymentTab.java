@@ -205,8 +205,6 @@ public class PaymentTab extends Composite {
 				}
 			})
 			.build();
-
-
 	}
 
 	private void assembleContent(List<ServiceDTO> services, List<ChannelDTO> channels){

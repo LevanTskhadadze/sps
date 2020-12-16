@@ -32,7 +32,10 @@ public class PaymentListServiceImpl extends RemoteServiceServlet implements Paym
 
 	@Override
 	public PaymentListDTO getPaymentListWithServices(String personalNumber) {
-		PaymentListDTO paymentList =  getPaymentList(personalNumber);
+		PaymentListDTO paymentList = PaymentListDTO.toDTO(paymentListManager.getPaymentList(personalNumber));
+		if (paymentList == null) {
+			paymentList = new PaymentListDTO();
+		}
 		List<PaymentListEntryDTO> paymentListEntries = new ArrayList<>();
 		for (PaymentListEntryDTO entry : paymentList.getEntries()) {
 			Service service = serviceManager.getService(entry.getServiceId());

@@ -165,7 +165,7 @@ public class PaymentManagerBean implements PaymentManager {
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public Payment addPayment(Payment payment, String sourceAccountIBAN) {
 		Payment paymentEntity;
-		if (!payment.getClCommission().equals(BigDecimal.ZERO) && clientAccountIBAN.getValue() == null) {
+		if (payment.getClCommission().compareTo(BigDecimal.ZERO) != 0 && clientAccountIBAN.getValue() == null) {
 			paymentEntity = setPayment(payment, PaymentStatus.COLLECT_REJECTED,
 				"Client account is not configured for client Commission. " +
 					"Please set client account in system parameters tab with key: \"clientAccountIBAN\".");

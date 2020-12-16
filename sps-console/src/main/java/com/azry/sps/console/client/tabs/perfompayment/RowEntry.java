@@ -2,6 +2,7 @@ package com.azry.sps.console.client.tabs.perfompayment;
 
 import com.azry.faicons.client.faicons.FAIconsProvider;
 import com.azry.gxt.client.zcomp.ZButton;
+import com.azry.gxt.client.zcomp.ZConfirmDialog;
 import com.azry.gxt.client.zcomp.ZNumberField;
 import com.azry.sps.console.client.ServicesFactory;
 import com.azry.sps.console.client.utils.Mes;
@@ -211,7 +212,12 @@ public class RowEntry {
 			.handler(new SelectEvent.SelectHandler() {
 				@Override
 				public void onSelect(SelectEvent selectEvent) {
-					onDelete();
+					new ZConfirmDialog(Mes.get("confirm"), Mes.get("objectDeleteConfirmation")) {
+						@Override
+						public void onConfirm() {
+							onDelete();
+						}
+					}.show();
 				}
 			})
 			.build();
@@ -282,12 +288,10 @@ public class RowEntry {
 		} else {
 			setCommission(commission);
 			setCommissionCell(new Label(NumberFormatUtils.format(commission)), "payment-table-loaded", ALIGN_RIGHT, false);
-			if (commission.compareTo(BigDecimal.ZERO) > 0) {
-				if (!isCommissionVerified()) {
-					paymentListTable.incrementReadyPaymentEntryCount();
-				}
-				commissionVerified = true;
+			if (!isCommissionVerified()) {
+				paymentListTable.incrementReadyPaymentEntryCount();
 			}
+			commissionVerified = true;
 			amountF.enable();
 			paymentListTable.updateAggregateCommission();
 			paymentListTable.updateAggregateTotalAmount();
