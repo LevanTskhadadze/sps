@@ -138,6 +138,9 @@ public class CollectPayments {
 
 	@Timeout
 	public void process() {
+		if (!isProcessPaymentEnabled()) {
+			return;
+		}
 		List<Payment> payments = paymentManager.getPayments(0, Integer.MAX_VALUE, new PaymentParams(), TARGET_STATUSES)
 			.getResultList();
 
@@ -150,5 +153,10 @@ public class CollectPayments {
 
 			}
 		}
+	}
+
+	private boolean isProcessPaymentEnabled() {
+		String value = System.getProperty("StartProcessPayment");
+		return Boolean.parseBoolean(value);
 	}
 }
