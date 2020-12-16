@@ -73,6 +73,9 @@ public class CollectPayments {
 
 	@PostConstruct
 	public void startup() {
+		if (!isProcessPaymentEnabled()) {
+			return;
+		}
 		timerService.createIntervalTimer(15000, 30 * 1000, new TimerConfig(null, false));
 	}
 
@@ -138,6 +141,7 @@ public class CollectPayments {
 
 	@Timeout
 	public void process() {
+
 		List<Payment> payments = paymentManager.getPayments(0, Integer.MAX_VALUE, new PaymentParams(), TARGET_STATUSES)
 			.getResultList();
 
@@ -150,5 +154,10 @@ public class CollectPayments {
 
 			}
 		}
+	}
+
+	private boolean isProcessPaymentEnabled() {
+		String value = System.getProperty("StartProcessPayment");
+		return Boolean.parseBoolean(value);
 	}
 }
