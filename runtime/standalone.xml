@@ -38,6 +38,9 @@
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
     </extensions>
+    <system-properties>
+        <property name="StartProcessPayment" value="true"/>
+    </system-properties>
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
@@ -151,7 +154,7 @@
         <subsystem xmlns="urn:jboss:domain:datasources:5.0">
             <datasources>
                 <datasource jndi-name="java:jboss/datasources/sps" pool-name="sps" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:sqlserver://10.131.33.57;DatabaseName=SPS_GROUP_L</connection-url>
+                    <connection-url>jdbc:sqlserver://5.10.34.73;DatabaseName=SPS_GROUP_L</connection-url>
                     <driver>sqlserver.jdbc</driver>
                     <pool>
                         <min-pool-size>10</min-pool-size>
@@ -200,18 +203,18 @@
         <subsystem xmlns="urn:jboss:domain:ee:4.0">
             <spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
             <concurrent>
-                <context-com.azry.sps.server.services.services>
+                <context-services>
                     <context-service name="default" jndi-name="java:jboss/ee/concurrency/context/default" use-transaction-setup-provider="true"/>
-                </context-com.azry.sps.server.services.services>
+                </context-services>
                 <managed-thread-factories>
                     <managed-thread-factory name="default" jndi-name="java:jboss/ee/concurrency/factory/default" context-service="default"/>
                 </managed-thread-factories>
-                <managed-executor-com.azry.sps.server.services.services>
+                <managed-executor-services>
                     <managed-executor-service name="default" jndi-name="java:jboss/ee/concurrency/executor/default" context-service="default" hung-task-threshold="60000" keepalive-time="5000"/>
-                </managed-executor-com.azry.sps.server.services.services>
-                <managed-scheduled-executor-com.azry.sps.server.services.services>
+                </managed-executor-services>
+                <managed-scheduled-executor-services>
                     <managed-scheduled-executor-service name="default" jndi-name="java:jboss/ee/concurrency/scheduler/default" context-service="default" hung-task-threshold="60000" keepalive-time="3000"/>
-                </managed-scheduled-executor-com.azry.sps.server.services.services>
+                </managed-scheduled-executor-services>
             </concurrent>
             <default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/datasources/ExampleDS" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
         </subsystem>
@@ -528,8 +531,8 @@
         <subsystem xmlns="urn:jboss:domain:undertow:9.0" default-server="default-server" default-virtual-host="default-host" default-servlet-container="default" default-security-domain="other" statistics-enabled="${wildfly.undertow.statistics-enabled:${wildfly.statistics-enabled:false}}">
             <buffer-cache name="default"/>
             <server name="default-server">
-                <http-listener name="default" socket-binding="http"  max-post-size="254857600" redirect-socket="https" enable-http2="true"/>
-                <https-listener name="https" socket-binding="https"  max-post-size="254857600" security-realm="ApplicationRealm" enable-http2="true"/>
+                <http-listener name="default" socket-binding="http" max-post-size="254857600" redirect-socket="https" enable-http2="true"/>
+                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true"/>
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <http-invoker security-realm="ApplicationRealm"/>
@@ -576,8 +579,8 @@
         </outbound-socket-binding>
     </socket-binding-group>
     <deployments>
-        <deployment name="sps-ear-1.0-SNAPSHOT" runtime-name="sps-ear-1.0-SNAPSHOT.ear">
-            <fs-exploded path="C:\dev\payments-system-internship-project-group-l\sps-ear\target\sps-ear-1.0-SNAPSHOT"/>
+        <deployment name="sps-ear-1.0-SNAPSHOT.ear" runtime-name="sps-ear-1.0-SNAPSHOT.ear">
+            <fs-archive path="C:\dev\sps\payments-system-internship-project-group-l\sps-ear\target\sps-ear-1.0-SNAPSHOT.ear"/>
         </deployment>
     </deployments>
 </server>

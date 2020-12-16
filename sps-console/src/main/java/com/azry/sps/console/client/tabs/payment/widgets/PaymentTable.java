@@ -154,7 +154,8 @@ public class PaymentTable {
 
 		columns.add(new ZColumnConfig.Builder<PaymentDTO, String>()
 			.header(Mes.get("status"))
-			.width(100)
+			.width(170)
+			.fixed()
 			.cell(new AbstractCell<String>() {
 				@Override
 				public void render(Context context, String value, SafeHtmlBuilder sb) {
@@ -162,9 +163,12 @@ public class PaymentTable {
 					PaymentDTO dto = store.get(context.getIndex());
 					String str = dto.getStatus() == null ?
 						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
+					String tooltipText = "";
+					if (dto.getStatusMessage() != null) {
+						tooltipText = "  <p><span class=\"tooltiptext\">"+dto.getStatusMessage()+"</span></p>\n";
+					}
 					sb.appendHtmlConstant("<div class = \"tooltip\" style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" +
-						str + "  <span class=\"tooltiptext\">"+dto.getStatusMessage()+"</span>\n" +
-						  "</div>");
+						str + tooltipText + "</div>");
 				}
 			})
 			.build());
@@ -187,11 +191,10 @@ public class PaymentTable {
 				.clickHandler(new GridClickHandler<PaymentDTO>() {
 					@Override
 					public void onClick(final Cell.Context context, final PaymentDTO paymentDTO) {
-						ServicesFactory.getPaymentService().retryPayment(paymentDTO.getId(), new ServiceCallback<PaymentStatusDTO>() {
+						ServicesFactory.getPaymentService().retryPayment(paymentDTO.getId(), new ServiceCallback<PaymentDTO>() {
 							@Override
-							public void onServiceSuccess(PaymentStatusDTO result) {
-								paymentDTO.setStatus(result);
-								store.update(paymentDTO);
+							public void onServiceSuccess(PaymentDTO result) {
+								store.update(result);
 							}
 						});
 					}

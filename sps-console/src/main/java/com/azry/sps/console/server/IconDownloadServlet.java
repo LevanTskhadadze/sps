@@ -29,7 +29,6 @@ public class IconDownloadServlet extends HttpServlet {
 
 		byte[] buffer;
 		try {
-			//TODO gasasworebelia
 			buffer = fileManager.downloadIcon(source);
 		} catch (Exception ex) {
 			buffer = IOUtils.toByteArray(getClass().getClassLoader().getResourceAsStream("/images/empty_icon.gif"));

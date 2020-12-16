@@ -1,10 +1,10 @@
 package com.azry.sps.console.server;
 
 import com.azry.sps.common.ListResult;
+import com.azry.sps.common.exception.SPSException;
 import com.azry.sps.common.model.payment.Payment;
-import com.azry.sps.common.model.payment.PaymentStatus;
-import com.azry.sps.common.model.payment.PaymentStatusLog;
 import com.azry.sps.common.model.transaction.TransactionType;
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.channel.ChannelDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
@@ -16,6 +16,7 @@ import com.azry.sps.console.shared.payment.PaymentParamDTO;
 import com.azry.sps.console.shared.payment.PaymentService;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.payment.PaymentManager;
+import com.azry.sps.server.services.processpayments.ProcessPayments;
 import com.azry.sps.server.services.service.ServiceManager;
 import com.azry.sps.server.services.transactionorder.TransactionOrderManager;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -24,7 +25,6 @@ import com.sencha.gxt.data.shared.loader.PagingLoadResultBean;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet("sps/servlet/payment")
@@ -41,6 +41,9 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 
 	@Inject
 	ChannelManager channelManager;
+
+	@Inject
+	ProcessPayments processPayments;
 
 	@Override
 	public PagingLoadResult<PaymentDTO> getPayments(int offset, int limit, PaymentParamDTO params, List<PaymentStatusDTO> statuses) {
@@ -80,16 +83,12 @@ public class PaymentServiceImpl extends RemoteServiceServlet implements PaymentS
 	}
 
 	@Override
-	public PaymentStatusDTO retryPayment(long paymentId) {
-		paymentManager.changePaymentStatus(paymentId, PaymentStatus.PENDING);
+	public PaymentDTO retryPayment(long paymentId) throws SPSConsoleException {
+		try {
+			return PaymentDTO.toDTO(processPayments.retryPayment(paymentManager.getPayment(paymentId)));
 
-		PaymentStatusLog log = new PaymentStatusLog();
-		log.setPaymentId(paymentId);
-		log.setStatus(PaymentStatus.PENDING);
-		log.setStatusTime(new Date());
-		log.setStatusMessage("Retry Payment");
-
-		paymentManager.addPaymentStatusLog(log);
-		return PaymentStatusDTO.PENDING;
+		} catch (SPSException ex) {
+			throw new SPSConsoleException(ex.getMessage(), ex);
+		}
 	}
 }

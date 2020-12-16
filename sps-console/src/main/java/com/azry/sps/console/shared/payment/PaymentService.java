@@ -1,5 +1,6 @@
 package com.azry.sps.console.shared.payment;
 
+import com.azry.sps.console.shared.clientexception.SPSConsoleException;
 import com.azry.sps.console.shared.dto.payment.PaymentDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentInfoDTO;
 import com.azry.sps.console.shared.dto.payment.PaymentStatusDTO;
@@ -21,5 +22,5 @@ public interface PaymentService extends RemoteService {
 
 	List<PaymentDTO> addPayments(List<PaymentDTO> payments);
 
-	PaymentStatusDTO retryPayment(long paymentId);
+	PaymentDTO retryPayment(long paymentId) throws SPSConsoleException;
 }

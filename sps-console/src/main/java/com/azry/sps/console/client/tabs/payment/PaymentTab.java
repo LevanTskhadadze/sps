@@ -195,13 +195,13 @@ public class PaymentTab extends Composite {
 					return item == null ? null : item.name();
 				}
 			})
-			.width(2 * TOOLBAR_FIELD_WIDTH + 6)
+			.width(2 * TOOLBAR_FIELD_WIDTH + 2)
 			.noSelectionLabel(Mes.get("paymentStatus"))
 			.values(Arrays.asList(PaymentStatusDTO.values()))
 			.labelProvider(new LabelProvider<PaymentStatusDTO>() {
 				@Override
 				public String getLabel(PaymentStatusDTO item) {
-					return "<div style=\"color: " + item.getColor() + "\">" + Mes.get("PAYMENT_" + item.name()) + "</div>";
+					return Mes.get("PAYMENT_" + item.name());
 				}
 			})
 			.build();
@@ -219,7 +219,7 @@ public class PaymentTab extends Composite {
 	}
 
 	private VerticalLayoutContainer getToolbar() {
-		ZToolBar upperToolbar = new ZToolBar(1, -1);
+		ZToolBar upperToolbar = new ZToolBar(1, 1);
 		ZToolBar lowerToolbar = new ZToolBar(1, -1);
 		VerticalLayoutContainer container = new VerticalLayoutContainer();
 		upperToolbar.setEnableOverflow(false);
@@ -241,8 +241,9 @@ public class PaymentTab extends Composite {
 		container.add(lowerToolbar);
 
 		container.addStyleName("toolbar-container");
+		upperToolbar.getElement().getStyle().setMarginBottom(1, Style.Unit.PX);
 		container.getElement().getStyle().setFontSize(13, Style.Unit.PX);
-		container.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
+		//zcontainer.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
 		container.getElement().getStyle().setMarginBottom(5, Style.Unit.PX);
 		container.getElement().getStyle().setTextAlign(Style.TextAlign.CENTER);
 

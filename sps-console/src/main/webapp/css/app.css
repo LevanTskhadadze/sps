@@ -28,23 +28,18 @@ body {
 
 }
 
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black;
-}
-
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
+    width: 200px;
+    background-color: #dddddd;
+    color: black;
+    font-weight: normal;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
 
     /* Position the tooltip */
+    margin-left: -210px;
     position: absolute;
     z-index: 1;
 }
@@ -52,8 +47,6 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
-
-
 
 .user-block-username {
     min-width: 90px;

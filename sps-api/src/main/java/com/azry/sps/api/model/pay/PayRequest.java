@@ -87,7 +87,7 @@ public class PayRequest implements Serializable {
 		this.clientAccountBAN = clientAccountBAN;
 	}
 
-	@XmlElement(name = "clientCommission")
+	@XmlElement(name = "clientCommission", required = true)
 	public BigDecimal getClientCommission() {
 		return clientCommission;
 	}
@@ -100,6 +100,7 @@ public class PayRequest implements Serializable {
 		return agentPaymentId != null
 			&& abonentCode != null
 			&& personalNumber != null
+			&& clientCommission != null
 			&& amount != null
 			&& serviceId != null
 			&& channelId != null

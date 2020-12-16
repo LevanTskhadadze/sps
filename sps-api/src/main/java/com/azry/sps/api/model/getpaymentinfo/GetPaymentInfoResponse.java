@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@XmlType(name = "GetPaymentInfoResponse", propOrder = {"agentPaymentId", "serviceId", "channelId", "abonentCode", "amount", "clCommission", "svcCommission", "status", "statusMessage"})
+@XmlType(name = "GetPaymentInfoResponse", propOrder = {"agentPaymentId", "serviceId", "channelId", "abonentCode", "personalNumber", "amount", "clCommission", "svcCommission", "status", "statusMessage"})
 public class GetPaymentInfoResponse implements Serializable {
 
 	private String agentPaymentId;
@@ -17,6 +17,8 @@ public class GetPaymentInfoResponse implements Serializable {
 	private long channelId;
 
 	private String abonentCode;
+
+	private String personalNumber;
 
 	private BigDecimal amount;
 
@@ -28,7 +30,7 @@ public class GetPaymentInfoResponse implements Serializable {
 
 	private String statusMessage;
 
-	@XmlElement(name = "agentPaymentId")
+	@XmlElement(name = "paymentId")
 	public String getAgentPaymentId() {
 		return agentPaymentId;
 	}
@@ -80,6 +82,15 @@ public class GetPaymentInfoResponse implements Serializable {
 
 	public void setClCommission(BigDecimal clCommission) {
 		this.clCommission = clCommission;
+	}
+
+	@XmlElement(name = "clientPersonalNumber")
+	public String getPersonalNumber() {
+		return personalNumber;
+	}
+
+	public void setPersonalNumber(String personalNumber) {
+		this.personalNumber = personalNumber;
 	}
 
 	@XmlElement(name = "svcCommission")

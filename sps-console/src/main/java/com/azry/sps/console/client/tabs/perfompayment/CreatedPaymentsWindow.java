@@ -167,9 +167,13 @@ public class CreatedPaymentsWindow extends ZWindow {
 				@Override
 				public void render(Context context, String s, SafeHtmlBuilder sb) {
 					PaymentDTO dto = gridStore.get(context.getIndex());
+					String tooltipText = "";
+					if (dto.getStatusMessage() != null) {
+						tooltipText = "  <p><span class=\"tooltiptext\">"+dto.getStatusMessage()+"</span></p>\n";
+					}
 					String str = dto.getStatus() == null ?
 						"" : Mes.get("PAYMENT_" + dto.getStatus().name());
-					sb.appendHtmlConstant("<div style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + "</div>");
+					sb.appendHtmlConstant("<div class=\"tooltip\" style=\"font-weight: bold; color: "+ dto.getStatus().getColor() + "\">" + str + tooltipText + "</div>");
 				}
 			})
 			.build());

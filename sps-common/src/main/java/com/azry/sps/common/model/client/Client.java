@@ -23,7 +23,7 @@ public class Client {
 
 	@Column(length = 100)
 	private String birthPlace;
-
+/*
 	//TODO შესამოწმებელია
 	@Override
 	public boolean equals(Object object) {
@@ -33,5 +33,5 @@ public class Client {
 		}
 
 		return personalNumber.equals(((Client) object).getPersonalNumber());
-	}
+	}*/
 }

@@ -36,6 +36,7 @@ import com.azry.sps.fi.model.exception.FIException;
 import com.azry.sps.fi.service.BankIntegrationService;
 import com.azry.sps.integration.sp.ProviderIntegrationService;
 import com.azry.sps.integration.sp.dto.AbonentInfo;
+import com.azry.sps.integration.sp.dto.GetInfoStatus;
 import com.azry.sps.integration.sp.exception.SpConnectivityException;
 import com.azry.sps.server.services.channel.ChannelManager;
 import com.azry.sps.server.services.clientcommission.ClientCommissionsManager;
@@ -107,7 +108,9 @@ public class SpsApiImpl implements SpsApi{
 
 		try {
 			AbonentInfo abonentInfo = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getAbonentCode());
-
+			if (abonentInfo.getStatus() != GetInfoStatus.SUCCESS) {
+				throw new SpsApiException("Error while communicating with service provider: " + abonentInfo.getMessage());
+			}
 			response.setDebt(abonentInfo.getDebt());
 			response.setInfoMessage(abonentInfo.getAbonentInfo());
 
@@ -163,7 +166,6 @@ public class SpsApiImpl implements SpsApi{
 		payment.setAmount(request.getAmount());
 		payment.setSvcCommission(svcCommissionAmount);
 
-
 		try {
 			payment.setClient(bankIntegrationService.getClientWithAccount(request.getPersonalNumber()).toClient());
 		} catch (FIException ex) {
@@ -212,6 +214,7 @@ public class SpsApiImpl implements SpsApi{
 		response.setAmount(payment.getAmount());
 		response.setChannelId(payment.getChannelId());
 		response.setServiceId(payment.getServiceId());
+		response.setPersonalNumber(payment.getClient().getPersonalNumber());
 		response.setClCommission(payment.getClCommission());
 		response.setSvcCommission(payment.getSvcCommission());
 		response.setStatus(PaymentStatusDTO.valueOf(payment.getStatus().name()));
@@ -260,10 +263,21 @@ public class SpsApiImpl implements SpsApi{
 			paymentListManager.addPaymentList(paymentList);
 		}
 
-		PaymentListEntry entry = PaymentListEntryDTO.dtoToListEntry(request.getPaymentListEntry());
 
-		if (serviceManager.getService(entry.getServiceId()) == null) {
+
+		PaymentListEntry entry = PaymentListEntryDTO.dtoToListEntry(request.getPaymentListEntry());
+		Service svc = serviceManager.getService(entry.getServiceId());
+		if (svc == null) {
 			throw new SpsApiException("Service not found.");
+		}
+
+		try {
+			AbonentInfo info = providerIntegrationService.getInfo(svc.getServiceDebtCode(), request.getPaymentListEntry().getAbonentCode());
+			if (info.getStatus() != GetInfoStatus.SUCCESS) {
+				throw new SpsApiException("Error while verifying abonent: " + info.getMessage());
+			}
+		} catch (SpConnectivityException e) {
+			throw new SpsApiException("Could not verify abonent - connection problem.");
 		}
 
 		entry = paymentListManager.addPaymentListEntry(paymentList.getClient(), entry);

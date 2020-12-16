@@ -123,17 +123,13 @@ public class ServiceManagerBean implements ServiceManager {
 		srv.setIcon(path);
 		entity.setData(XmlUtils.toXml(srv));
 		em.persist(entity);
+		updateCache();
 	}
 
 	@Override
 	public String getIcon(long id) {
-		//ServiceEntity entity = em.find(ServiceEntity.class, id);
 		Service srv = cachingService.getService(id);
 
-//		if (entity == null) {
-//			srv = new Service();
-//		}
-//		srv = XmlUtils.fromXML(entity.getData(), Service.class);
 		return srv.getIcon();
 	}
 
